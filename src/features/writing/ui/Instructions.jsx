@@ -1,7 +1,6 @@
 import { Button, Typography } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
-
-const { Title, Text } = Typography;
+const {Title} = Typography;
 
 const WritingInstructions = ({ testData, onStartTest }) => {
   return (
@@ -15,39 +14,39 @@ const WritingInstructions = ({ testData, onStartTest }) => {
           {testData.section}
         </Title>
         
-        <div className="text-base mb-4">
+        <Typography className="text-base mb-4">
           The test has four parts and takes up to {testData.timeAllowed}.
-        </div>
+        </Typography>
         
-        <div className="text-base mb-4">
+        <Typography className="text-base mb-4">
           Recommended times:
-        </div>
+        </Typography>
         
-        <div className="text-base mb-2">
+        <Typography className="text-base mb-2">
           Part One: 3 minutes
-        </div>
+        </Typography>
         
-        <div className="text-base mb-2">
+        <Typography className="text-base mb-2">
           Part Two: 7 minutes
-        </div>
+        </Typography>
         
-        <div className="text-base mb-2">
+        <Typography className="text-base mb-2">
           Part Three: 10 minutes
-        </div>
+        </Typography>
         
-        <div className="text-base mb-2">
+        <Typography className="text-base mb-2">
           Part Four: 30 minutes
-        </div>
+        </Typography>
         
-        <div className="text-base mt-8 mb-4">
+        <Typography className="text-base mt-8">
           When you click on the 'Next' button, the test will begin.
-        </div>
+        </Typography>
       </div>
       
       <div className="border-t border-gray-200 p-4 flex justify-end">
         <Button 
           type="primary"
-          className="flex items-center h-[60px] min-w-[110px] px-5 rounded bg-[#003087] border-[#003087]"
+          className="flex items-center h-[60px] min-w-[110px]  bg-[#003087] border-[#003087] px-5 rounded"
           onClick={onStartTest}
         >
           <span>Next</span> <ArrowRightOutlined className="ml-3 text-lg" />
