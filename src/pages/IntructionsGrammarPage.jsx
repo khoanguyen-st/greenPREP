@@ -35,7 +35,7 @@ const IntructionsGrammarPage = () => {
           <div className="border-b border-[#f8d7da]">
             <div className="py-4 md:py-6 mx-auto px-6 sm:px-10 md:px-16 lg:px-20 text-center sm:text-left max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl">
               <Text className="block text-base font-bold mb-3 md:mb-4">
-                Grammar and Vocabulary
+                Grammar and Vocabularies
               </Text>
               
               <Text className="block mb-2 text-base">
