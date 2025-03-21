@@ -4,8 +4,9 @@
 
 * {
   margin: 0;
-  font-family: "Poppins", sans-serif !important;
+  font-family: 'Poppins', sans-serif !important;
 }
+
 .ant-layout {
   background: #f3f4f6 !important;
 }
