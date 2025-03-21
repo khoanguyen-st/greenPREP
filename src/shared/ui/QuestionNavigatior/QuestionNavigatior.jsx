@@ -1,9 +1,10 @@
-export default function QuestionNavigatior({ values }) {
+export default function QuestionNavigatior({ values, action }) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 p-2 sm:p-4 max-w-[260px] lg:min-w-[200px] mx-auto">
       {values.map(({ type }, i) => (
         <div
           key={i}
+          onClick={() => action(i)}
           className="relative flex flex-col items-center justify-center rounded-sm border-2 border-gray-500 border-solid"
         >
           {(type === "flagged" || type === "answered-flagged") && (
