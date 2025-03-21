@@ -2,7 +2,6 @@
 import HomePage from "@pages/HomePage.jsx";
 import { ProtectedRoute } from "./ProtectedRoute/ProtectedRoute.jsx";
 
-
 const PrivateRoute = [
   {
     path: "/",
