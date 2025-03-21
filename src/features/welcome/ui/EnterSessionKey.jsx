@@ -54,7 +54,7 @@ const EnterSessionKey = () => {
           />
         </div>
         <div className="w-full md:w-[70%] flex flex-col pr-0 md:pr-5 items-center md:items-start mt-0 md:mt-[-20%]">
-          <div className="text-center md:text-left w-full mb-6">
+          <div className="text-center w-full mb-6">
             <Title className="text-[28px] md:text-[40px] font-bold mb-4 md:mb-5">
               Welcome to <span className="text-[#003087]">GreenPREP</span>!
             </Title>
