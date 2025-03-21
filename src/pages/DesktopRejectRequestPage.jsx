@@ -13,7 +13,7 @@ export default class DesktopRejectRequestPage extends Component {
           <div className="flex flex-col items-center justify-center" style={{ height: 'calc(100vh - 64px)' }}>
             <Space direction="vertical" align="center" size="large">
               <Title level={1} style={{ marginBottom: 0, textAlign: 'center' }}>
-                Oops! Your request has been denied 
+                Oopsss! Your request has been denied 
               </Title>
               
               <Text style={{ fontSize: '1.1rem', textAlign: 'center' }}>
