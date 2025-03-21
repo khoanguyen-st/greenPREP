@@ -19,20 +19,18 @@ const GrammarVocabPage = () => {
           {/* Top border */}
           <div className="border-b border-[#f8d7da]"></div>
           
-          {/* Empty space - reduced */}
+  
           <div className="py-6 sm:py-8 md:py-12 border-b border-[#f8d7da]"></div>
           
-          {/* GreenPREP title */}
+         
           <div className="text-center py-4 sm:py-5 md:py-6 border-b border-[#f8d7da]">
             <Title level={1} className="!m-0 !text-[#003087] text-3xl sm:text-4xl md:text-5xl">
               GreenPREP
             </Title>
           </div>
           
-          {/* Test details section */}
           <div className="border-b border-[#f8d7da]">
             <div className="max-w-xs sm:max-w-sm md:max-w-md mx-auto py-4 sm:py-5 px-3 sm:px-4">
-              {/* Test title section */}
               <div className="text-left mb-2 sm:mb-3">
                 <Text className="block text-base sm:text-lg font-medium">
                   Aptis General Practice Test
@@ -42,7 +40,6 @@ const GrammarVocabPage = () => {
                 </Text>
               </div>
               
-              {/* Questions and time section */}
               <div className="flex mt-3 sm:mt-4">
                 <div className="w-1/2">
                   <Text strong className="block mb-1 text-sm sm:text-base">Number of Questions</Text>
@@ -54,13 +51,11 @@ const GrammarVocabPage = () => {
                 </div>
               </div>
               
-              {/* Assessment description */}
               <div className="mt-2 sm:mt-3">
                 <Text strong className="block mb-1 text-sm sm:text-base">Assessment Description</Text>
                 <Text className="block text-sm sm:text-base"></Text>
               </div>
               
-              {/* Form description */}
               <div className="mt-2 sm:mt-3">
                 <Text strong className="block mb-1 text-sm sm:text-base">Form Description</Text>
                 <Text className="block text-sm sm:text-base"></Text>
@@ -68,7 +63,7 @@ const GrammarVocabPage = () => {
             </div>
           </div>
           
-          {/* Start button section */}
+
           <div className="text-center py-3 sm:py-4 border-b border-[#f8d7da]">
             <Button
               type="primary"
@@ -80,7 +75,7 @@ const GrammarVocabPage = () => {
             </Button>
           </div>
           
-          {/* Flexible space that grows to fill remaining screen */}
+
           <div className="flex-grow border-b border-[#f8d7da]"></div>
         </div>
       </Content>

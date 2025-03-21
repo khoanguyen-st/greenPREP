@@ -17,12 +17,12 @@ const IntructionsGrammarPage = () => {
     <Layout className="min-h-screen">
       <Content className="px-0 py-0">
         <div className="w-full mx-auto border-t border-[#f8d7da] flex flex-col min-h-screen">
-          {/* Top empty space with border */}
+        
           <div className="border-b border-[#f8d7da]"></div>
           <div className="border-b border-[#f8d7da]"></div>
           <div className="py-4 sm:py-6 md:py-8 lg:py-12 border-b border-[#f8d7da]"></div>
           
-          {/* Title section - centered */}
+       
           <div className="border-b border-[#f8d7da]">
             <div className="py-4 sm:py-6 md:py-8 mx-auto text-center px-2 sm:px-4 md:px-6">
               <Title level={3} className="m-0 text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mx-auto">
@@ -31,7 +31,7 @@ const IntructionsGrammarPage = () => {
             </div>
           </div>
           
-          {/* Content section - centered */}
+         
           <div className="border-b border-[#f8d7da]">
             <div className="py-4 mx-auto px-4 sm:px-6 md:px-10 lg:px-16 text-left max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg">
               <Text className="block text-sm sm:text-base font-bold mb-2 sm:mb-3 md:mb-4">
@@ -60,7 +60,7 @@ const IntructionsGrammarPage = () => {
             </div>
           </div>
           
-          {/* Button section - moved above the flexible space */}
+
           <div className="border-b border-[#f8d7da]">
             <div className="flex justify-end py-6 sm:py-8 md:py-10 px-4 sm:px-6 md:px-10 lg:px-16">
               <Button
@@ -74,10 +74,10 @@ const IntructionsGrammarPage = () => {
             </div>
           </div>
           
-          {/* Empty space that fills the remaining vertical space */}
+
           <div className="flex-grow border-b border-[#f8d7da]"></div>
           
-          {/* Bottom border */}
+ 
           <div className="border-b border-[#f8d7da]"></div>
         </div>
       </Content>
