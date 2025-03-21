@@ -1,5 +1,6 @@
 // import { lazy } from 'react';
 import HomePage from "@pages/HomePage.jsx";
+import WaitingForApproval from "@pages/WaitingForApproval.jsx";
 import { ProtectedRoute } from "./ProtectedRoute/ProtectedRoute.jsx";
 
 const PrivateRoute = [
@@ -10,6 +11,10 @@ const PrivateRoute = [
       {
         path: "homepage",
         element: <HomePage />,
+      },
+      {
+        path: "waiting-approval",
+        element: <WaitingForApproval />,
       },
     ],
   },
