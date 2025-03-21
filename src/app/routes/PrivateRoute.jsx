@@ -1,6 +1,6 @@
-// import { lazy } from 'react';
 import HomePage from "@pages/HomePage.jsx";
 import { ProtectedRoute } from "./ProtectedRoute/ProtectedRoute.jsx";
+import ListeningPage from "@pages/ListeningPage.jsx";
 
 const PrivateRoute = [
   {
@@ -10,6 +10,10 @@ const PrivateRoute = [
       {
         path: "homepage",
         element: <HomePage />,
+      },
+      {
+        path: "listening",
+        element: <ListeningPage />,
       },
     ],
   },
