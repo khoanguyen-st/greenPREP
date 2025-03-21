@@ -1,6 +1,5 @@
 // import { lazy } from 'react';
 import HomePage from "@pages/HomePage.jsx";
-import QuestionPage from "../../pages/QuestionPage";
 import { ProtectedRoute } from "./ProtectedRoute/ProtectedRoute.jsx";
 
 const PrivateRoute = [
@@ -11,10 +10,6 @@ const PrivateRoute = [
       {
         path: "homepage",
         element: <HomePage />,
-      },
-      {
-        path: "question",
-        element: <QuestionPage />,
       },
     ],
   },
