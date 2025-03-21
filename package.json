@@ -8,7 +8,10 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "format": "prettier --write .",
+    "check": "prettier --check .",
+    "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
@@ -27,7 +30,6 @@
     "google-sheets-mapper": "^2.0.0",
     "google-spreadsheet": "^4.1.4",
     "jwt-decode": "^4.0.0",
-
     "react": "^18.3.1",
     "react-apexcharts": "^1.7.0",
     "react-dom": "^18.3.1",
