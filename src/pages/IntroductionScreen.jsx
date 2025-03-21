@@ -15,19 +15,17 @@ return (
                 GreenPREP
             </Title>
         </Header>
-        <Content style={{ padding: 20 }}>
-            <div className="p-6">
+        <Content className="px-4 py-6 md:px-6">
+            <div className="p-3">
                 <div
-                    className="shadow-lg bg-white w-[90%] min-h-[80px] p-20 rounded-2xl mx-auto"
+                    className="shadow-lg bg-white w-full md:w-[95%] p-4 md:p-10 rounded-2xl mx-auto"
                     style={{ background: colorBgContainer }}
                 >
                     <div>
-                        <h4 className=" text-blue-500 p-2">Test structure & Flow</h4>
-                        <h2 className="p-2">Welcome to English Mock Test Journey!</h2>
-                        <p className="p-2">
-                            <strong>
-                                The test is structured to assess different aspects of your language proficiency in the following order:
-                            </strong>
+                        <p className="text-lg text-blue-500 p-2">Test structure & Flow</p>
+                        <p className="p-2 text-2xl md:text-[30px] font-bold">Welcome to English Mock Test Journey!</p>
+                        <p className="text-lg font-bold p-2">
+                            The test is structured to assess different aspects of your language proficiency in the following order:
                         </p>
                         <ol className="list-none p-0">
                             {[
@@ -64,26 +62,27 @@ return (
                             ].map((item, index) => (
                                 <li
                                     key={index}
-                                    className="flex items-center rounded-lg p-3 mb-3 w-full"
+                                    className="flex items-start gap-4 rounded-lg p-3 mb-3 w-full"
                                 >
                                     <div
-                                        className="flex items-center justify-center w-12 h-12 rounded-full border-1 border-blue-500 text-blue-500 font-bold border-solid text-base"
+                                        className="flex-shrink-0 flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-full border-1 border-blue-500 text-blue-500 font-bold border-solid text-base"
                                     >
                                         {item.number}
                                     </div>
-                                    <div className="ml-4">
-                                        <strong className="text-xl">{item.title}</strong>
-                                        <p className="mt-1 text-gray-600">{item.description}</p>
+                                    <div className="flex-1 overflow-hidden">
+                                        <p className="text-xl">{item.title}</p>
+                                        <p className="text-sm mt-1 text-gray-600 md:whitespace-nowrap md:overflow-hidden md:text-ellipsis">{item.description}</p>
                                     </div>
                                 </li>
                             ))}
                         </ol>
+                        <div className="justify-center flex mt-6">
+                            <Button type="primary" size="large" className="w-72 bg-[#003087] hover:bg-[#003087]">
+                                Start Now
+                            </Button>
+                        </div>
                     </div>
-                    <div className="justify-center flex">
-                        <Button  type="primary">
-                            Start Now
-                        </Button>
-                    </div>
+                   
                 </div>                
             </div>
         </Content>
@@ -92,4 +91,3 @@ return (
 }
 
 export default IntroductionScreen
- 
