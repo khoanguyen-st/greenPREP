@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { ConfigProvider } from "antd";
 import WritingIntroduction from "@features/writing/ui/Introduction.jsx";
+import WritingInstructions from "@features/writing/ui/Instructions";
 
 const WritingTestPage = () => {
-  // Mock data, no API to fetch yet
   const [testData, setTestData] = useState({
     testName: "Aptis General Practice Test",
     section: "Writing",
@@ -23,6 +22,10 @@ const WritingTestPage = () => {
     setPageState("instructions");
   };
 
+  const handleBeginTest = () =>{
+    setPageState("test");
+  }
+
   const renderContent = () => {
     switch (pageState) {
       case "intro":
@@ -33,7 +36,12 @@ const WritingTestPage = () => {
           />
         );
       case "instructions":
-        return <div></div>;
+        return (
+          <WritingInstructions
+            testData={testData}
+            onStartTest={handleBeginTest}
+          />
+        );
       default:
         return <div>Loading...</div>;
     }
