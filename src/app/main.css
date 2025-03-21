@@ -10,3 +10,7 @@
 .ant-layout {
   background: #f3f4f6 !important;
 }
+body {
+  margin: 0;
+  padding: 0;
+}
