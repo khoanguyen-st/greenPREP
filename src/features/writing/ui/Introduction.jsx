@@ -12,7 +12,7 @@ const WritingIntroduction = ({ testData, onStartTest }) => {
         <div className="test-info">
           <Title level={3} className="test-name">{testData.testName}</Title>
           <Title level={5} className="section-name">{testData.section}</Title>
-          
+
           <div className="test-details">
             <div className="detail-row">
               <div className="detail-column">
@@ -24,14 +24,14 @@ const WritingIntroduction = ({ testData, onStartTest }) => {
                 <Text className="detail-value">{testData.timeAllowed}</Text>
               </div>
             </div>
-            
+
             <div className="detail-row">
               <div className="detail-column full-width">
                 <Title level={5} className="detail-label">Assessment Description</Title>
                 <Text className="detail-value">{testData.assessmentDescription}</Text>
               </div>
             </div>
-            
+
             <div className="detail-row">
               <div className="detail-column full-width">
                 <Title level={5} className="detail-label">Form Description</Title>
@@ -40,10 +40,10 @@ const WritingIntroduction = ({ testData, onStartTest }) => {
             </div>
           </div>
         </div>
-        
-        <Button 
-          type="primary" 
-          size="large" 
+
+        <Button
+          type="primary"
+          size="large"
           className="start-button"
           onClick={onStartTest}
         >

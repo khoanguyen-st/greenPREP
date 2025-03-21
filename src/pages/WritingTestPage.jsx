@@ -12,12 +12,11 @@ const WritingTestPage = () => {
     assessmentDescription: 'This assessment evaluates your ability to write in English for different purposes.',
     formDescription: 'You will need to complete various writing tasks including emails, essays, and short responses.',
   });
-  
+
   const [pageState, setPageState] = useState('intro');
 
-  // Placeholder for fetching from API on page load, maybe added later
   useEffect(() => {
-    // Fetch data from API here
+
   }, []);
 
   const handleStartTest = () => {
@@ -28,15 +27,13 @@ const WritingTestPage = () => {
     switch (pageState) {
       case 'intro':
         return (
-          <WritingIntroduction 
-            testData={testData} 
-            onStartTest={handleStartTest} 
+          <WritingIntroduction
+            testData={testData}
+            onStartTest={handleStartTest}
           />
         );
-        //Placeholder for test instruction page
       case 'instructions':
         return (
-          //Instructions page component here
           <div></div>
         );
       default:
@@ -45,7 +42,7 @@ const WritingTestPage = () => {
   };
 
   return (
-      renderContent()
+    renderContent()
   );
 };
 
