@@ -1,6 +1,8 @@
 // import { lazy } from 'react';
 import HomePage from "@pages/HomePage.jsx";
 import { ProtectedRoute } from "./ProtectedRoute/ProtectedRoute.jsx";
+import DesktopRejectRequestPage from "../../pages/DesktopRejectRequestPage.jsx";
+
 
 const PrivateRoute = [
   {
@@ -10,6 +12,10 @@ const PrivateRoute = [
       {
         path: "homepage",
         element: <HomePage />,
+      },
+      {
+        path: "rejectpage",
+        element: <DesktopRejectRequestPage />,
       },
     ],
   },
