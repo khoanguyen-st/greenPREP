@@ -1,54 +1,38 @@
 import { useEffect, useRef, useState } from "react";
 
-
 const MatchingQuestion = ({
- leftItems,
- rightItems,
- matches,
- onChange,
- disabled = false,
- className = "",
-}) => {
+    leftItems,
+    rightItems,
+    matches,
+    onChange,
+    disabled = false,
+    className = "",
+    }) => {
+
  const [selectedLeft, setSelectedLeft] = useState(null);
  const [selectedRight, setSelectedRight] = useState(null);
  const [lines, setLines] = useState([]);
  const containerRef = useRef(null);
 
-
- // Function to draw connecting lines
  const drawLine = (start, end) => {
    if (!start || !end || !containerRef.current) return null;
-
-
    const startRect = start.getBoundingClientRect();
    const endRect = end.getBoundingClientRect();
    const containerRect = containerRef.current.getBoundingClientRect();
-
-
    const startX = startRect.right - containerRect.left;
    const startY = startRect.top + startRect.height / 2 - containerRect.top;
    const endX = endRect.left - containerRect.left;
    const endY = endRect.top + endRect.height / 2 - containerRect.top;
-
-
-   // Calculate control points for the curve
    const midX = (startX + endX) / 2;
-
-
    return `M ${startX} ${startY}
            C ${midX} ${startY},
              ${midX} ${endY},
              ${endX} ${endY}`;
  };
 
-
- // Update connecting lines when matches or selection changes
  useEffect(() => {
    const updateLines = () => {
      const newLines = [];
-
-
-     // Draw lines for matched items
      Object.entries(matches).forEach(([leftId, rightId]) => {
        const leftElement = document.getElementById(`left-${leftId}`);
        const rightElement = document.getElementById(`right-${rightId}`);
@@ -61,9 +45,6 @@ const MatchingQuestion = ({
          });
        }
      });
-
-
-     // Draw line for current selection
      if (selectedLeft && selectedRight) {
        const leftElement = document.getElementById(`left-${selectedLeft}`);
        const rightElement = document.getElementById(`right-${selectedRight}`);
@@ -76,21 +57,12 @@ const MatchingQuestion = ({
          });
        }
      }
-
-
      setLines(newLines);
    };
-
-
-   // Ensure DOM is updated
    requestAnimationFrame(updateLines);
-
-
-   // Add event listener for window resize
    window.addEventListener("resize", updateLines);
    return () => window.removeEventListener("resize", updateLines);
  }, [matches, selectedLeft, selectedRight]);
-
 
  const handleLeftSelect = (value) => {
    if (disabled) return;
@@ -99,7 +71,6 @@ const MatchingQuestion = ({
    } else {
      setSelectedLeft(value);
      if (selectedRight) {
-       // Check if the right item is already matched
        const isRightIdMatched = Object.values(matches).includes(selectedRight);
        if (!isRightIdMatched) {
          onChange(value, selectedRight);
@@ -110,13 +81,11 @@ const MatchingQuestion = ({
    }
  };
 
-
  const handleRightSelect = (value) => {
    if (disabled) return;
    if (value === selectedRight) {
      setSelectedRight(null);
    } else {
-     // Check if the right item is already matched
      const isRightIdMatched = Object.values(matches).includes(value);
      if (!isRightIdMatched) {
        setSelectedRight(value);
@@ -129,14 +98,12 @@ const MatchingQuestion = ({
    }
  };
 
-
  return (
    <div
      className={`matching-question relative min-h-[400px] ${className}`}
      ref={containerRef}
      style={{ position: "relative" }}
    >
-     {/* SVG layer for lines */}
      <svg
        className="absolute inset-0 w-full h-full"
        style={{
@@ -165,7 +132,6 @@ const MatchingQuestion = ({
        ))}
      </svg>
 
-
      <style>
        {`
          @keyframes drawLine {
@@ -176,9 +142,7 @@ const MatchingQuestion = ({
        `}
      </style>
 
-
      <div className="grid grid-cols-2 gap-8 relative" style={{ zIndex: 2 }}>
-       {/* Left column */}
        <div className="left-items space-y-4">
          <h3 className="text-lg font-semibold mb-4">Column A</h3>
          {leftItems.map((item) => (
@@ -199,8 +163,6 @@ const MatchingQuestion = ({
          ))}
        </div>
 
-
-       {/* Right column */}
        <div className="right-items space-y-4">
          <h3 className="text-lg font-semibold mb-4">Column B</h3>
          {rightItems.map((item) => (
@@ -224,7 +186,6 @@ const MatchingQuestion = ({
    </div>
  );
 };
-
 
 export default MatchingQuestion;
 
