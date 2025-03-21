@@ -4,7 +4,8 @@ const { Title, Text } = Typography;
 
 const MultipleChoice = ({ 
   questionData,
-  onSubmit
+  onSubmit,
+  className = '',
 }) => {
   const [selectedOption, setSelectedOption] = useState(null);
 
@@ -18,7 +19,7 @@ const MultipleChoice = ({
   };
 
   return (
-    <div className="w-full">
+    <div className={`w-full ${className}`}>
       <Title level={5} className="mb-6">
         {questionData.Content}
       </Title>
