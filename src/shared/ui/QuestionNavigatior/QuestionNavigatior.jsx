@@ -8,8 +8,8 @@ export default function QuestionNavigator({ values, action, position }) {
           className={`relative flex flex-col items-center justify-center rounded-sm border-2 border-gray-400 border-solid
             ${
               position === i
-                ? " outline outline-2 outline-gray-500 shadow-lg " // Highlight current position
-                : "border-gray-500 border-solid rounded-sm" // Default border
+                ? " outline outline-2 outline-gray-500 shadow-lg "
+                : "border-gray-500 border-solid rounded-sm"
             }
             hover:outline hover:outline-2 hover:rounded-md hover:outline-gray-500 hover:cursor-pointer`}
         >
