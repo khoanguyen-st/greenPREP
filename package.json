@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "husky install",
+    "format": "prettier --write .",
+    "check": "prettier --check .",
+    "lint:fix": "yarn lint --fix"
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
@@ -45,16 +49,25 @@
     "@vitejs/plugin-react": "^4.3.2",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.11.1",
-    "eslint-plugin-react": "^7.37.0",
+    "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.12",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "globals": "^15.9.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.0",
     "postcss": "^8.4.47",
-    "prettier": "^3.3.3",
+    "prettier": "^3.5.3",
     "prop-types": "^15.8.1",
     "sass": "^1.80.6",
     "sass-loader": "^16.0.3",
     "tailwindcss": "^3.4.14",
     "vite": "^5.4.9"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,css,scss}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }
