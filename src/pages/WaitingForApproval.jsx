@@ -1,5 +1,5 @@
-import { Layout, Typography, Dropdown, Menu } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
+import { Layout, Typography, Dropdown, Menu } from "antd";
+import { DownOutlined } from "@ant-design/icons";
 
 const { Header, Content } = Layout;
 const { Title, Text } = Typography;
@@ -20,9 +20,13 @@ const WaitingForApproval = () => {
     <Layout className="min-h-screen">
       <Header className="flex justify-between items-center bg-[#003087] !p-2 sm:!p-5">
         <Title level={2} className="!text-white !m-0">
-          <img src="src\assets\Images\logo.png" alt="" className="h-[40px] sm:h-[50px] w-auto" />
+          <img
+            src="src\assets\Images\logo.png"
+            alt=""
+            className="h-[40px] sm:h-[50px] w-auto"
+          />
         </Title>
-        
+
         <Dropdown overlay={menu} trigger={["click"]}>
           <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
             <Text className="text-white text-sm sm:text-base">Hi, </Text>
@@ -42,9 +46,9 @@ const WaitingForApproval = () => {
           <p className="text-lg sm:text-xl md:text-2xl text-center mt-2 px-4">
             Sit tight and hold on for a moment!
           </p>
-          <img 
-            src="src/assets/Images/06.gif" 
-            alt="Notification" 
+          <img
+            src="src/assets/Images/06.gif"
+            alt="Notification"
             className="w-48 h-48 sm:w-64 sm:h-64 mt-6 sm:mt-8"
           />
         </div>
@@ -53,4 +57,4 @@ const WaitingForApproval = () => {
   );
 };
 
-export default WaitingForApproval; 
+export default WaitingForApproval;
