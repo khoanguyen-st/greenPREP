@@ -1,8 +1,7 @@
-import React from 'react';
 import { Button, Typography } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Text } = Typography;
 
 const WritingInstructions = ({ testData, onStartTest }) => {
   return (
@@ -16,44 +15,39 @@ const WritingInstructions = ({ testData, onStartTest }) => {
           {testData.section}
         </Title>
         
-        <Paragraph className="text-base mb-4">
+        <div className="text-base mb-4">
           The test has four parts and takes up to {testData.timeAllowed}.
-        </Paragraph>
+        </div>
         
-        <Paragraph className="text-base mb-4">
+        <div className="text-base mb-4">
           Recommended times:
-        </Paragraph>
+        </div>
         
-        <Paragraph className="text-base mb-2 ml-4">
+        <div className="text-base mb-2">
           Part One: 3 minutes
-        </Paragraph>
+        </div>
         
-        <Paragraph className="text-base mb-2 ml-4">
+        <div className="text-base mb-2">
           Part Two: 7 minutes
-        </Paragraph>
+        </div>
         
-        <Paragraph className="text-base mb-2 ml-4">
+        <div className="text-base mb-2">
           Part Three: 10 minutes
-        </Paragraph>
+        </div>
         
-        <Paragraph className="text-base mb-2 ml-4">
+        <div className="text-base mb-2">
           Part Four: 30 minutes
-        </Paragraph>
+        </div>
         
-        <Paragraph className="text-base mt-8 mb-4">
+        <div className="text-base mt-8 mb-4">
           When you click on the 'Next' button, the test will begin.
-        </Paragraph>
+        </div>
       </div>
       
       <div className="border-t border-gray-200 p-4 flex justify-end">
         <Button 
           type="primary"
-          className="flex items-center h-[60px] min-w-[110px] px-5 rounded"
-          style={{ 
-            backgroundColor: '#003087', 
-            borderColor: '#003087',
-            boxShadow: 'none'
-          }}
+          className="flex items-center h-[60px] min-w-[110px] px-5 rounded bg-[#003087] border-[#003087]"
           onClick={onStartTest}
         >
           <span>Next</span> <ArrowRightOutlined className="ml-3 text-lg" />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import WritingIntroduction from "@features/writing/ui/Introduction.jsx";
 import WritingInstructions from "@features/writing/ui/Instructions";
 
