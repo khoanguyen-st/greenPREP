@@ -1,23 +1,18 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Typography } from 'antd';
 const { Title, Text } = Typography;
-
 const MultipleChoice = ({ 
   questionData,
   onSubmit,
   className = '',
 }) => {
   const [selectedOption, setSelectedOption] = useState(null);
-
-  // Parse AnswerContent từ JSON string
   const answerContent = JSON.parse(questionData.AnswerContent)[0];
   const options = answerContent.options;
-
   const handleClick = (optionValue) => {
     setSelectedOption(optionValue);
     onSubmit(optionValue);
   };
-
   return (
     <div className={`w-full ${className}`}>
       <Title level={5} className="mb-6">
@@ -26,7 +21,6 @@ const MultipleChoice = ({
       <div className="space-y-3">
         {options.map((option) => {
           const isSelected = selectedOption === option.value;
-          
           return (
             <div
               key={option.key}
@@ -64,5 +58,4 @@ const MultipleChoice = ({
     </div>
   );
 };
-
 export default MultipleChoice;
