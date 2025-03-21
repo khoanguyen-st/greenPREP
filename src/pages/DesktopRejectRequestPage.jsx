@@ -5,9 +5,9 @@ import { Layout } from "antd";
 export default class DesktopRejectRequestPage extends Component {
   render() {
     return (
-    <Layout className="h-screen overflow-hidden">
+    <Layout className="h-screen overflow-hidden bg-gray-50">
       <SharedHeader/>
-        <div className="h-[calc(100vh-64px)] flex flex-col items-center justify-center px-2 2xs:px-3 xs:px-4 sm:px-5 md:px-6 lg:px-8">
+        <div className="h-[calc(100vh-64px)] flex flex-col items-center justify-center px-2 2xs:px-3 xs:px-4 sm:px-5 md:px-6 lg:px-8 bg-white">
           <div className="flex flex-col items-center justify-center h-full w-full max-w-7xl mx-auto">
             <h1 className="text-sm 2xs:text-base xs:text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold 
                          mb-1 2xs:mb-1.5 xs:mb-2 sm:mb-2.5 md:mb-3 lg:mb-4 
