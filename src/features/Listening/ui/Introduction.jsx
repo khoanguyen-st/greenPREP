@@ -3,15 +3,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Button, Slider } from 'antd'
 import { CaretRightOutlined, PauseOutlined, SoundFilled } from '@ant-design/icons'
-
-// Constants
-const COLORS = {
-  primary: '#0A3B8C',
-  blue: '#1890ff',
-  lightGray: '#f7fafc',
-  orange: '#FFA500'
-}
-
 const AUDIO = {
   path: 'src/assets/Sounds/Headphone-check-test.mp3',
   initialVolume: 50
@@ -25,11 +16,6 @@ const TEST_INFO = {
   timeAllowed: '40 mins',
   description: 'This is a practice test for the Aptis General Listening section.',
   instructions: 'You will hear various recordings and answer questions based on what you hear.'
-}
-
-// Custom class joining function
-const joinClasses = (...classes) => {
-  return classes.filter(Boolean).join(' ')
 }
 
 const Introduction = ({ onStart }) => {
@@ -88,7 +74,7 @@ const Introduction = ({ onStart }) => {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
       <div className="mb-12 text-center">
-        <h1 className={`mb-8 text-4xl font-bold text-[${COLORS.primary}]`}>{TEST_INFO.title}</h1>
+        <h1 className={`mb-8 text-4xl font-bold text-[#1890ff]`}>{TEST_INFO.title}</h1>
 
         <div className="mb-8">
           <h2 className="text-xl font-medium text-gray-800">{TEST_INFO.subtitle}</h2>
@@ -125,7 +111,7 @@ const Introduction = ({ onStart }) => {
               onClick={togglePlay}
               type="text"
               shape="circle"
-              className="p-1 transition-all hover:scale-110 hover:bg-blue-100"
+              className="p-1 transition-all hover:scale-110 hover:bg-blue-100 hover:!text-[#1890ff]"
               aria-label={isPlaying ? 'Pause' : 'Play'}
               icon={isPlaying ? <PauseOutlined className="text-2xl" /> : <CaretRightOutlined className="text-2xl" />}
             />
@@ -134,13 +120,7 @@ const Introduction = ({ onStart }) => {
                 value={volume}
                 onChange={handleVolumeChange}
                 tooltip={{ formatter: value => `${value}%` }}
-                className={joinClasses(
-                  'w-full',
-                  '[&_.ant-slider-track]:bg-blue-500',
-                  '[&_.ant-slider-rail]:bg-slate-100',
-                  'hover:[&_.ant-slider-track]:bg-blue-600',
-                  'hover:[&_.ant-slider-handle]:border-blue-600'
-                )}
+                className="w-full hover:[&_.ant-slider-handle]:border-blue-600 [&_.ant-slider-rail]:bg-slate-100 [&_.ant-slider-track]:bg-blue-500 hover:[&_.ant-slider-track]:bg-blue-600"
               />
             </div>
             <SoundFilled className="text-xl text-gray-600" />
@@ -151,12 +131,8 @@ const Introduction = ({ onStart }) => {
       <div className="text-center">
         <Button
           onClick={onStart}
-          className={joinClasses(
-            'h-14 w-full max-w-xs rounded text-lg font-bold',
-            `bg-[${COLORS.primary}] text-white border-[${COLORS.primary}]`,
-            `hover:border-[${COLORS.orange}]`,
-            'transition-colors duration-200'
-          )}
+          type="primary"
+          className="h-14 w-full max-w-xs rounded border-2 !border-[#0A3B8C] !bg-[#0A3B8C] text-lg font-bold text-white transition-colors duration-200 hover:!border-[#FFA500] hover:!bg-white hover:!text-[#1890ff]"
         >
           Start
         </Button>
@@ -164,5 +140,4 @@ const Introduction = ({ onStart }) => {
     </div>
   )
 }
-
 export default Introduction

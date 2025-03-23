@@ -22,11 +22,6 @@ const TEXT = {
   footer: "When you click on the 'Next' button, the test will begin."
 }
 
-// Custom class joining function
-const joinClasses = (...classes) => {
-  return classes.filter(Boolean).join(' ')
-}
-
 const Instruction = ({ onNext }) => {
   return (
     <div className="flex min-h-screen flex-col">
@@ -65,16 +60,7 @@ const Instruction = ({ onNext }) => {
           onClick={onNext}
           type="primary"
           size="large"
-          className={joinClasses(
-            'mx-4',
-            `bg-[${COLORS.primary}]`,
-            `border-[${COLORS.primary}]`,
-            `hover:bg-[${COLORS.primary}]/90`,
-            `hover:border-[${COLORS.primary}]/90`,
-            'text-white',
-            'focus:ring-2',
-            `focus:ring-[${COLORS.primary}]/50`
-          )}
+          className="mx-4 border-2 border-[#003087] bg-[#003087] text-white hover:border-[#FF6E00]/90 hover:bg-[#003087]/90 focus:ring-2 focus:ring-[#003087]/50"
         >
           Next <ArrowRightOutlined />
         </Button>
