@@ -1,6 +1,10 @@
 import { Select } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import * as yup from "yup";
+import {
+  answerContentSchema,
+  dropdownQuestionSchema,
+} from "../../model/questionType/dropdownQuestion.schema";
 
 const { Option } = Select;
 
@@ -14,6 +18,7 @@ const DropdownQuestion = ({
   className = "",
   small = false,
 }) => {
+  dropdownQuestionSchema.validateSync(questionData);
   const [selectedOptions, setSelectedOptions] = useState({});
   const [error, setError] = useState({});
 
@@ -21,6 +26,7 @@ const DropdownQuestion = ({
     if (!questionData) return null;
     try {
       const parsedAnswerContent = JSON.parse(questionData.AnswerContent);
+      answerContentSchema.validateSync(parsedAnswerContent);
       const options = parsedAnswerContent.options || [];
       const answers = {};
       options.forEach(({ key, value }) => {
