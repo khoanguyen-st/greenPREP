@@ -25,23 +25,41 @@ const DropdownQuestion = ({
   const processedData = useMemo(() => {
     if (!questionData) return null;
     try {
-      const parsedAnswerContent = JSON.parse(questionData.AnswerContent);
+      const parsedAnswerContent =
+        typeof questionData.AnswerContent === "string"
+          ? JSON.parse(questionData.AnswerContent)
+          : questionData.AnswerContent;
       answerContentSchema.validateSync(parsedAnswerContent);
-      const options = parsedAnswerContent.options || [];
-      const answers = {};
-      options.forEach(({ key, value }) => {
-        answers[key] = value;
-      });
-      const correctAnswers = {};
-      (parsedAnswerContent.correctAnswer || []).forEach(({ key, value }) => {
-        correctAnswers[key] = value;
-      });
-      return {
-        id: questionData.ID,
-        question: questionData.Content,
-        answers,
-        correctAnswers,
-      };
+
+      if (parsedAnswerContent.leftItems && parsedAnswerContent.rightItems) {
+        // Kiểu 2: right, left item
+        return {
+          id: questionData.ID,
+          question: questionData.Content,
+          leftItems: parsedAnswerContent.leftItems,
+          rightItems: parsedAnswerContent.rightItems,
+          correctAnswers: parsedAnswerContent.correctAnswer,
+          type: "right-left",
+        };
+      } else {
+        // Kiểu 1: paragraph
+        const options = parsedAnswerContent.options || [];
+        const answers = {};
+        options.forEach(({ key, value }) => {
+          answers[key] = value;
+        });
+        const correctAnswers = {};
+        (parsedAnswerContent.correctAnswer || []).forEach(({ key, value }) => {
+          correctAnswers[key] = value;
+        });
+        return {
+          id: questionData.ID,
+          question: questionData.Content,
+          answers,
+          correctAnswers,
+          type: "paragraph",
+        };
+      }
     } catch (error) {
       console.error("Error parsing question data:", error);
       return null;
@@ -76,7 +94,9 @@ const DropdownQuestion = ({
       <p className="text-gray-600 text-center">No question data available.</p>
     );
 
-  const isSingleQuestion = Object.keys(processedData.answers).length === 1;
+  const isSingleQuestion =
+    processedData.type === "paragraph" &&
+    Object.keys(processedData.answers).length === 1;
 
   return (
     <div
@@ -89,38 +109,68 @@ const DropdownQuestion = ({
             : "flex-col items-center"
         }`}
       >
-        <p className="text-sm font-semibold text-gray-800 mb-4">
+        <p className="text-sm font-semibold text-gray-800 mb-4 whitespace-pre-wrap">
           {processedData.question}
         </p>
 
-        {Object.entries(processedData.answers).map(([key, options]) => (
-          <div key={key} className="flex w-full mb-4">
-            {Object.keys(processedData.answers).length > 1 && (
-              <div className="w-7 ">
-                <p className="text-lg text-gray-700 font-bold p-1">{key}.</p>
-              </div>
-            )}
+        {processedData.type === "paragraph" ? (
+          // Kiểu 1: paragraph
+          Object.entries(processedData.answers).map(([key, options]) => (
+            <div key={key} className="flex w-full mb-4">
+              {Object.keys(processedData.answers).length > 1 && (
+                <div className="w-7 h-7">
+                  <p className="text-sm text-gray-700 p-1">{key}.</p>
+                </div>
+              )}
 
-            <div
-              className={`flex ${isSingleQuestion ? " items-center w-1/4" : "w-1/2"}`}
-            >
-              <Select
-                onChange={(value) => handleSelectChange(key, value)}
-                value={selectedOptions[key]}
-                className={`w-full ${small ? "h-8 text-xs" : "h-10 text-sm"} border border-gray-300 rounded-md`}
+              <div
+                className={`flex ${isSingleQuestion ? " items-center w-1/4" : "w-1/2"}`}
               >
-                {options.map((option) => (
-                  <Option key={option} value={option}>
-                    {option}
-                  </Option>
-                ))}
-              </Select>
+                <Select
+                  onChange={(value) => handleSelectChange(key, value)}
+                  value={selectedOptions[key]}
+                  className={`w-2/3 ${small ? "h-8 text-xs" : "h-8 text-sm"} border border-gray-300 rounded-md`}
+                >
+                  {options.map((option) => (
+                    <Option key={option} value={option}>
+                      {option}
+                    </Option>
+                  ))}
+                </Select>
+              </div>
+              {error[key] && (
+                <p className="text-red-500 text-xs mt-2">{error[key]}</p>
+              )}
             </div>
-            {error[key] && (
-              <p className="text-red-500 text-xs mt-2">{error[key]}</p>
-            )}
+          ))
+        ) : (
+          // Kiểu 2: right, left item
+          <div className="w-full">
+            {processedData.leftItems.map((leftItem, index) => (
+              <div key={index} className="flex w-full mb-4">
+                <div className="w-1/2 pr-4">
+                  <p className="text-xs text-gray-700 p-1">{leftItem}</p>
+                </div>
+                <div className="w-1/2">
+                  <Select
+                    onChange={(value) => handleSelectChange(leftItem, value)}
+                    value={selectedOptions[leftItem]}
+                    className={`w-2/3 ${small ? "h-8 text-xs" : "h-8 text-xs"} border border-gray-300 rounded-md`}
+                  >
+                    {processedData.rightItems.map((rightItem) => (
+                      <Option key={rightItem} value={rightItem}>
+                        {rightItem}
+                      </Option>
+                    ))}
+                  </Select>
+                </div>
+                {error[leftItem] && (
+                  <p className="text-red-500 text-xs mt-2">{error[leftItem]}</p>
+                )}
+              </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
     </div>
   );
