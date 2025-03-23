@@ -1,19 +1,45 @@
 'use client'
+
 import { useState, useRef, useEffect } from 'react'
 import { Button, Slider } from 'antd'
 import { CaretRightOutlined, PauseOutlined, SoundFilled } from '@ant-design/icons'
 
+// Constants
+const COLORS = {
+  primary: '#0A3B8C',
+  blue: '#1890ff',
+  lightGray: '#f7fafc',
+  orange: '#FFA500'
+}
+
+const AUDIO = {
+  path: 'src/assets/Sounds/Headphone-check-test.mp3',
+  initialVolume: 50
+}
+
+const TEST_INFO = {
+  title: 'GreenPREP',
+  subtitle: 'Aptis General Practice Test',
+  section: 'Listening',
+  questions: 17,
+  timeAllowed: '40 mins',
+  description: 'This is a practice test for the Aptis General Listening section.',
+  instructions: 'You will hear various recordings and answer questions based on what you hear.'
+}
+
+// Custom class joining function
+const joinClasses = (...classes) => {
+  return classes.filter(Boolean).join(' ')
+}
+
 const Introduction = ({ onStart }) => {
-  const [volume, setVolume] = useState(50)
+  const [volume, setVolume] = useState(AUDIO.initialVolume)
   const [isPlaying, setIsPlaying] = useState(false)
   const audioRef = useRef(null)
 
   useEffect(() => {
-    audioRef.current = new Audio('src/assets/Sounds/Headphone-check-test.mp3')
+    audioRef.current = new Audio(AUDIO.path)
     audioRef.current.loop = true
-
-    console.log('Audio element initialized with src:', audioRef.current.src)
-
     audioRef.current.addEventListener('error', e => {
       console.error('Audio error:', e)
     })
@@ -62,34 +88,32 @@ const Introduction = ({ onStart }) => {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">
       <div className="mb-12 text-center">
-        <h1 className="mb-8 text-4xl font-bold text-[#0A3B8C]">GreenPREP</h1>
+        <h1 className={`mb-8 text-4xl font-bold text-[${COLORS.primary}]`}>{TEST_INFO.title}</h1>
 
         <div className="mb-8">
-          <h2 className="text-xl font-medium text-gray-800">Aptis General Practice Test</h2>
-          <h3 className="text-xl font-bold text-gray-800">Listening</h3>
+          <h2 className="text-xl font-medium text-gray-800">{TEST_INFO.subtitle}</h2>
+          <h3 className="text-xl font-bold text-gray-800">{TEST_INFO.section}</h3>
         </div>
 
         <div className="mb-8 grid grid-cols-2 gap-8">
           <div className="text-left">
             <h4 className="font-medium text-gray-800">Number of Questions</h4>
-            <p className="text-gray-700">17</p>
+            <p className="text-gray-700">{TEST_INFO.questions}</p>
           </div>
           <div className="text-left">
             <h4 className="font-medium text-gray-800">Time Allowed</h4>
-            <p className="text-gray-700">40 mins</p>
+            <p className="text-gray-700">{TEST_INFO.timeAllowed}</p>
           </div>
         </div>
 
         <div className="mb-4 text-left">
           <h4 className="font-medium text-gray-800">Assessment Description</h4>
-          <p className="text-sm text-gray-600">This is a practice test for the Aptis General Listening section.</p>
+          <p className="text-sm text-gray-600">{TEST_INFO.description}</p>
         </div>
 
         <div className="mb-8 text-left">
           <h4 className="font-medium text-gray-800">Form Description</h4>
-          <p className="text-sm text-gray-600">
-            You will hear various recordings and answer questions based on what you hear.
-          </p>
+          <p className="text-sm text-gray-600">{TEST_INFO.instructions}</p>
         </div>
 
         <div className="mb-8 text-left">
@@ -97,30 +121,29 @@ const Introduction = ({ onStart }) => {
             Headphone Check <span className="text-red-500">*</span>
           </h4>
           <div className="mt-2 flex max-w-md items-center space-x-4 rounded-md bg-gray-100 p-2">
-            <button
+            <Button
               onClick={togglePlay}
-              className="rounded-full border-0 p-1 transition-all hover:scale-110 hover:bg-blue-100"
+              type="text"
+              shape="circle"
+              className="p-1 transition-all hover:scale-110 hover:bg-blue-100"
               aria-label={isPlaying ? 'Pause' : 'Play'}
-            >
-              {isPlaying ? (
-                <PauseOutlined style={{ fontSize: '24px' }} />
-              ) : (
-                <CaretRightOutlined style={{ fontSize: '24px' }} />
-              )}
-            </button>
+              icon={isPlaying ? <PauseOutlined className="text-2xl" /> : <CaretRightOutlined className="text-2xl" />}
+            />
             <div className="flex-grow">
               <Slider
                 value={volume}
                 onChange={handleVolumeChange}
-                className="w-full"
                 tooltip={{ formatter: value => `${value}%` }}
-                styles={{
-                  track: { backgroundColor: '#1890ff' },
-                  rail: { backgroundColor: '#f7fafc' }
-                }}
+                className={joinClasses(
+                  'w-full',
+                  '[&_.ant-slider-track]:bg-blue-500',
+                  '[&_.ant-slider-rail]:bg-slate-100',
+                  'hover:[&_.ant-slider-track]:bg-blue-600',
+                  'hover:[&_.ant-slider-handle]:border-blue-600'
+                )}
               />
             </div>
-            <SoundFilled style={{ fontSize: '20px' }} className="text-gray-600" />
+            <SoundFilled className="text-xl text-gray-600" />
           </div>
         </div>
       </div>
@@ -128,11 +151,12 @@ const Introduction = ({ onStart }) => {
       <div className="text-center">
         <Button
           onClick={onStart}
-          className="h-12 w-full max-w-xs rounded bg-[#0A3B8C] text-white hover:bg-[#0A3B8C]/90"
-          style={{
-            backgroundColor: '#0A3B8C',
-            borderColor: '#0A3B8C'
-          }}
+          className={joinClasses(
+            'h-14 w-full max-w-xs rounded text-lg font-bold',
+            `bg-[${COLORS.primary}] text-white border-[${COLORS.primary}]`,
+            `hover:border-[${COLORS.orange}]`,
+            'transition-colors duration-200'
+          )}
         >
           Start
         </Button>
