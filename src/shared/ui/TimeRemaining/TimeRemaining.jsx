@@ -1,4 +1,6 @@
+import React from "react";
 import { useState, useEffect } from "react";
+import formatTime from "../../utils/formatTime";
 
 /**Cách dùng TimeRemaining trong mỗi Skills (speaking, listening, reading, writing, vocal/grammar)
  * B1: ⚠️Import TimeRemaining from "../shared/ui/TimeRemaining/TimeRemaining";⚠️
@@ -26,18 +28,6 @@ const TimeRemaining = ({
     return () => clearInterval(timer);
   }, [timeLeft, onAutoSubmit]);
 
-  const formatTime = (seconds) => {
-    const hrs = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-
-    return [
-      hrs.toString().padStart(2, "0"),
-      mins.toString().padStart(2, "0"),
-      secs.toString().padStart(2, "0"),
-    ].join(":");
-  };
-
   const percentage = ((timeLeft / duration) * 100).toFixed(2);
 
   return (
@@ -61,4 +51,4 @@ const TimeRemaining = ({
   );
 };
 
-export default TimeRemaining;
+export default React.memo(TimeRemaining);
