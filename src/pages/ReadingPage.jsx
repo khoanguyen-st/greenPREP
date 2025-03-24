@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react'
 import ReadingIntroduction from '@features/reading/ui/ReadingIntroduction.jsx'
+import ReadingTestInstructions from '@features/reading/ui/ReadingInstruction.jsx'
 
 const ReadingTestPage = () => {
   // Mock data
@@ -21,16 +22,20 @@ const ReadingTestPage = () => {
     setPageState('instructions')
   }
 
+  const handleNext = () => {
+    setPageState('test')
+  }
+
   const renderContent = () => {
     switch (pageState) {
       case 'intro':
         return <ReadingIntroduction testData={testData && testData} onStartTest={handleStartTest} />
       case 'instructions':
         return (
-          <div>
-            <h2>Instructions Page</h2>
-          </div>
+          <ReadingTestInstructions onStartTest={handleNext}/>
         )
+      case 'test':
+        return <div>Test</div>
       default:
         return <div>Loading...</div>
     }
