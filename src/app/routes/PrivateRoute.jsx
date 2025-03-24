@@ -1,7 +1,7 @@
 // import { lazy } from 'react';
 import HomePage from "@pages/HomePage.jsx";
 import GrammarVocabPage from "@pages/GrammarVocabPage.jsx";
-import IntructionsGrammarPage from "@pages/IntructionsGrammarPage.jsx";
+import InstructionsGrammarPage from "@pages/InstructionsGrammarPage.jsx";
 import WritingTestPage from "@pages/WritingTestPage.jsx";
 import { ProtectedRoute } from "./ProtectedRoute/ProtectedRoute.jsx";
 
@@ -21,7 +21,7 @@ const PrivateRoute = [
       },
       {
         path: "grammar-instructions",
-        element: <IntructionsGrammarPage />,
+        element: <InstructionsGrammarPage />,
       },
       {
         path: "writing",

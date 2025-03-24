@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 const { Content } = Layout;
 const { Title, Text } = Typography;
 
-const IntructionsGrammarPage = () => {
+const InstructionsGrammarPage = () => {
   const navigate = useNavigate();
 
   const handleNext = () => {
@@ -17,9 +17,6 @@ const IntructionsGrammarPage = () => {
     <Layout className="min-h-screen">
       <Content className="px-0 py-0">
         <div className="w-full mx-auto border-t border-[#f8d7da] flex flex-col min-h-screen">
-        
-          <div className="border-b border-[#f8d7da]"></div>
-          <div className="border-b border-[#f8d7da]"></div>
           <div className="py-4 sm:py-6 md:py-8 lg:py-12 border-b border-[#f8d7da]"></div>
           
           <div className="border-b border-[#f8d7da]">
@@ -72,14 +69,11 @@ const IntructionsGrammarPage = () => {
               </Button>
             </div>
           </div>
-          
           <div className="flex-grow border-b border-[#f8d7da]"></div>
-          
-          <div className="border-b border-[#f8d7da]"></div>
         </div>
       </Content>
     </Layout>
   );
 };
 
-export default IntructionsGrammarPage;
+export default InstructionsGrammarPage;

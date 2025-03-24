@@ -16,9 +16,6 @@ const GrammarVocabPage = () => {
     <Layout className="min-h-screen">
       <Content className="px-0 py-0">
         <div className="w-full mx-auto border-t border-[#f8d7da] flex flex-col min-h-screen">
-   
-          <div className="border-b border-[#f8d7da]"></div>
-          
           <div className="py-6 sm:py-8 md:py-12 border-b border-[#f8d7da]"></div>
           
           <div className="text-center py-4 sm:py-5 md:py-6 border-b border-[#f8d7da]">
