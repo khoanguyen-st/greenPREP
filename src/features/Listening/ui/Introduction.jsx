@@ -1,5 +1,3 @@
-'use client'
-
 import { useState, useRef, useEffect } from 'react'
 import { Button, Slider } from 'antd'
 import { CaretRightOutlined, PauseOutlined, SoundFilled } from '@ant-design/icons'
