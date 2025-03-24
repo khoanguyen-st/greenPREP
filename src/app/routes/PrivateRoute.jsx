@@ -5,8 +5,9 @@ import WritingTestPage from '@pages/WritingTestPage.jsx'
 import IntroductionScreen from '@pages/IntroductionScreen'
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute.jsx'
 import ListeningPage from '@pages/ListeningPage.jsx'
-import DesktopRejectRequestPage from '../../pages/DesktopRejectRequestPage.jsx'
+import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage.jsx'
 import ReadingTestPage from '@pages/ReadingPage.jsx'
+import WaitingForApproval from '@pages/WaitingForApproval.jsx'
 
 const PrivateRoute = [
   {
@@ -44,6 +45,10 @@ const PrivateRoute = [
       {
         path: 'introduction',
         element: <IntroductionScreen />
+      },
+      {
+        path: 'waiting-for-approval',
+        element: <WaitingForApproval />
       }
     ]
   }
