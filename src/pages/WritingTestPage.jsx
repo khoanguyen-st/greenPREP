@@ -28,8 +28,6 @@ const WritingTestPage = () => {
         return <WritingIntroduction testData={testData} onStartTest={handleStartTest} />
       case 'instructions':
         return <WritingIntroduction testData={testData} onStartTest={handleStartTest} />
-      case 'instructions':
-        return <div></div>
       default:
         return <div>Loading...</div>
     }
