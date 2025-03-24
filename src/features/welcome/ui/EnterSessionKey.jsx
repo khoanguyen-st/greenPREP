@@ -1,7 +1,7 @@
 import { Layout, Input, Button, Typography, Form } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
-import sessionKeyImage from '../../assets/Images/session-key.png'
+import sessionKeyImage from '/src/assets/Images/session-key.png'
 const { Content } = Layout
 const { Title, Text } = Typography
 

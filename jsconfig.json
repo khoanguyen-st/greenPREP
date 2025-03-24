@@ -6,6 +6,7 @@
     "target": "es2016",
     "jsx": "preserve",
     "checkJs": true,
+    "types": [],
     "paths": {
       "@*": ["./src/*"],
       "@app/*": ["./src/app/*"],
