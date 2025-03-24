@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useMemo } from 'react'
 import * as yup from 'yup'
 
 const validationSchema = yup.object().shape({
@@ -15,15 +15,17 @@ const validationSchema = yup.object().shape({
 })
 
 const OrderingQuestion = ({ options = [], onChange, className = '', value = [] }) => {
-  const [items, setItems] = useState(
-    value.length > 0
+  const initialItems = useMemo(() => {
+    return value.length > 0
       ? value
       : options.map((option, index) => ({
           id: String(index),
           content: option,
           order: index + 1
         }))
-  )
+  }, [options, value])
+
+  const [items, setItems] = useState(initialItems)
   const [error, setError] = useState(null)
 
   const dragItem = useRef(null)
