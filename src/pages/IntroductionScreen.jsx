@@ -10,7 +10,7 @@ const IntroductionScreen = () => {
   const navigate = useNavigate();
   
   const handleNext = () => {
-    navigate("/test");
+    navigate("/reading");
   };
   const testSections = [
     {
@@ -84,7 +84,8 @@ const IntroductionScreen = () => {
         </div>
       </Content>
     </Layout>
-  );
-};
+  )
+}
+
 
 export default IntroductionScreen;
