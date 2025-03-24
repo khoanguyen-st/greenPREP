@@ -15,7 +15,6 @@ const AudioPlayer = ({ src, id }) => {
     if (!audio) return
 
     if (isPlaying) {
-      // Dừng audio
       audio.pause()
       setIsPlaying(false)
       setIsStopped(true)
