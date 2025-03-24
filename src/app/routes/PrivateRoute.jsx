@@ -1,13 +1,13 @@
-import HomePage                 from '@pages/HomePage.jsx'
-import GrammarVocabPage         from '@pages/GrammarVocabPage.jsx'
+import HomePage from '@pages/HomePage.jsx'
+import GrammarVocabPage from '@pages/GrammarVocabPage.jsx'
 import InstructionsGrammarPage  from '@pages/InstructionsGrammarPage.jsx'
-import WritingTestPage          from '@pages/WritingTestPage.jsx'
-import IntroductionScreen       from '@pages/IntroductionScreen'
-import { ProtectedRoute }       from './ProtectedRoute/ProtectedRoute.jsx'
-import ListeningPage            from '@pages/ListeningPage.jsx'
+import WritingTestPage from '@pages/WritingTestPage.jsx'
+import IntroductionScreen from '@pages/IntroductionScreen'
+import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute.jsx'
+import ListeningPage from '@pages/ListeningPage.jsx'
 import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage.jsx'
-import ReadingTestPage          from '@pages/ReadingPage.jsx'
-import WaitingForApproval       from '@pages/WaitingForApproval.jsx'
+import ReadingTestPage from '@pages/ReadingPage.jsx'
+import WaitingForApproval from '@pages/WaitingForApproval.jsx'
 
 const PrivateRoute = [
   {
