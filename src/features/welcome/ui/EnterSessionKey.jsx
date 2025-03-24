@@ -17,13 +17,14 @@ const EnterSessionKey = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
-  const handleStart = (values) => {
+  const handleStart = (sessionKey) => {
+    console.log(sessionKey)
     navigate("/waiting-for-approval");
   };
 
   return (
     <Layout>
-          <Content className="flex flex-col md:flex-row items-center justify-center min-h-screen bg-white px-5 md:px-20 gap-10 md:gap-40">
+      <Content className="flex flex-col md:flex-row items-center justify-center min-h-screen bg-white px-5 md:px-20 gap-10 md:gap-40">
         <div className="w-full md:w-[30%] flex justify-center items-center">
           <img
             src="src/assets/Images/session-key.png"
@@ -36,12 +37,14 @@ const EnterSessionKey = () => {
             <Title className="text-[28px] md:text-[40px] font-bold mb-4 md:mb-5">
               Welcome to <span className="text-[#003087]">GreenPREP !</span>
             </Title>
-            <Text className="text-lg md:text-[40px] font-normal leading-tight block mb-4 md:mb-5">
-              Have you received the session key?
-            </Text>
-            <Text className="text-gray-600 text-sm md:text-[20px] text-center md:text-left block">
-              Please enter session key to start test
-            </Text>
+            <div className="flex flex-col items-center md:items-start">
+              <Text className="text-lg md:text-[40px] font-normal leading-tight text-center mb-4 md:mb-5">
+                Have you received the session key?
+              </Text>
+              <Text className="text-gray-600 text-sm md:text-[20px] w-fit text-left">
+                Please enter session key to start test
+              </Text>
+            </div>
           </div>
           <Form
             form={form}
@@ -76,12 +79,11 @@ const EnterSessionKey = () => {
                 }
               />
             </Form.Item>
-
             <div className="w-full flex justify-center md:justify-start">
               <Button
                 type="primary"
                 size="large"
-                className="bg-[#01033D] hover:!bg-[#131663] rounded-md px-6 py-2"
+                className="bg-[#003087] hover:!bg-[#131663] rounded-md px-6 py-2"
                 htmlType="submit"
               >
                 Submit key

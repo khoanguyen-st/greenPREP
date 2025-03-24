@@ -1,8 +1,7 @@
-import React from 'react';
-import { Layout, Button, Typography, theme } from "antd";
+import { Layout, Button, theme } from "antd";
+import SharedHeader from "@shared/ui/SharedHeader";
 
-const { Header, Content } = Layout;
-const { Title } = Typography;
+const { Content } = Layout;
 
 const IntroductionScreen = () => {
     const {
@@ -10,11 +9,7 @@ const IntroductionScreen = () => {
       } = theme.useToken();
 return (
     <Layout>
-        <Header className="text-[#003087] p-2">
-            <Title level={2} className="!text-white !m-0">
-                GreenPREP
-            </Title>
-        </Header>
+        <SharedHeader/>
         <Content className="px-4 py-6 md:px-6">
             <div className="p-3">
                 <div
