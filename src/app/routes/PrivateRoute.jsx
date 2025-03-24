@@ -1,8 +1,11 @@
+import AudioTest from "@pages/AudioTest.jsx";
 import HomePage from "@pages/HomePage.jsx";
-import WritingTestPage from "@pages/WritingTestPage.jsx";
 import IntroductionScreen from '@pages/IntroductionScreen';
-import { ProtectedRoute } from "./ProtectedRoute/ProtectedRoute.jsx";
 import ListeningPage from "@pages/ListeningPage.jsx";
+import SamplePage from "@pages/Sample.jsx";
+import WritingTestPage from "@pages/WritingTestPage.jsx";
+import SubmissionScreen from "@shared/ui/Submission/SubmissionScreen.jsx";
+import { ProtectedRoute } from "./ProtectedRoute/ProtectedRoute.jsx";
 
 const PrivateRoute = [
   {
@@ -23,11 +26,23 @@ const PrivateRoute = [
       },
       {
         path: "introduction",
-        element: <IntroductionScreen/>      
+        element: <IntroductionScreen/>
+      },
+            {
+        path: "sample",
+        element: <SamplePage/>
+      },
+                        {
+        path: "success",
+        element: <SubmissionScreen/>
+      },
+                        {
+        path: "audio",
+        element: <AudioTest/>
       },
     ],
   },
-  
+
 ];
 
 export default PrivateRoute;

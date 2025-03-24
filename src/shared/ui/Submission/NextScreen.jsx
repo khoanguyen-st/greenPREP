@@ -2,20 +2,13 @@ import { Button, message } from "antd";
 import { useState } from "react";
 import { AiFillLike } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import * as yup from "yup";
 
 const NextScreen = ({ nextPath, skillName, imageSrc }) => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
 
-  // Schema xác thực với Yup
-  const schema = yup.object().shape({
-    nextPath: yup.string().url("Invalid URL format").required("Next path is required"),
-  });
-
   const handleNavigation = async () => {
     try {
-      await schema.validate({ nextPath });
       navigate(nextPath);
     } catch (err) {
       setError(err.message);
