@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-const AudioLevelMeter = ({ waveColor = "#6A9C89", enableAudioOutput = false }) => {
+const AudioVisual = ({ waveColor = "#6A9C89", enableAudioOutput = false }) => {
   const canvasRef = useRef(null);
   const audioContextRef = useRef(null);
   const analyserRef = useRef(null);
@@ -95,4 +95,4 @@ const AudioLevelMeter = ({ waveColor = "#6A9C89", enableAudioOutput = false }) =
   );
 };
 
-export default AudioLevelMeter;
+export default AudioVisual;

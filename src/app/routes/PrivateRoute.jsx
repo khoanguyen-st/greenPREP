@@ -1,13 +1,16 @@
-import HomePage from '@pages/HomePage.jsx'
-import GrammarVocabPage from '@pages/GrammarVocabPage.jsx'
-import InstructionsGrammarPage from '@pages/InstructionsGrammarPage.jsx'
-import WritingTestPage from '@pages/WritingTestPage.jsx'
-import IntroductionScreen from '@pages/IntroductionScreen'
-import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute.jsx'
-import ListeningPage from '@pages/ListeningPage.jsx'
+import SampleTestPage from '@/pages/Sample'
 import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage.jsx'
+import GrammarVocabPage from '@pages/GrammarVocabPage.jsx'
+import HomePage from '@pages/HomePage.jsx'
+import InstructionsGrammarPage from '@pages/InstructionsGrammarPage.jsx'
+import IntroductionScreen from '@pages/IntroductionScreen'
+import ListeningPage from '@pages/ListeningPage.jsx'
 import ReadingTestPage from '@pages/ReadingPage.jsx'
 import WaitingForApproval from '@pages/WaitingForApproval.jsx'
+import WritingTestPage from '@pages/WritingTestPage.jsx'
+import TestAudioPage from '../../pages/AudioTest'
+import SubmissionScreen from '../../shared/ui/Submission/SubmissionScreen'
+import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute.jsx'
 
 const PrivateRoute = [
   {
@@ -49,6 +52,18 @@ const PrivateRoute = [
       {
         path: 'waiting-for-approval',
         element: <WaitingForApproval />
+      },
+            {
+        path: 'sample',
+        element: <SampleTestPage />
+      },
+                        {
+        path: 'audio-test',
+        element: <TestAudioPage />
+      },
+         {
+        path: 'success',
+        element: <SubmissionScreen />
       }
     ]
   }

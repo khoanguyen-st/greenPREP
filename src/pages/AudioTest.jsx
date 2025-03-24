@@ -1,4 +1,4 @@
-import AudioLevelMeter from "@shared/ui/Audio/AudioLevelMeter.jsx";
+import AudioLevelMeter from "@shared/ui/Audio/AudioVisual.jsx";
 import { useState } from "react";
 
 const TestAudioPage = () => {

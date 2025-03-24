@@ -4,7 +4,7 @@ import { useState } from "react";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 
-const FinalTestScreen = () => {
+const SubmissionScreen = () => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
 
@@ -54,4 +54,4 @@ const FinalTestScreen = () => {
   );
 };
 
-export default FinalTestScreen;
+export default SubmissionScreen;
