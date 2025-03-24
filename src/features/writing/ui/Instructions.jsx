@@ -39,7 +39,7 @@ const WritingInstructions = ({ testData, onStartTest }) => {
         </Typography>
         
         <Typography className="text-base mt-8">
-          When you click on the 'Next' button, the test will begin.
+          When you click on the &apos;Next&apos; button, the test will begin.
         </Typography>
       </div>
       

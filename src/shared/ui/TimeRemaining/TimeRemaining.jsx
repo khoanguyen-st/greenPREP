@@ -5,7 +5,7 @@ import formatTime from "../../utils/formatTime";
 /**Cách dùng TimeRemaining trong mỗi Skills (speaking, listening, reading, writing, vocal/grammar)
  * B1: ⚠️Import TimeRemaining from "../shared/ui/TimeRemaining/TimeRemaining";⚠️
  * B2: ⚠️Phải có handleAutoSubmit để đếm ngược thời gian kết thúc thì auto submit⚠️
- * B3: Add dòng này ⚠️<TimeRemaining duration={số phút của skill * 60} onAutoSubmit{handAutoSubmit}/>⚠️
+ * B3: Add dòng này ⚠️<TimeRemaining duration={số phút của skill * 60} onAutoSubmit={handAutoSubmit}/>⚠️
  */
 
 const TimeRemaining = ({
