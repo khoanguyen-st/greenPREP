@@ -2,6 +2,8 @@
 import HomePage from "@pages/HomePage.jsx";
 import WritingTestPage from "@pages/WritingTestPage.jsx";
 import { ProtectedRoute } from "./ProtectedRoute/ProtectedRoute.jsx";
+import WritingTest from "@features/writing/ui/WritingTest"
+
 
 const PrivateRoute = [
   {
@@ -15,6 +17,10 @@ const PrivateRoute = [
       {
         path: "writing",
         element: <WritingTestPage />,
+      },
+      { 
+        path: "taking-writing",
+        element: <WritingTest />,
       },
     ],
   },
