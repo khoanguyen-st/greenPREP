@@ -8,24 +8,42 @@ import TimeRemaining from '@shared/ui/TimeRemaining/TimeRemaining.jsx'
 import FlagButton from '@shared/ui/FlagButton/FlagButton.jsx'
 import QuestionNavigator from '@shared/ui/QuestionNavigatior/QuestionNavigatior.jsx'
 
-const fetchTestData = async () => {
-  const response = await fetch(
-    'https://greenprep-api.onrender.com/api/topics/ef6b69aa-2ec2-4c65-bf48-294fd12e13fc?questionType=matching&skillName=READING'
-  )
-  if (!response.ok) {
-    throw new Error('Failed to fetch test data')
+const fetchTestData = async (topicId, questionType, skillName) => {
+  const baseUrl = 'https://greenprep-api.onrender.com/api/topics'
+  const url = `${baseUrl}/${topicId}?questionType=${encodeURIComponent(questionType)}&skillName=${encodeURIComponent(skillName)}`
+
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    })
+
+    if (!response.ok) {
+      const errorText = await response.text()
+      console.error('Failed to fetch test data:', response.status, errorText)
+      throw new Error(`Error ${response.status}: ${errorText}`)
+    }
+
+    return response.json()
+  } catch (error) {
+    console.error('Fetch error:', error)
+    throw error
   }
-  return response.json()
 }
 
-const ReadingMatchingQuestion = () => {
+const ReadingMatchingQuestion = ({
+  topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc',
+  questionType = 'matching',
+  skillName = 'READING'
+}) => {
   const {
     data: testData,
     isLoading,
     isError
   } = useQuery({
-    queryKey: ['fetchTestData'],
-    queryFn: fetchTestData
+    queryKey: ['fetchTestData', topicId, questionType, skillName],
+    queryFn: () => fetchTestData(topicId, questionType, skillName),
+    staleTime: 60000
   })
 
   const [matches, setMatches] = useState({})
@@ -43,17 +61,9 @@ const ReadingMatchingQuestion = () => {
       [currentQuestion]: isFlagged
     }))
   }
-  const fetchQuestion = async () => {
-    return Promise.resolve()
-  }
 
-  const handleAutoSubmit = () => {
-    console.log('Auto-submit triggered')
-  }
-
-  const handleSubmit = () => {
-    console.log('Test submitted')
-  }
+  const handleAutoSubmit = () => console.log('Auto-submit triggered')
+  const handleSubmit = () => console.log('Test submitted')
 
   if (isLoading) {
     return (
@@ -63,16 +73,12 @@ const ReadingMatchingQuestion = () => {
     )
   }
 
-  if (isError) {
+  if (isError || !testData || !testData.Parts?.[0]?.Questions?.[0]) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Alert message="Error" description="Failed to load test data. Please try again." type="error" showIcon />
       </div>
     )
-  }
-
-  if (!testData || !testData.Parts || !testData.Parts[0].Questions[0]) {
-    return <div className="text-center text-red-500">No test data available.</div>
   }
 
   const question = testData.Parts[0].Questions[currentQuestion]
@@ -106,8 +112,8 @@ const ReadingMatchingQuestion = () => {
           totalQuestions={totalQuestions}
           currentQuestion={currentQuestion}
           setCurrentQuestion={setCurrentQuestion}
-          fetchQuestion={fetchQuestion}
           onSubmit={handleSubmit}
+          fetchQuestion={undefined}
         />
       </div>
     </div>
