@@ -1,4 +1,18 @@
 import { useState, useRef } from 'react'
+import * as yup from 'yup'
+
+const validationSchema = yup.object().shape({
+  items: yup
+    .array()
+    .of(
+      yup.object().shape({
+        id: yup.string().required(),
+        content: yup.string().required(),
+        order: yup.number().required().min(1)
+      })
+    )
+    .min(2, 'At least 2 items are required')
+})
 
 const OrderingQuestion = ({ options = [], onChange, className = '', value = [] }) => {
   const [items, setItems] = useState(
@@ -10,6 +24,7 @@ const OrderingQuestion = ({ options = [], onChange, className = '', value = [] }
           order: index + 1
         }))
   )
+  const [error, setError] = useState(null)
 
   const dragItem = useRef(null)
   const dragOverItem = useRef(null)
@@ -49,14 +64,21 @@ const OrderingQuestion = ({ options = [], onChange, className = '', value = [] }
     setItems(updatedItems)
   }
 
-  const handleDragEnd = e => {
+  const handleDragEnd = async e => {
     e.target.classList.remove('dragging')
     const updatedItems = items.map((item, index) => ({
       ...item,
       order: index + 1
     }))
     setItems(updatedItems)
-    onChange?.(updatedItems)
+
+    try {
+      await validationSchema.validate({ items: updatedItems })
+      setError(null)
+      onChange?.(updatedItems)
+    } catch (validationError) {
+      setError(validationError.message)
+    }
 
     dragItem.current = null
     dragOverItem.current = null
@@ -98,6 +120,7 @@ const OrderingQuestion = ({ options = [], onChange, className = '', value = [] }
           </div>
         ))}
       </div>
+      {error && <div className="mt-2 text-sm text-red-500">{error}</div>}
     </div>
   )
 }
