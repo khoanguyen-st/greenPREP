@@ -1,8 +1,7 @@
 // import { lazy } from 'react';
-import PlayStopButton from '@features/listening/ui/PlayStopButton'
+import PlayStopButton from '@features/Listening/ui/PlayStopButton'
 import HomePage from '@pages/HomePage.jsx'
 import GrammarVocabPage from '@pages/GrammarVocabPage.jsx'
-import InstructionsGrammarPage from '@pages/InstructionsGrammarPage.jsx'
 import WritingTestPage from '@pages/WritingTestPage.jsx'
 import IntroductionScreen from '@pages/IntroductionScreen'
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute.jsx'
@@ -29,12 +28,8 @@ const PrivateRoute = [
         element: <PlayStopButton />
       },
       {
-        path: 'grammar-vocab',
+        path: 'grammarvocab',
         element: <GrammarVocabPage />
-      },
-      {
-        path: 'grammar-instructions',
-        element: <InstructionsGrammarPage />
       },
       {
         path: 'listening',
@@ -43,10 +38,6 @@ const PrivateRoute = [
       {
         path: 'rejectpage',
         element: <DesktopRejectRequestPage />
-      },
-      {
-        path: 'writing',
-        element: <WritingTestPage />
       },
       {
         path: 'reading',
