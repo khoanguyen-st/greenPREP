@@ -23,7 +23,7 @@ const Instruction = ({ onNext }) => {
           <div className="mb-6 sm:mb-8 px-2 sm:px-3">
             <Title 
               level={2} 
-              className="font-bold text-5xl sm:text-4xl md:text-5xl md:whitespace-nowrap sm:leading-tight text-left text-[#003087]"
+              className="font-bold text-5xl sm:text-4xl md:text-5xl md:whitespace-nowrap sm:leading-tight text-left"
             >
               {TEXT.title}
             </Title>
