@@ -255,10 +255,3 @@ const MatchingQuestion = ({
 };
 
 export default MatchingQuestion;
-
-
-
-
-
-
-

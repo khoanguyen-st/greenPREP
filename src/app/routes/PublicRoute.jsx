@@ -1,10 +1,11 @@
-// Define public routes accessible to all users
+import FlagButton from '../../shared/ui/FlagButton/FlagButton.jsx'
 
 const PublicRoute = [
   {
     path: "login",
-    element: "login",
+    element: <FlagButton onFlag={() => console.log("clicked")} initialFlagged={true} />
   },
 ];
 
-export default PublicRoute;
+
+export default PublicRoute
