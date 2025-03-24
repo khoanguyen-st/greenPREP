@@ -58,7 +58,7 @@ const IntroductionScreen = () => {
                   key={index}
                   className="flex items-start gap-4 rounded-lg p-3 mb-3 w-full"
                 >
-                  <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-full border border-blue-500 text-blue-500 font-bold text-base">
+                  <div  className="flex-shrink-0 flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-full border-1 border-blue-500 text-blue-500 font-bold border-solid text-base">
                     {item.number}
                   </div>
                   <div className="flex-1">
