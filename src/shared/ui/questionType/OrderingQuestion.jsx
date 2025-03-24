@@ -19,7 +19,6 @@ const OrderingQuestion = ({ options = [], onChange, className = '', value = [] }
     e.target.classList.add('dragging')
     e.dataTransfer.effectAllowed = 'move'
 
-    // Tạo preview image trong suốt
     const dragPreview = e.target.cloneNode(true)
     dragPreview.style.opacity = '0.5'
     dragPreview.style.position = 'absolute'
