@@ -9,7 +9,7 @@ import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage.jsx'
 import ReadingTestPage          from '@pages/ReadingPage.jsx'
 import WaitingForApproval       from '@pages/WaitingForApproval.jsx'
 
-
+import ReadingTestInstructions from '@features/reading/ui/ReadingInstruction.jsx'
 
 const PrivateRoute = [
   {
@@ -45,6 +45,10 @@ const PrivateRoute = [
         element: <ReadingTestPage />
       },
 
+      {
+        path: 'reading-instructions',
+        element: <ReadingTestInstructions />
+      },
       {
         path: 'introduction',
         element: <IntroductionScreen />
