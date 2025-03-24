@@ -1,4 +1,3 @@
-// Define public routes accessible to all users
 import FlagButton from '../../shared/ui/FlagButton/FlagButton.jsx'
 
 const PublicRoute = [
@@ -8,4 +7,5 @@ const PublicRoute = [
   },
 ];
 
-export default PublicRoute;
+
+export default PublicRoute
