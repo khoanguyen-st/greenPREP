@@ -46,10 +46,6 @@ const PrivateRoute = [
       },
 
       {
-        path: 'reading-instructions',
-        element: <ReadingTestInstructions />
-      },
-      {
         path: 'introduction',
         element: <IntroductionScreen />
       },
