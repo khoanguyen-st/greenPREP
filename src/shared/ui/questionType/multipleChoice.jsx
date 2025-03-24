@@ -1,18 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Typography } from 'antd';
-import * as yup from 'yup';
-
+import { multipleChoiceAnswerSchema } from 'src/shared/model/questionType/multipleQuestion.schemas';
 const { Title, Text } = Typography;
-
-// Schema validation cho AnswerContent
-const answerContentSchema = yup.object().shape({
-  options: yup.array().of(
-    yup.object().shape({
-      key: yup.string().required(),
-      value: yup.string().required()
-    })
-  ).required().min(1)
-});
 
 const MultipleChoice = ({ 
   questionData,
@@ -27,7 +16,7 @@ const MultipleChoice = ({
     try {
       const parsedContent = JSON.parse(questionData.AnswerContent)[0];
       // Validate với schema
-      answerContentSchema.validateSync(parsedContent);
+      multipleChoiceAnswerSchema.validateSync(parsedContent);
       return { options: parsedContent.options, isValid: true };
     } catch (err) {
       setError(err.message);
