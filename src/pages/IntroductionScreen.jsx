@@ -1,11 +1,17 @@
 import React from "react";
 import { Layout, Button, Typography, Card } from "antd";
 import SharedHeader from "@shared/ui/SharedHeader";
+import { useNavigate } from "react-router-dom";
 
 const { Content } = Layout;
 const { Title } = Typography;
 
 const IntroductionScreen = () => {
+  const navigate = useNavigate();
+  
+  const handleNext = () => {
+    navigate("/test");
+  };
   const testSections = [
     {
       number: "01",
@@ -69,7 +75,8 @@ const IntroductionScreen = () => {
               ))}
             </ul>
             <div className="flex justify-center mt-6">
-              <Button type="primary" size="large" className="w-72 bg-[#003087] hover:bg-[#002570]">
+              <Button type="primary" size="large" className="w-72 bg-[#003087] hover:bg-[#002570]" 
+              onClick={handleNext}>
                 Start Now
               </Button>
             </div>
