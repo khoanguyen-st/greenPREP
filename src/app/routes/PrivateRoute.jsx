@@ -1,9 +1,9 @@
 import HomePage from '@pages/HomePage.jsx'
-import WritingTestPage from '@pages/WritingTestPage.jsx'
 import IntroductionScreen from '@pages/IntroductionScreen'
-import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute.jsx'
 import ListeningPage from '@pages/ListeningPage.jsx'
 import SpeakingPage from '@pages/SpeakingPage.jsx'
+import WritingTestPage from '@pages/WritingTestPage.jsx'
+import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute.jsx'
 
 const PrivateRoute = [
   {
