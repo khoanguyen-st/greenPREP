@@ -1,4 +1,36 @@
 import { useEffect, useRef, useState } from "react";
+import * as yup from "yup";
+
+const itemSchema = yup.object().shape({
+  id: yup.string().required("Item must have an ID"),
+  label: yup.string().required("Item must have a label"),
+});
+
+const matchingQuestionSchema = yup.object().shape({
+  leftItems: yup
+    .array()
+    .of(itemSchema)
+    .min(1, "Left items cannot be empty")
+    .required("Left items are required"),
+  rightItems: yup
+    .array()
+    .of(itemSchema)
+    .min(1, "Right items cannot be empty")
+    .required("Right items are required"),
+  matches: yup.object().test(
+    "valid-matches",
+    "Invalid matches format",
+    (value) => {
+      if (!value) return true;
+      return Object.entries(value).every(
+        ([leftId, rightId]) =>
+          typeof leftId === "string" && (rightId === null || typeof rightId === "string")
+      );
+    }
+  ),
+  disabled: yup.boolean(),
+  className: yup.string(),
+});
 
 const MatchingQuestion = ({
   leftItems,
@@ -8,6 +40,14 @@ const MatchingQuestion = ({
   disabled = false,
   className = "",
 }) => {
+  useEffect(() => {
+    matchingQuestionSchema
+      .validate({ leftItems, rightItems, matches, disabled, className })
+      .catch((error) => {
+        console.error("Validation error:", error.message);
+      });
+  }, [leftItems, rightItems, matches, disabled, className]);
+
   const [selectedLeft, setSelectedLeft] = useState(null);
   const [selectedRight, setSelectedRight] = useState(null);
   const [lines, setLines] = useState([]);
@@ -67,6 +107,14 @@ const MatchingQuestion = ({
 
   const handleLeftSelect = (value) => {
     if (disabled) return;
+
+    if (matches[value]) {
+      onChange(value, null);
+      setSelectedLeft(null);
+      setSelectedRight(null);
+      return;
+    }
+
     if (value === selectedLeft) {
       setSelectedLeft(null);
     } else {
@@ -84,6 +132,15 @@ const MatchingQuestion = ({
 
   const handleRightSelect = (value) => {
     if (disabled) return;
+
+    const matchedLeftId = Object.entries(matches).find(([_, rightId]) => rightId === value)?.[0];
+    if (matchedLeftId) {
+      onChange(matchedLeftId, null);
+      setSelectedLeft(null);
+      setSelectedRight(null);
+      return;
+    }
+
     if (value === selectedRight) {
       setSelectedRight(null);
     } else {
@@ -121,7 +178,7 @@ const MatchingQuestion = ({
           <path
             key={line.id}
             d={line.path}
-            stroke={line.isMatched ? "#3B82F6" : "#93C5FD"}
+            stroke={line.isMatched ? "#1E40AF" : "#60A5FA"}
             strokeWidth="3"
             fill="none"
             style={{
@@ -143,18 +200,18 @@ const MatchingQuestion = ({
         `}
       </style>
 
-      <div className="grid grid-cols-2 gap-8 relative" style={{ zIndex: 2 }}>
+      <div className="grid grid-cols-2 gap-16 relative" style={{ zIndex: 2 }}>
         <div className="left-items space-y-4">
           <h3 className="text-lg font-semibold mb-4">Column A</h3>
           {leftItems.map((item) => (
             <div
               key={item.id}
               ref={(el) => (leftItemsRefs.current[item.id] = el)}
-              className={`p-4 rounded-lg border-[12px] transition-all cursor-pointer shadow-md hover:shadow-xl ${
+              className={`p-4 rounded-lg border-[12px] transition-all duration-200 ease-in-out cursor-pointer shadow-md hover:shadow-xl hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#1E40AF] ${
                 selectedLeft === item.id
-                  ? "border-blue-900 bg-blue-50 border-[14px]"
+                  ? "bg-blue-50 border-slate-950"
                   : matches[item.id]
-                    ? "border-blue-900 bg-blue-50 border-[14px]"
+                    ? "border-[#1E40AF] bg-blue-50 border-[14px] hover:bg-blue-100"
                     : "border-slate-950 hover:border-blue-800 hover:bg-blue-50"
               }`}
               onClick={() => handleLeftSelect(item.id)}
@@ -170,11 +227,11 @@ const MatchingQuestion = ({
             <div
               key={item.id}
               ref={(el) => (rightItemsRefs.current[item.id] = el)}
-              className={`p-4 rounded-lg border-[12px] transition-all cursor-pointer shadow-md hover:shadow-xl ${
+              className={`p-4 rounded-lg border-[12px] transition-all duration-200 ease-in-out cursor-pointer shadow-md hover:shadow-xl hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#1E40AF] ${
                 selectedRight === item.id
-                  ? "border-blue-900 bg-blue-50 border-[14px]"
+                  ? "bg-blue-50 border-slate-950"
                   : Object.values(matches).includes(item.id)
-                    ? "border-blue-900 bg-blue-50 border-[14px]"
+                    ? "border-[#1E40AF] bg-blue-50 border-[14px] hover:bg-blue-100"
                     : "border-slate-950 hover:border-blue-800 hover:bg-blue-50"
               }`}
               onClick={() => handleRightSelect(item.id)}
