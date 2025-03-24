@@ -1,3 +1,3 @@
-import iconRe from "./icon_re.jpg";
+import iconRe from './icon_re.jpg'
 
-export { iconRe };
+export { iconRe }
