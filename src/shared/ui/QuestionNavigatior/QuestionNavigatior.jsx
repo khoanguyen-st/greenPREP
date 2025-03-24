@@ -14,7 +14,7 @@ export default function QuestionNavigator({ values, action, position }) {
             hover:outline hover:outline-2 hover:rounded-md hover:outline-gray-500 hover:cursor-pointer`}
         >
           {(type === "flagged" || type === "answered-flagged") && (
-            <div className="absolute top-[-0.5px] right-0 w-[14px] h-[14px]">
+            <div className="absolute top-[-0.031rem] right-0 w-[0.875rem] h-[0.875rem]">
               <svg
                 className="w-full h-full"
                 viewBox="0 0 14 14"
