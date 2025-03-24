@@ -1,10 +1,10 @@
-import { Select } from "antd";
-import { useEffect, useMemo, useState } from "react";
-import * as yup from "yup";
 import {
   answerContentSchema,
   dropdownQuestionSchema,
-} from "../../model/questionType/dropdownQuestion.schema";
+} from "@shared/model/questionType/dropdownQuestion.schema";
+import { Select } from "antd";
+import { useEffect, useMemo, useState } from "react";
+import * as yup from "yup";
 
 const { Option } = Select;
 
@@ -32,7 +32,6 @@ const DropdownQuestion = ({
       answerContentSchema.validateSync(parsedAnswerContent);
 
       if (parsedAnswerContent.leftItems && parsedAnswerContent.rightItems) {
-        // Kiểu 2: right, left item
         return {
           id: questionData.ID,
           question: questionData.Content,
@@ -42,7 +41,6 @@ const DropdownQuestion = ({
           type: "right-left",
         };
       } else {
-        // Kiểu 1: paragraph
         const options = parsedAnswerContent.options || [];
         const answers = {};
         options.forEach(({ key, value }) => {
@@ -114,7 +112,6 @@ const DropdownQuestion = ({
         </p>
 
         {processedData.type === "paragraph" ? (
-          // Kiểu 1: paragraph
           Object.entries(processedData.answers).map(([key, options]) => (
             <div key={key} className="flex w-full mb-4">
               {Object.keys(processedData.answers).length > 1 && (
@@ -144,7 +141,6 @@ const DropdownQuestion = ({
             </div>
           ))
         ) : (
-          // Kiểu 2: right, left item
           <div className="w-full">
             {processedData.leftItems.map((leftItem, index) => (
               <div key={index} className="flex w-full mb-4">
