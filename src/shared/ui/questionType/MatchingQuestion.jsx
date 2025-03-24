@@ -41,12 +41,21 @@ const MatchingQuestion = ({
   className = "",
 }) => {
   useEffect(() => {
-    matchingQuestionSchema
-      .validate({ leftItems, rightItems, matches, disabled, className })
-      .catch((error) => {
+    const validateData = async () => {
+      try {
+        await matchingQuestionSchema.validate({
+          leftItems,
+          rightItems,
+          matches,
+          disabled,
+        });
+      } catch (error) {
         console.error("Validation error:", error.message);
-      });
-  }, [leftItems, rightItems, matches, disabled, className]);
+      }
+    };
+
+    validateData();
+  }, [leftItems, rightItems, matches, disabled]);
 
   const [selectedLeft, setSelectedLeft] = useState(null);
   const [selectedRight, setSelectedRight] = useState(null);
@@ -200,7 +209,7 @@ const MatchingQuestion = ({
         `}
       </style>
 
-      <div className="grid grid-cols-2 gap-16 relative" style={{ zIndex: 2 }}>
+      <div className="grid grid-cols-2 gap-8 md:gap-16 relative" style={{ zIndex: 2 }}>
         <div className="left-items space-y-4">
           <h3 className="text-lg font-semibold mb-4">Column A</h3>
           {leftItems.map((item) => (
