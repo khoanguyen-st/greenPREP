@@ -4,10 +4,10 @@ import SharedHeader from "@shared/ui/SharedHeader";
 const { Content } = Layout;
 
 const IntroductionScreen = () => {
-    const {
-        token: { colorBgContainer, borderRadiusLG },
-      } = theme.useToken();
-return (
+  const {
+    token: { colorBgContainer }
+  } = theme.useToken()
+  return (
     <Layout>
         <SharedHeader/>
         <Content className="px-4 py-6 md:px-6">
@@ -82,7 +82,7 @@ return (
             </div>
         </Content>
     </Layout>
-)
+  )
 }
 
 export default IntroductionScreen

@@ -77,8 +77,8 @@ const Introduction = ({ onStart }) => {
         <h1 className={`mb-8 text-4xl font-bold text-[#003087]`}>{TEST_INFO.title}</h1>
 
         <div className="mb-8">
-          <h2 className="text-xl text-left font-medium text-gray-800">{TEST_INFO.subtitle}</h2>
-          <h3 className="text-xl text-left font-bold text-gray-800">{TEST_INFO.section}</h3>
+          <h2 className="text-left text-xl font-medium text-gray-800">{TEST_INFO.subtitle}</h2>
+          <h3 className="text-left text-xl font-bold text-gray-800">{TEST_INFO.section}</h3>
         </div>
 
         <div className="mb-8 grid grid-cols-2 gap-8">
