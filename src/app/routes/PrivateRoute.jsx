@@ -1,3 +1,5 @@
+// import { lazy } from 'react';
+import PlayStopButton from '@features/Listening/ui/PlayStopButton'
 import HomePage from '@pages/HomePage.jsx'
 import GrammarVocabPage from '@pages/GrammarVocabPage.jsx'
 import WritingTestPage from '@pages/WritingTestPage.jsx'
@@ -7,7 +9,6 @@ import ListeningPage from '@pages/ListeningPage.jsx'
 import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage.jsx'
 import ReadingTestPage from '@pages/ReadingPage.jsx'
 import WaitingForApproval from '@pages/WaitingForApproval.jsx'
-import ReadingTestInstructions from '@features/reading/ui/ReadingInstruction.jsx'
 
 const PrivateRoute = [
   {
@@ -17,6 +18,14 @@ const PrivateRoute = [
       {
         path: 'homepage',
         element: <HomePage />
+      },
+      {
+        path: 'writing',
+        element: <WritingTestPage />
+      },
+      {
+        path: 'play-stop-button',
+        element: <PlayStopButton />
       },
       {
         path: 'grammarvocab',
@@ -31,16 +40,8 @@ const PrivateRoute = [
         element: <DesktopRejectRequestPage />
       },
       {
-        path: 'writing',
-        element: <WritingTestPage />
-      },
-      {
         path: 'reading',
         element: <ReadingTestPage />
-      },
-      {
-        path: 'reading-instructions',
-        element: <ReadingTestInstructions />
       },
       {
         path: 'introduction',
