@@ -12,7 +12,6 @@ const EnterSessionKey = () => {
   const navigate = useNavigate()
 
   const handleStart = (sessionKey) => {
-    console.log(sessionKey)
     navigate("/waiting-for-approval");
   };
 
