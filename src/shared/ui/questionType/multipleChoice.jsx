@@ -1,18 +1,53 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Typography } from 'antd';
+import * as yup from 'yup';
+
 const { Title, Text } = Typography;
+
+// Schema validation cho AnswerContent
+const answerContentSchema = yup.object().shape({
+  options: yup.array().of(
+    yup.object().shape({
+      key: yup.string().required(),
+      value: yup.string().required()
+    })
+  ).required().min(1)
+});
+
 const MultipleChoice = ({ 
   questionData,
   onSubmit,
   className = '',
 }) => {
   const [selectedOption, setSelectedOption] = useState(null);
-  const answerContent = JSON.parse(questionData.AnswerContent)[0];
-  const options = answerContent.options;
+  const [error, setError] = useState(null);
+
+  // Parse và validate AnswerContent với useMemo
+  const { options, isValid } = useMemo(() => {
+    try {
+      const parsedContent = JSON.parse(questionData.AnswerContent)[0];
+      // Validate với schema
+      answerContentSchema.validateSync(parsedContent);
+      return { options: parsedContent.options, isValid: true };
+    } catch (err) {
+      setError(err.message);
+      return { options: [], isValid: false };
+    }
+  }, [questionData.AnswerContent]);
+
   const handleClick = (optionValue) => {
     setSelectedOption(optionValue);
     onSubmit(optionValue);
   };
+
+  if (!isValid) {
+    return (
+      <div className="text-red-500 p-4 bg-red-50 rounded-md">
+        <p>Lỗi dữ liệu: {error}</p>
+      </div>
+    );
+  }
+
   return (
     <div className={`w-full ${className}`}>
       <Title level={5} className="mb-6">
@@ -58,4 +93,5 @@ const MultipleChoice = ({
     </div>
   );
 };
+
 export default MultipleChoice;
