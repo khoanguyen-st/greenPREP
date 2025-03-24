@@ -1,48 +1,57 @@
-import AudioTest from "@pages/AudioTest.jsx";
-import HomePage from "@pages/HomePage.jsx";
-import IntroductionScreen from '@pages/IntroductionScreen';
-import ListeningPage from "@pages/ListeningPage.jsx";
-import SamplePage from "@pages/Sample.jsx";
-import WritingTestPage from "@pages/WritingTestPage.jsx";
-import SubmissionScreen from "@shared/ui/Submission/SubmissionScreen.jsx";
-import { ProtectedRoute } from "./ProtectedRoute/ProtectedRoute.jsx";
+import HomePage from '@pages/HomePage.jsx'
+import GrammarVocabPage from '@pages/GrammarVocabPage.jsx'
+import InstructionsGrammarPage from '@pages/InstructionsGrammarPage.jsx'
+import WritingTestPage from '@pages/WritingTestPage.jsx'
+import IntroductionScreen from '@pages/IntroductionScreen'
+import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute.jsx'
+import ListeningPage from '@pages/ListeningPage.jsx'
+import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage.jsx'
+import ReadingTestPage from '@pages/ReadingPage.jsx'
+import WaitingForApproval from '@pages/WaitingForApproval.jsx'
 
 const PrivateRoute = [
   {
-    path: "/",
+    path: '/',
     element: <ProtectedRoute />,
     children: [
       {
-        path: "homepage",
-        element: <HomePage />,
+        path: 'homepage',
+        element: <HomePage />
       },
       {
-        path: "listening",
-        element: <ListeningPage />,
+        path: 'grammar-vocab',
+        element: <GrammarVocabPage />
       },
       {
-        path: "writing",
-        element: <WritingTestPage />,
+        path: 'grammar-instructions',
+        element: <InstructionsGrammarPage />
       },
       {
-        path: "introduction",
-        element: <IntroductionScreen/>
+        path: 'listening',
+        element: <ListeningPage />
       },
-            {
-        path: "sample",
-        element: <SamplePage/>
+      {
+        path: 'rejectpage',
+        element: <DesktopRejectRequestPage />
       },
-                        {
-        path: "success",
-        element: <SubmissionScreen/>
+      {
+        path: 'writing',
+        element: <WritingTestPage />
       },
-                        {
-        path: "audio",
-        element: <AudioTest/>
+      {
+        path: 'reading',
+        element: <ReadingTestPage />
       },
-    ],
-  },
+      {
+        path: 'introduction',
+        element: <IntroductionScreen />
+      },
+      {
+        path: 'waiting-for-approval',
+        element: <WaitingForApproval />
+      }
+    ]
+  }
+]
 
-];
-
-export default PrivateRoute;
+export default PrivateRoute

@@ -1,28 +1,11 @@
-// Define public routes accessible to all users
-
-import QuestionNavigator from "../../shared/ui/QuestionNavigatior/QuestionNavigatior";
+import FlagButton from '../../shared/ui/FlagButton/FlagButton.jsx'
 
 const PublicRoute = [
   {
     path: "login",
-    element: (
-      <QuestionNavigator
-        values={[
-          { type: "answered" },
-          { type: "flagged" },
-          { type: "unanswered" },
-          { type: "answered" },
-          { type: "flagged" },
-          { type: "unanswered" },
-          { type: "answered" },
-          { type: "flagged" },
-          { type: "unanswered" },
-        ]}
-        action={(index) => console.log("clicked")}
-        position={1}
-      />
-    ),
+    element: <FlagButton onFlag={() => console.log("clicked")} initialFlagged={true} />
   },
 ];
 
-export default PublicRoute;
+
+export default PublicRoute

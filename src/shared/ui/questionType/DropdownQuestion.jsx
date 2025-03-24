@@ -6,30 +6,25 @@ import { Select } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import * as yup from "yup";
 
-const { Option } = Select;
+const { Option } = Select
 
 const validationSchema = yup.object().shape({
-  selectedOption: yup.string().required("Please select an answer"),
-});
+  selectedOption: yup.string().required('Please select an answer')
+})
 
-const DropdownQuestion = ({
-  questionData,
-  onChange,
-  className = "",
-  small = false,
-}) => {
-  dropdownQuestionSchema.validateSync(questionData);
-  const [selectedOptions, setSelectedOptions] = useState({});
-  const [error, setError] = useState({});
+const DropdownQuestion = ({ questionData, onChange, className = '', small = false }) => {
+  dropdownQuestionSchema.validateSync(questionData)
+  const [selectedOptions, setSelectedOptions] = useState({})
+  const [error, setError] = useState({})
 
   const processedData = useMemo(() => {
-    if (!questionData) return null;
+    if (!questionData) return null
     try {
       const parsedAnswerContent =
-        typeof questionData.AnswerContent === "string"
+        typeof questionData.AnswerContent === 'string'
           ? JSON.parse(questionData.AnswerContent)
-          : questionData.AnswerContent;
-      answerContentSchema.validateSync(parsedAnswerContent);
+          : questionData.AnswerContent
+      answerContentSchema.validateSync(parsedAnswerContent)
 
       if (parsedAnswerContent.leftItems && parsedAnswerContent.rightItems) {
         return {
@@ -38,138 +33,121 @@ const DropdownQuestion = ({
           leftItems: parsedAnswerContent.leftItems,
           rightItems: parsedAnswerContent.rightItems,
           correctAnswers: parsedAnswerContent.correctAnswer,
-          type: "right-left",
-        };
+          type: 'right-left'
+        }
       } else {
         const options = parsedAnswerContent.options || [];
         const answers = {};
         options.forEach(({ key, value }) => {
-          answers[key] = value;
-        });
-        const correctAnswers = {};
-        (parsedAnswerContent.correctAnswer || []).forEach(({ key, value }) => {
-          correctAnswers[key] = value;
-        });
+          answers[key] = value
+        })
+        const correctAnswers = {}
+        ;(parsedAnswerContent.correctAnswer || []).forEach(({ key, value }) => {
+          correctAnswers[key] = value
+        })
         return {
           id: questionData.ID,
           question: questionData.Content,
           answers,
           correctAnswers,
-          type: "paragraph",
-        };
+          type: 'paragraph'
+        }
       }
     } catch (error) {
-      console.error("Error parsing question data:", error);
-      return null;
+      console.error('Error parsing question data:', error)
+      return null
     }
-  }, [questionData]);
+  }, [questionData])
 
   useEffect(() => {
     if (processedData) {
-      setSelectedOptions({});
-      setError({});
+      setSelectedOptions({})
+      setError({})
     }
-  }, [processedData]);
+  }, [processedData])
 
   const handleSelectChange = async (key, value) => {
-    setSelectedOptions((prev) => ({
+    setSelectedOptions(prev => ({
       ...prev,
-      [key]: value,
-    }));
+      [key]: value
+    }))
     try {
-      await validationSchema.validate({ selectedOption: value });
-      setError((prev) => ({ ...prev, [key]: "" }));
+      await validationSchema.validate({ selectedOption: value })
+      setError(prev => ({ ...prev, [key]: '' }))
       if (onChange) {
-        onChange(processedData.id, key, value);
+        onChange(processedData.id, key, value)
       }
     } catch (validationError) {
-      setError((prev) => ({ ...prev, [key]: validationError.message }));
+      setError(prev => ({ ...prev, [key]: validationError.message }))
     }
-  };
+  }
 
-  if (!processedData)
-    return (
-      <p className="text-gray-600 text-center">No question data available.</p>
-    );
+  if (!processedData) return <p className="text-center text-gray-600">No question data available.</p>
 
-  const isSingleQuestion =
-    processedData.type === "paragraph" &&
-    Object.keys(processedData.answers).length === 1;
+  const isSingleQuestion = processedData.type === 'paragraph' && Object.keys(processedData.answers).length === 1
 
   return (
-    <div
-      className={`${className} bg-white p-6 rounded-lg shadow-lg max-w-4xl mx-auto`}
-    >
+    <div className={`${className} mx-auto max-w-4xl rounded-lg bg-white p-6 shadow-lg`}>
       <div
         className={`flex ${
-          isSingleQuestion
-            ? "text-wrap w-full gap-4 justify-center items-center"
-            : "flex-col items-center"
+          isSingleQuestion ? 'w-full items-center justify-center gap-4 text-wrap' : 'flex-col items-center'
         }`}
       >
-        <p className="text-sm font-semibold text-gray-800 mb-4 whitespace-pre-wrap">
-          {processedData.question}
-        </p>
+        <p className="mb-4 whitespace-pre-wrap text-sm font-semibold text-gray-800">{processedData.question}</p>
 
         {processedData.type === "paragraph" ? (
           Object.entries(processedData.answers).map(([key, options]) => (
-            <div key={key} className="flex w-full mb-4">
+            <div key={key} className="mb-4 flex w-full">
               {Object.keys(processedData.answers).length > 1 && (
-                <div className="w-7 h-7">
-                  <p className="text-sm text-gray-700 p-1">{key}.</p>
+                <div className="h-7 w-7">
+                  <p className="p-1 text-sm text-gray-700">{key}.</p>
                 </div>
               )}
 
-              <div
-                className={`flex ${isSingleQuestion ? " items-center w-1/4" : "w-1/2"}`}
-              >
+              <div className={`flex ${isSingleQuestion ? 'w-1/4 items-center' : 'w-1/2'}`}>
                 <Select
-                  onChange={(value) => handleSelectChange(key, value)}
+                  onChange={value => handleSelectChange(key, value)}
                   value={selectedOptions[key]}
-                  className={`w-2/3 ${small ? "h-8 text-xs" : "h-8 text-sm"} border border-gray-300 rounded-md`}
+                  className={`w-2/3 ${small ? 'h-8 text-xs' : 'h-8 text-sm'} rounded-md border border-gray-300`}
                 >
-                  {options.map((option) => (
+                  {options.map(option => (
                     <Option key={option} value={option}>
                       {option}
                     </Option>
                   ))}
                 </Select>
               </div>
-              {error[key] && (
-                <p className="text-red-500 text-xs mt-2">{error[key]}</p>
-              )}
+              {error[key] && <p className="mt-2 text-xs text-red-500">{error[key]}</p>}
             </div>
           ))
         ) : (
           <div className="w-full">
             {processedData.leftItems.map((leftItem, index) => (
-              <div key={index} className="flex w-full mb-4">
+              <div key={index} className="mb-4 flex w-full">
                 <div className="w-1/2 pr-4">
-                  <p className="text-xs text-gray-700 p-1">{leftItem}</p>
+                  <p className="p-1 text-xs text-gray-700">{leftItem}</p>
                 </div>
                 <div className="w-1/2">
                   <Select
-                    onChange={(value) => handleSelectChange(leftItem, value)}
+                    onChange={value => handleSelectChange(leftItem, value)}
                     value={selectedOptions[leftItem]}
-                    className={`w-2/3 ${small ? "h-8 text-xs" : "h-8 text-xs"} border border-gray-300 rounded-md`}
+                    className={`w-2/3 ${small ? 'h-8 text-xs' : 'h-8 text-xs'} rounded-md border border-gray-300`}
                   >
-                    {processedData.rightItems.map((rightItem) => (
+                    {processedData.rightItems.map(rightItem => (
                       <Option key={rightItem} value={rightItem}>
                         {rightItem}
                       </Option>
                     ))}
                   </Select>
                 </div>
-                {error[leftItem] && (
-                  <p className="text-red-500 text-xs mt-2">{error[leftItem]}</p>
-                )}
+                {error[leftItem] && <p className="mt-2 text-xs text-red-500">{error[leftItem]}</p>}
               </div>
             ))}
           </div>
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default DropdownQuestion;
+export default DropdownQuestion
