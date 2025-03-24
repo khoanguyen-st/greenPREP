@@ -2,7 +2,7 @@ import { Button, Typography } from 'antd'
 
 const { Title, Text } = Typography
 
-const WritingIntroduction = ({ testData, onStartTest }) => {
+const ReadingIntroduction = ({ testData, onStartTest }) => {
   return (
     <div className="flex min-h-screen flex-col text-center font-sans">
       <div className="mx-auto mb-6 flex max-w-3xl flex-1 flex-col items-center justify-center text-center">
@@ -67,4 +67,4 @@ const WritingIntroduction = ({ testData, onStartTest }) => {
   )
 }
 
-export default WritingIntroduction
+export default ReadingIntroduction
