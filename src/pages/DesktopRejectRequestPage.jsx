@@ -1,6 +1,7 @@
 import SharedHeader from "@shared/ui/SharedHeader";
 import { Layout, Typography, Button, Space, Image } from "antd";
 import { useNavigate } from "react-router-dom";
+import { iconRe } from "../assets/Images/assets";
 const { Title, Text } = Typography;
 const { Content } = Layout;
 
@@ -8,26 +9,26 @@ const DesktopRejectRequestPage = () => {
   const navigate = useNavigate();
   
   return (
-    <Layout style={{ height: '100vh', overflow: 'hidden' }}>
+    <Layout className="h-screen overflow-hidden">
       <SharedHeader />
       <Content className="bg-white">
-        <div className="flex flex-col items-center justify-center" style={{ height: 'calc(100vh - 64px)' }}>
+        <div className="flex flex-col items-center justify-center h-[calc(100vh-64px)]">
           <Space direction="vertical" align="center" size="large">
-            <Title level={1} style={{ marginBottom: 0, textAlign: 'center' }}>
+            <Title level={1} className="m-0 text-center">
               Oopsss! Your request has been denied 
             </Title>
             
-            <Text style={{ fontSize: '1.1rem', textAlign: 'center' }}>
+            <Text className="text-lg text-center">
               Please reach out to your teacher for support!
             </Text>
 
             <Image
-              src="/src/assets/Images/icon_re.jpg"
+              src={iconRe}
               alt="Reject Request Icon"
               preview={false}
               width={283.48}
               height={355}
-              className="object-contain"
+              style={{ objectFit: 'contain' }}
             />
 
             <Button 
