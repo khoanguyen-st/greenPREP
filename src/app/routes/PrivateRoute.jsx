@@ -1,3 +1,5 @@
+// import { lazy } from 'react';
+import PlayStopButton from '@features/listening/ui/PlayStopButton'
 import HomePage from '@pages/HomePage.jsx'
 import GrammarVocabPage from '@pages/GrammarVocabPage.jsx'
 import InstructionsGrammarPage from '@pages/InstructionsGrammarPage.jsx'
@@ -17,6 +19,14 @@ const PrivateRoute = [
       {
         path: 'homepage',
         element: <HomePage />
+      },
+      {
+        path: 'writing',
+        element: <WritingTestPage />
+      },
+      {
+        path: 'play-stop-button',
+        element: <PlayStopButton />
       },
       {
         path: 'grammar-vocab',
