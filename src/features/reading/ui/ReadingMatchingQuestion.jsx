@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import axiosInstance from '@shared/config/axios' // Update the import path as needed
+import axiosInstance from '@shared/config/axios'
 import { Spin, Alert } from 'antd'
 import MatchingQuestion from '@shared/ui/questionType/MatchingQuestion'
 import NavigationButtons from '@shared/ui/NavigationButtons/NavigationButtons'
