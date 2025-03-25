@@ -31,9 +31,7 @@ const ReadingTestPage = () => {
       case 'intro':
         return <ReadingIntroduction testData={testData && testData} onStartTest={handleStartTest} />
       case 'instructions':
-        return (
-          <ReadingTestInstructions onStartTest={handleNext}/>
-        )
+        return <ReadingTestInstructions onStartTest={handleNext} />
       case 'test':
         return <div>Test</div>
       default:
