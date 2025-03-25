@@ -3,16 +3,17 @@ import SpeakingPage from '@pages/SpeakingPage'
 import PlayStopButton from '@features/Listening/ui/PlayStopButton'
 import HomePage from '@pages/HomePage'
 import GrammarVocabPage from '@pages/GrammarVocabPage'
-import ListeningPage from '@pages/ListeningPage'
 import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage'
-import ReadingTestPage from '@pages/ReadingPage'
 import WaitingForApproval from '@pages/WaitingForApproval'
-import Introduction from '@pages/listening/Introduction'
-import Instruction from '@pages/listening/Instruction'
-import ReadingPage from '@pages/Reading-Question'
+import Introduction from '@features/Listening/ui/Introduction'
+import InstructionListening from '@features/Listening/ui/Instruction'
+import InstructionReading from '@features/reading/ui/ReadingInstruction'
 import { WritingPage } from '@pages/writing'
 import { InstructionWriting } from '@features/writing/ui/instruction'
 import { IntroductionWriting } from '@features/writing/ui/Introduction'
+import { ListeningPage } from '@pages/listening'
+import { ReadingPage } from '@pages/reading'
+import { IntroductionReading } from '@features/reading/ui/ReadingIntroduction'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 
@@ -57,7 +58,7 @@ const PrivateRoute = [
           },
           {
             path: 'instruction',
-            element: <Instruction />
+            element: <InstructionListening />
           },
           {
             path: 'test',
@@ -71,7 +72,21 @@ const PrivateRoute = [
       },
       {
         path: 'reading',
-        element: <ReadingTestPage />
+        element: <ReadingPage />,
+        children: [
+          {
+            index: true,
+            element: <IntroductionReading />
+          },
+          {
+            path: 'instruction',
+            element: <InstructionReading />
+          },
+          {
+            path: 'test',
+            element: <div>Test page</div>
+          }
+        ]
       },
       {
         path: 'introduction',
@@ -84,10 +99,6 @@ const PrivateRoute = [
       {
         path: 'speaking',
         element: <SpeakingPage />
-      },
-      {
-        path: 'reading-question',
-        element: <ReadingPage />
       }
     ]
   }

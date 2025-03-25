@@ -1,13 +1,13 @@
-import { useReadingData } from '@shared/context/reading-context'
+import { useListeningData } from '@shared/context/listening-context'
 import { Instruction } from '@shared/ui/instruction'
 import { useNavigate } from 'react-router-dom'
 
-const InstructionReading = () => {
+const InstructionListening = () => {
   const navigate = useNavigate()
-  const data = useReadingData()
+  const data = useListeningData()
   const onStart = () => {
-    navigate('/Reading/test')
+    navigate('/Listening/test')
   }
   return <Instruction data={data} onStart={onStart} />
 }
-export default InstructionReading
+export default InstructionListening
