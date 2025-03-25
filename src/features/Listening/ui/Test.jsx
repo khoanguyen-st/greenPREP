@@ -232,10 +232,6 @@ const Test = () => {
               {testData.Parts[0].Questions[0].Skill.Name}
             </Text>
 
-            <Text strong className="text-4xl">
-              {testData.Parts[0].Content}
-            </Text>
-
             <div className="flex justify-between">
               <Text strong className="text-2xl">
                 Question {flatIndex + 1} of {totalQuestions}
