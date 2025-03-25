@@ -1,4 +1,4 @@
-import { iconRe } from '@assets/images/icon_re.jpg'
+import { iconRe } from '@assets/images'
 import SharedHeader from '@shared/ui/SharedHeader'
 import { Layout, Typography, Button, Space, Image } from 'antd'
 import { useNavigate } from 'react-router-dom'

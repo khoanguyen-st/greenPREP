@@ -1,5 +1,5 @@
 import { Layout, Typography, Image } from 'antd'
-import { Logo } from '@assets/images/logo.png'
+import { Logo } from '@assets/images'
 
 import SharedHeader from '../shared/ui/SharedHeader'
 
