@@ -1,8 +1,8 @@
-import SubmissionImage from '@assets/images/Submission/submission.jpg'
 import { Button, message } from 'antd'
 import { useState } from 'react'
 import { AiOutlineCheckCircle } from 'react-icons/ai'
 import { useNavigate } from 'react-router-dom'
+import { SubmissionImage } from '@assets/images'
 
 const SubmissionScreen = () => {
   const navigate = useNavigate()
