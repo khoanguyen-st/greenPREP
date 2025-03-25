@@ -61,23 +61,6 @@ const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className =
     }
   }, [processedData, userAnswer]);
 
-const handleSelectChange1 = async (key, value) => {
-  const updatedAnswers = { ...selectedOptions, [key]: value };
-  setSelectedOptions(updatedAnswers);
-
-  try {
-    await validationSchema.validate({ selectedOption: value });
-    setError(prev => ({ ...prev, [key]: '' }));
-
-    setUserAnswer(prev => ({
-      ...prev,
-      userAnswer: Object.entries(updatedAnswers).map(([k, v]) => ({ key: k, value: v }))
-    }));
-  } catch (validationError) {
-    setError(prev => ({ ...prev, [key]: validationError.message }));
-  }
-  };
-
 const handleSelectChange = async (key, value) => {
   const updatedAnswers = { ...selectedOptions, [key]: value };
   setSelectedOptions(updatedAnswers);
