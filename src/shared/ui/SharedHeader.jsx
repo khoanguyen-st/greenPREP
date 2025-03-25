@@ -1,6 +1,6 @@
 import { Layout, Menu, Dropdown, Typography } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
-import { Logo } from '@assets/images/index'
+import { Logo } from '@assets/images/logo.png'
 
 const { Header } = Layout
 const { Title } = Typography
