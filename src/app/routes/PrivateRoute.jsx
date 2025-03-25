@@ -9,8 +9,7 @@ import ListeningPage from '@pages/ListeningPage.jsx'
 import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage.jsx'
 import ReadingTestPage from '@pages/ReadingPage.jsx'
 import WaitingForApproval from '@pages/WaitingForApproval.jsx'
-import InstructionsGrammarPage from '@pages/InstructionsGrammarPage.jsx'
-import ReadingTestInstructions from '@features/reading/ui/ReadingInstruction.jsx'
+import WritingTest from '@features/writing/ui/WritingTest.jsx'
 
 const PrivateRoute = [
   {
@@ -26,10 +25,6 @@ const PrivateRoute = [
         element: <WritingTestPage />
       },
       {
-        path: 'grammar-vocab',
-        element: <GrammarVocabPage />
-      },
-      {
         path: 'play-stop-button',
         element: <PlayStopButton />
       },
@@ -42,24 +37,8 @@ const PrivateRoute = [
         element: <ListeningPage />
       },
       {
-        path: 'grammar-instructions',
-        element: <InstructionsGrammarPage />
-      },
-      {
-        path: 'listening',
-        element: <ListeningPage />
-      },
-      {
-        path: 'reject-page',
-        element: <DesktopRejectRequestPage />
-      },
-      {
         path: 'rejectpage',
         element: <DesktopRejectRequestPage />
-      },
-      {
-        path: 'writing',
-        element: <WritingTestPage />
       },
       {
         path: 'reading',
@@ -74,14 +53,11 @@ const PrivateRoute = [
         element: <WaitingForApproval />
       },
       {
-        path: 'reading-instructions',
-        element: <ReadingTestInstructions />
-      },
+        path: 'taking-writing',
+        element: <WritingTest />
+      }
     ]
   }
-     
-    
-    ]
-
+]
 
 export default PrivateRoute

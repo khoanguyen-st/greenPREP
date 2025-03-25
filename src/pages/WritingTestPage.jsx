@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import WritingIntroduction from '@features/writing/ui/Introduction.jsx'
 import WritingInstructions from '@features/writing/ui/Instructions'
-import WritingTest from '@features/writing/ui/WritingTest'
 
 const WritingTestPage = () => {
   const [testData] = useState({
@@ -29,8 +28,6 @@ const WritingTestPage = () => {
         return <WritingIntroduction testData={testData} onStartTest={handleStartTest} />;
       case 'instructions':
         return <WritingInstructions testData={testData} onStartTest={handleBeginTest} />;
-      case 'test':
-        return <WritingTest />;
       default:
         return <div>Loading...</div>;
     }
