@@ -5,14 +5,18 @@ import {
 import { Select } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import * as yup from "yup";
+
 const { Option } = Select
+
 const validationSchema = yup.object().shape({
   selectedOption: yup.string().required('Please select an answer')
 })
+
 const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className = '', small = false }) => {
   dropdownQuestionSchema.validateSync(questionData);
   const [selectedOptions, setSelectedOptions] = useState({});
   const [error, setError] = useState({});
+
   const processedData = useMemo(() => {
     if (!questionData) return null;
     try {
@@ -53,13 +57,21 @@ const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className =
       return null;
     }
   }, [questionData]);
+
+  const memoizedProcessedData = useMemo(() => processedData, [processedData]);
   useEffect(() => {
-      console.log(userAnswer)
-    if (processedData) {
-      setSelectedOptions(userAnswer[processedData.id] || {});
-      setError({});
-    }
-  }, [processedData, userAnswer]);
+    if (!memoizedProcessedData) return;
+
+    const currentUserAnswer = userAnswer[memoizedProcessedData.id] || {};
+    setSelectedOptions(prev => ({
+      ...prev,
+      ...currentUserAnswer
+    }));
+
+    setError({});
+  }, [memoizedProcessedData, userAnswer]);
+
+
 
 const handleSelectChange = async (key, value) => {
   const updatedAnswers = { ...selectedOptions, [key]: value };
