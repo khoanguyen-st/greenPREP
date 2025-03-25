@@ -10,7 +10,9 @@ const matchingQuestionSchema = yup.object().shape({
   leftItems: yup.array().of(itemSchema).min(1, 'Left items cannot be empty').required('Left items are required'),
   rightItems: yup.array().of(itemSchema).min(1, 'Right items cannot be empty').required('Right items are required'),
   matches: yup.object().test('valid-matches', 'Invalid matches format', value => {
-    if (!value) return true
+    if (!value) {
+      return true
+    }
     return Object.entries(value).every(
       ([leftId, rightId]) => typeof leftId === 'string' && (rightId === null || typeof rightId === 'string')
     )
@@ -45,7 +47,9 @@ const MatchingQuestion = ({ leftItems, rightItems, matches, onChange, disabled =
   const rightItemsRefs = useRef({})
 
   const drawLine = (start, end) => {
-    if (!start || !end || !containerRef.current) return null
+    if (!start || !end || !containerRef.current) {
+      return null
+    }
     const startRect = start.getBoundingClientRect()
     const endRect = end.getBoundingClientRect()
     const containerRect = containerRef.current.getBoundingClientRect()
@@ -95,7 +99,9 @@ const MatchingQuestion = ({ leftItems, rightItems, matches, onChange, disabled =
   }, [matches, selectedLeft, selectedRight])
 
   const handleLeftSelect = value => {
-    if (disabled) return
+    if (disabled) {
+      return
+    }
 
     if (matches[value]) {
       onChange(value, null)
@@ -120,10 +126,11 @@ const MatchingQuestion = ({ leftItems, rightItems, matches, onChange, disabled =
   }
 
   const handleRightSelect = value => {
-    if (disabled) return
+    if (disabled) {
+      return
+    }
 
-    // eslint-disable-next-line no-unused-vars
-    const matchedLeftId = Object.entries(matches).find(([_, rightId]) => rightId === value)?.[0]
+    const matchedLeftId = Object.entries(matches).find(([, rightId]) => rightId === value)?.[0]
     if (matchedLeftId) {
       onChange(matchedLeftId, null)
       setSelectedLeft(null)

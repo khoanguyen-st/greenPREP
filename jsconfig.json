@@ -8,12 +8,12 @@
     "checkJs": true,
     "types": [],
     "paths": {
-      "@*": ["./src/*"],
-      "@app/*": ["./src/app/*"],
+      "@*": ["src/*"],
+      "@app/*": ["src/app/*"],
       "@pages/*": ["src/pages/*"],
-      "@assets/*": ["./src/assets/*"],
-      "@features/*": ["./src/features/*"],
-      "@shared/*": ["./src/shared/*"]
+      "@assets/*": ["src/assets/*"],
+      "@features/*": ["src/features/*"],
+      "@shared/*": ["src/shared/*"]
     }
   }
 }

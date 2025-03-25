@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Button, Slider } from 'antd'
 import { CaretRightOutlined, PauseOutlined, SoundFilled } from '@ant-design/icons'
+import { useNavigate } from 'react-router-dom'
 const AUDIO = {
   path: 'src/assets/Sounds/Headphone-check-test.mp3',
   initialVolume: 50
@@ -16,7 +17,8 @@ const TEST_INFO = {
   instructions: 'You will hear various recordings and answer questions based on what you hear.'
 }
 
-const Introduction = ({ onStart }) => {
+const Introduction = () => {
+  const navigate = useNavigate()
   const [volume, setVolume] = useState(AUDIO.initialVolume)
   const [isPlaying, setIsPlaying] = useState(false)
   const audioRef = useRef(null)
@@ -128,7 +130,7 @@ const Introduction = ({ onStart }) => {
 
       <div className="text-center">
         <Button
-          onClick={onStart}
+          onClick={() => navigate('/listening/instruction')}
           type="primary"
           className="h-14 w-full max-w-xs rounded border-2 !border-[#0A3B8C] !bg-[#0A3B8C] text-lg font-bold text-white transition-colors duration-200 hover:!border-[#FFA500] hover:!bg-white hover:!text-[#1890ff]"
         >
@@ -138,4 +140,5 @@ const Introduction = ({ onStart }) => {
     </div>
   )
 }
+
 export default Introduction

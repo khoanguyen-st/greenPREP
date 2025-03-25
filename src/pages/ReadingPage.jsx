@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import ReadingIntroduction from '@features/reading/ui/ReadingIntroduction.jsx'
 import ReadingTestInstructions from '@features/reading/ui/ReadingInstruction.jsx'
 import ReadingMatchingQuestion from '@features/reading/ui/ReadingMatchingQuestion'

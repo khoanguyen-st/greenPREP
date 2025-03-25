@@ -54,8 +54,15 @@ const ReadingMatchingQuestion = ({
     }))
   }
 
-  const handleAutoSubmit = () => console.log('Auto-submit triggered')
-  const handleSubmit = () => console.log('Test submitted')
+  const handleAutoSubmit = () => {
+    // Placeholder for auto-submit logic
+    alert('Auto-submit triggered')
+  }
+
+  const handleSubmit = () => {
+    // Placeholder for submit logic
+    alert('Test submitted')
+  }
 
   if (isLoading) {
     return (
@@ -77,7 +84,9 @@ const ReadingMatchingQuestion = ({
   const answerContent = question.AnswerContent
 
   const formattedContent = question.Content.split('Paragraph ').map((paragraph, index) => {
-    if (index === 0) return paragraph
+    if (index === 0) {
+      return paragraph
+    }
     return (
       <React.Fragment key={index}>
         {'\n'}
@@ -90,7 +99,7 @@ const ReadingMatchingQuestion = ({
   return (
     <div className="flex flex-col p-4 sm:p-8 md:flex-row md:p-12">
       <div className="flex-1">
-        <FlagButton onFlag={handleFlag} initialFlagged={!!flaggedQuestions[currentQuestion]} />
+        <FlagButton onFlag={handleFlag} initialFlagged={Boolean(flaggedQuestions[currentQuestion])} />
 
         <h1 className="mb-6 text-xl font-bold sm:text-2xl md:text-3xl">{testData.Name}</h1>
         <p className="mb-8 space-y-3 whitespace-pre-line px-4 text-base leading-relaxed text-gray-800 sm:text-lg">
