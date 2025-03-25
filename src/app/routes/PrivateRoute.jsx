@@ -1,39 +1,65 @@
-import HomePage from "@pages/HomePage.jsx";
-import WritingTestPage from "@pages/WritingTestPage.jsx";
-import IntroductionScreen from '@pages/IntroductionScreen';
-import { ProtectedRoute } from "./ProtectedRoute/ProtectedRoute.jsx";
-import ListeningPage from "@pages/ListeningPage.jsx";
-import WritingTest from "@features/writing/ui/WritingTest"
-
+import HomePage from '@pages/HomePage.jsx'
+import GrammarVocabPage from '@pages/GrammarVocabPage.jsx'
+import InstructionsGrammarPage from '@pages/InstructionsGrammarPage.jsx'
+import WritingTestPage from '@pages/WritingTestPage.jsx'
+import IntroductionScreen from '@pages/IntroductionScreen'
+import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute.jsx'
+import ListeningPage from '@pages/ListeningPage.jsx'
+import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage.jsx'
+import ReadingTestPage from '@pages/ReadingPage.jsx'
+import WaitingForApproval from '@pages/WaitingForApproval.jsx'
+import ReadingTestInstructions from '@features/reading/ui/ReadingInstruction.jsx'
 
 const PrivateRoute = [
   {
-    path: "/",
+    path: '/',
     element: <ProtectedRoute />,
     children: [
       {
-        path: "homepage",
-        element: <HomePage />,
+        path: 'homepage',
+        element: <HomePage />
       },
       {
-        path: "listening",
-        element: <ListeningPage />,
+        path: 'grammar-vocab',
+        element: <GrammarVocabPage />
       },
       {
-        path: "writing",
-        element: <WritingTestPage />,
+        path: 'grammar-instructions',
+        element: <InstructionsGrammarPage />
+      },
+      {
+        path: 'listening',
+        element: <ListeningPage />
+      },
+      {
+        path: 'reject-page',
+        element: <DesktopRejectRequestPage />
+      },
+      {
+        path: 'writing',
+        element: <WritingTestPage />
+      },
+      {
+        path: 'reading',
+        element: <ReadingTestPage />
       },
       {
         path: "introduction",
-        element: <IntroductionScreen/>      
+        element: <IntroductionScreen />
       },
-      { 
-        path: "taking-writing",
-        element: <WritingTest />,
+      {
+        path: 'reading-instructions',
+        element: <ReadingTestInstructions />
       },
-    ],
-  },
-  
+      {
+        path: 'waiting-for-approval',
+        element: <WaitingForApproval />
+      }
+    ]
+  }
+
 ];
 
-export default PrivateRoute;
+
+
+export default PrivateRoute

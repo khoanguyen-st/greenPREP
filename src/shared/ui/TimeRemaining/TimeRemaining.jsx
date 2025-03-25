@@ -1,6 +1,6 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import formatTime from "../../utils/formatTime";
+import React from 'react'
+import { useState, useEffect } from 'react'
+import formatTime from '../../utils/formatTime'
 
 /**Cách dùng TimeRemaining trong mỗi Skills (speaking, listening, reading, writing, vocal/grammar)
  * B1: ⚠️Import TimeRemaining from "../shared/ui/TimeRemaining/TimeRemaining";⚠️
@@ -8,47 +8,41 @@ import formatTime from "../../utils/formatTime";
  * B3: Add dòng này ⚠️<TimeRemaining duration={số phút của skill * 60} onAutoSubmit={handAutoSubmit}/>⚠️
  */
 
-const TimeRemaining = ({
-  duration,
-  label = "Time remaining",
-  onAutoSubmit,
-}) => {
-  const [timeLeft, setTimeLeft] = useState(duration);
+const TimeRemaining = ({ duration, label = 'Time remaining', onAutoSubmit }) => {
+  const [timeLeft, setTimeLeft] = useState(duration)
 
   useEffect(() => {
     if (timeLeft <= 0) {
-      if (onAutoSubmit) onAutoSubmit();
-      return;
+      if (onAutoSubmit) onAutoSubmit()
+      return
     }
 
     const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
+      setTimeLeft(prev => prev - 1)
+    }, 1000)
 
-    return () => clearInterval(timer);
-  }, [timeLeft, onAutoSubmit]);
+    return () => clearInterval(timer)
+  }, [timeLeft, onAutoSubmit])
 
-  const percentage = ((timeLeft / duration) * 100).toFixed(2);
+  const percentage = ((timeLeft / duration) * 100).toFixed(2)
 
   return (
-    <div className="fixed top-4 right-2 z-50 flex flex-col items-center space-y-2 bg-white shadow-md rounded-lg px-2 py-2 w-60 border border-black">
+    <div className="fixed right-2 top-4 z-50 flex w-60 flex-col items-center space-y-2 rounded-lg border border-black bg-white px-2 py-2 shadow-md">
       {/* Time */}
-      <div className="text-3xl font-bold text-black">
-        {formatTime(timeLeft)}
-      </div>
+      <div className="text-3xl font-bold text-black">{formatTime(timeLeft)}</div>
 
       {/* Label */}
-      <div className="text-gray-600 text-sm">{label}</div>
+      <div className="text-sm text-gray-600">{label}</div>
 
       {/* Progress bar */}
-      <div className="w-3/4 h-2 bg-gray-300 rounded-full mt-2">
+      <div className="mt-2 h-2 w-3/4 rounded-full bg-gray-300">
         <div
-          className="h-2 bg-blue-700 rounded-full transition-all duration-300"
+          className="h-2 rounded-full bg-blue-700 transition-all duration-300"
           style={{ width: `${percentage}%` }}
         ></div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default React.memo(TimeRemaining);
+export default React.memo(TimeRemaining)

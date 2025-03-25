@@ -10,7 +10,7 @@ const NotFound = () => {
             Page not found
           </p>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Sorry, we couldn't find this person you're looking for.
+            Sorry, we couldn&#39;t find this person you&#39;re looking for.
           </p>
         </div>
         <div className="mt-2">
