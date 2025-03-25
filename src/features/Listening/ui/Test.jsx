@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Typography, Spin, Alert, Space, Row, Col } from 'antd'
 import axiosInstance from '@shared/config/axios'
 import MultipleChoice from '@shared/ui/questionType/multipleChoice'
@@ -111,10 +111,10 @@ const Test = () => {
     const currentQuestion = getCurrentQuestion()
     if (!currentQuestion) return
 
-    setUserAnswers({
-      ...userAnswers,
-      [currentQuestion.ID]: answer
-    })
+    setUserAnswers(prev => ({
+      ...prev,
+      [currentQuestion.ID]: currentQuestion.Type === 'matching' ? { ...prev[currentQuestion.ID], ...answer } : answer
+    }))
   }
 
   const toggleFlag = isFlagged => {
@@ -182,6 +182,14 @@ const Test = () => {
     }
   }
 
+  const currentQuestion = getCurrentQuestion()
+  console.log('Current question:', currentQuestion)
+
+  const formattedQuestion = useMemo(() => formatQuestionData(currentQuestion), [currentQuestion])
+  const flatIndex = getCurrentFlatIndex()
+  const totalQuestions = getTotalQuestions()
+  const isFlagged = currentQuestion && flaggedQuestions.includes(currentQuestion.ID)
+
   if (isLoading) {
     return <Spin size="large" className="flex min-h-screen items-center justify-center" />
   }
@@ -189,14 +197,6 @@ const Test = () => {
   if (error) {
     return <Alert type="error" message="Failed to load test data" description={error.message} />
   }
-
-  const currentQuestion = getCurrentQuestion()
-  console.log('Current question:', currentQuestion)
-
-  const formattedQuestion = formatQuestionData(currentQuestion)
-  const flatIndex = getCurrentFlatIndex()
-  const totalQuestions = getTotalQuestions()
-  const isFlagged = currentQuestion && flaggedQuestions.includes(currentQuestion.ID)
 
   const fetchNextQuestion = () => {
     goToNext()
