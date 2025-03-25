@@ -7,6 +7,7 @@ import FlagButton from '@shared/ui/FLagButton/FlagButton'
 import TimeRemaining from '@shared/ui/TimeRemaining/TimeRemaining'
 import QuestionNavigator from '@shared/ui/QuestionNavigatior/QuestionNavigatior'
 import { useQuery } from '@tanstack/react-query'
+import PlayStopButton from './PlayStopButton'
 
 const { Text } = Typography
 
@@ -213,10 +214,13 @@ const Test = () => {
               <Text strong className="text-4xl">
                 Question {flatIndex + 1} of {totalQuestions}
               </Text>
+
               <div className="flex items-end gap-2">
                 <FlagButton key={currentQuestion?.ID} initialFlagged={isFlagged} onFlag={toggleFlag} />
               </div>
             </div>
+
+            <PlayStopButton />
 
             {formattedQuestion && (
               <MultipleChoice questionData={formattedQuestion} onSubmit={handleAnswerSubmit} className="mt-6" />
