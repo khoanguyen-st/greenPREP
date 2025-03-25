@@ -1,11 +1,16 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Typography } from 'antd'
 import { multipleChoiceAnswerSchema } from '@shared/model/questionType/multipleQuestion.schemas'
 const { Title, Text } = Typography
 
-const MultipleChoice = ({ questionData, onSubmit, className = '' }) => {
-  const [selectedOption, setSelectedOption] = useState(null)
+const MultipleChoice = ({ questionData, onSubmit, className = '', savedAnswer }) => {
+  const [selectedOption, setSelectedOption] = useState(savedAnswer)
   const [error, setError] = useState(null)
+
+  // Update selectedOption when savedAnswer changes
+  useEffect(() => {
+    setSelectedOption(savedAnswer)
+  }, [savedAnswer])
 
   // Parse và validate AnswerContent với useMemo
   const { options, isValid } = useMemo(() => {

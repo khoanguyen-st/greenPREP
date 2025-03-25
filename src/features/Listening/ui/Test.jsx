@@ -34,7 +34,6 @@ const Test = () => {
         '/topics/ef6b69aa-2ec2-4c65-bf48-294fd12e13fc?questionType=matching&skillName=LISTENING'
       )
 
-      // Combine the parts from both responses
       return {
         ...mcResponse.data,
         Parts: [...mcResponse.data.Parts, ...matchingResponse.data.Parts]
@@ -42,20 +41,17 @@ const Test = () => {
     }
   })
 
-  // Calculate total questions for navigation
   const getTotalQuestions = () => {
     if (!testData || !testData.Parts) return 0
     return testData.Parts.reduce((acc, part) => acc + part.Questions.length, 0)
   }
 
-  // Get current part and question
   const getCurrentPart = () => testData?.Parts[currentPartIndex] || null
   const getCurrentQuestion = () => {
     const part = getCurrentPart()
     return part?.Questions[currentQuestionIndex] || null
   }
 
-  // Create a flat array of all questions with part information for navigation
   const getAllQuestions = () => {
     if (!testData?.Parts) return []
 
@@ -111,10 +107,10 @@ const Test = () => {
     const currentQuestion = getCurrentQuestion()
     if (!currentQuestion) return
 
-    setUserAnswers(prev => ({
-      ...prev,
-      [currentQuestion.ID]: currentQuestion.Type === 'matching' ? { ...prev[currentQuestion.ID], ...answer } : answer
-    }))
+    setUserAnswers({
+      ...userAnswers,
+      [currentQuestion.ID]: answer
+    })
   }
 
   const toggleFlag = isFlagged => {
@@ -256,7 +252,12 @@ const Test = () => {
             {formattedQuestion && (
               <>
                 {currentQuestion.Type === 'multiple-choice' ? (
-                  <MultipleChoice questionData={formattedQuestion} onSubmit={handleAnswerSubmit} className="mt-6" />
+                  <MultipleChoice
+                    questionData={formattedQuestion}
+                    onSubmit={handleAnswerSubmit}
+                    className="mt-6"
+                    savedAnswer={userAnswers[currentQuestion.ID]}
+                  />
                 ) : currentQuestion.Type === 'matching' ? (
                   <MatchingQuestion
                     leftItems={formattedQuestion.leftItems}
