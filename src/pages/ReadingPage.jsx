@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import ReadingIntroduction from '@features/reading/ui/ReadingIntroduction.jsx'
 import ReadingTestInstructions from '@features/reading/ui/ReadingInstruction.jsx'
+import ReadingOrderingQuestion from '@features/reading/ui/ReadingOrderingQuestion.jsx'
 
 const ReadingTestPage = () => {
   // Mock data
@@ -33,7 +34,7 @@ const ReadingTestPage = () => {
       case 'instructions':
         return <ReadingTestInstructions onStartTest={handleNext} />
       case 'test':
-        return <div>Test</div>
+        return <ReadingOrderingQuestion />
       default:
         return <div>Loading...</div>
     }
