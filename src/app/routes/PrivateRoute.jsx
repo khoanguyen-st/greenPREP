@@ -1,14 +1,16 @@
-// import { lazy } from 'react';
+import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage.jsx'
+import InstructionsGrammarPage from '@pages/InstructionsGrammarPage.jsx'
 import PlayStopButton from '@features/Listening/ui/PlayStopButton'
 import HomePage from '@pages/HomePage.jsx'
 import GrammarVocabPage from '@pages/GrammarVocabPage.jsx'
 import WritingTestPage from '@pages/WritingTestPage.jsx'
 import IntroductionScreen from '@pages/IntroductionScreen'
-import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute.jsx'
 import ListeningPage from '@pages/ListeningPage.jsx'
-import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage.jsx'
 import ReadingTestPage from '@pages/ReadingPage.jsx'
+import SpeakingPage from '@pages/SpeakingPage'
 import WaitingForApproval from '@pages/WaitingForApproval.jsx'
+import WritingTestPage from '@pages/WritingTestPage.jsx'
+import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute.jsx'
 
 const PrivateRoute = [
   {
@@ -50,7 +52,8 @@ const PrivateRoute = [
       {
         path: 'waiting-for-approval',
         element: <WaitingForApproval />
-      }
+      },
+      { path: 'speaking', element: <SpeakingPage /> }
     ]
   }
 ]
