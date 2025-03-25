@@ -10,10 +10,11 @@ const ReadingIntroduction = ({ testData, onStartTest }) => {
           GreenPREP
         </Title>
         <div className="mb-6 w-full text-left">
-          <Title level={4} className="m-0 leading-normal">
-            {testData.testName}
-          </Title>
-          <Title level={5} className="m-0 leading-normal">
+          <div className="flex items-center gap-1">
+            <Text className="m-0 text-lg leading-normal">{testData.section}</Text>
+            <Text className="m-0 text-lg leading-normal">{testData.testName}</Text>
+          </div>
+          <Title level={5} className="leading-normal">
             {testData.section}
           </Title>
 
@@ -29,11 +30,13 @@ const ReadingIntroduction = ({ testData, onStartTest }) => {
                 <Text strong className="mb-1">
                   Time Allowed
                 </Text>
-                <Text className="text-base">{testData.timeAllowed}</Text>
+                <Text className="text-base" style={{ marginLeft: '20px' }}>
+                  {testData.timeAllowed}
+                </Text>
               </div>
             </div>
 
-            <div className="mb-6">
+            <div className="mb-6" style={{ marginTop: '-30px' }}>
               <div className="flex w-full flex-col">
                 <Text strong className="mb-1">
                   Assessment Description
@@ -42,7 +45,7 @@ const ReadingIntroduction = ({ testData, onStartTest }) => {
               </div>
             </div>
 
-            <div className="mb-6">
+            <div className="mb-6" style={{ marginTop: '-10px' }}>
               <div className="flex w-full flex-col">
                 <Text strong className="mb-1">
                   Form Description

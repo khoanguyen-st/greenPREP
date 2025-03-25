@@ -4,7 +4,6 @@ import ReadingIntroduction from '@features/reading/ui/ReadingIntroduction.jsx'
 import ReadingTestInstructions from '@features/reading/ui/ReadingInstruction.jsx'
 
 const ReadingTestPage = () => {
-  // Mock data
   const [testData] = useState({
     testName: 'Aptis General Practice Test',
     section: 'Reading',
