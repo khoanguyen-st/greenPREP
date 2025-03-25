@@ -9,7 +9,7 @@ const ReadingIntroduction = ({ testData, onStartTest }) => {
             <p className="m-0">{testData.section}</p>
             <p className="m-0">{testData.testName}</p>
           </div>
-          <h5 className="mt-2 text-lg font-semibold">{testData.section}</h5>
+          <h5 className="relative mt-2 -translate-y-[15px] text-lg font-semibold">{testData.section}</h5>
 
           <div className="mb-6">
             <div className="mb-6 flex flex-col justify-between md:flex-row">
@@ -17,18 +17,18 @@ const ReadingIntroduction = ({ testData, onStartTest }) => {
                 <p className="mb-1 font-semibold">Number of Questions</p>
                 <p className="text-base">{testData.questionCount}</p>
               </div>
-              <div className="mb-6 flex-1">
+              <div className="relative -left-[30px] mb-6 flex-1">
                 <p className="mb-1 font-semibold">Time Allowed</p>
                 <p className="text-base">{testData.timeAllowed}</p>
               </div>
             </div>
 
-            <div className="mb-5">
+            <div className="relative mb-5 -translate-y-[10px]">
               <p className="mb-1 font-semibold">Assessment Description</p>
               <p className="text-base">{testData.assessmentDescription}</p>
             </div>
 
-            <div className="mb-5">
+            <div className="relative mb-5 -translate-y-[10px]">
               <p className="mb-1 font-semibold">Form Description</p>
               <p className="text-base">{testData.formDescription}</p>
             </div>
