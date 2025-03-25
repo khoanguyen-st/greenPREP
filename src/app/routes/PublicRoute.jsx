@@ -1,4 +1,4 @@
-import FlagButton from '../../shared/ui/FlagButton/FlagButton.jsx'
+import FlagButton from '../../shared/ui/FLagButton/FlagButton.jsx'
 
 const PublicRoute = [
   {
