@@ -1,4 +1,3 @@
-'use client'
 import { Button, Typography } from 'antd'
 import { ArrowRightOutlined } from '@ant-design/icons'
 
