@@ -14,16 +14,21 @@ const validationSchema = yup.object().shape({
     .min(2, 'At least 2 items are required')
 })
 
-const OrderingQuestion = ({ options = [], onChange, className = '', value = [] }) => {
+const OrderingQuestion = ({ options = [], className = '', userAnswer = [], setUserAnswer }) => {
   const initialItems = useMemo(() => {
-    return value.length > 0
-      ? value
-      : options.map((option, index) => ({
-          id: String(index),
-          content: option,
-          order: index + 1
-        }))
-  }, [options, value])
+    if (userAnswer.length > 0) {
+      return userAnswer.map(item => ({
+        id: item.key,
+        content: item.key,
+        order: item.value
+      }))
+    }
+    return options.map((option, index) => ({
+      id: String(index),
+      content: option,
+      order: index + 1
+    }))
+  }, [options, userAnswer])
 
   const [items, setItems] = useState(initialItems)
   const [error, setError] = useState(null)
@@ -79,7 +84,13 @@ const OrderingQuestion = ({ options = [], onChange, className = '', value = [] }
     try {
       await validationSchema.validate({ items: updatedItems })
       setError(null)
-      onChange?.(updatedItems)
+
+      const formattedAnswer = updatedItems.map((item, index) => ({
+        key: item.content,
+        value: index + 1
+      }))
+
+      setUserAnswer?.(formattedAnswer)
     } catch (validationError) {
       setError(validationError.message)
     }
