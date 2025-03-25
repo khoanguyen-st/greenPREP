@@ -10,18 +10,20 @@ const validationSchema = yup.object().shape({
 })
 
 const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className = '', small = false }) => {
-  dropdownQuestionSchema.validateSync(questionData);
-  const [selectedOptions, setSelectedOptions] = useState({});
-  const [error, setError] = useState({});
+  dropdownQuestionSchema.validateSync(questionData)
+  const [selectedOptions, setSelectedOptions] = useState({})
+  const [error, setError] = useState({})
 
   const processedData = useMemo(() => {
-    if (!questionData) return null;
+    if (!questionData) {
+      return null
+    }
     try {
       const parsedAnswerContent =
         typeof questionData.AnswerContent === 'string'
           ? JSON.parse(questionData.AnswerContent)
-          : questionData.AnswerContent;
-      answerContentSchema.validateSync(parsedAnswerContent);
+          : questionData.AnswerContent
+      answerContentSchema.validateSync(parsedAnswerContent)
       if (parsedAnswerContent.leftItems && parsedAnswerContent.rightItems) {
         return {
           id: questionData.ID,
@@ -30,75 +32,76 @@ const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className =
           rightItems: parsedAnswerContent.rightItems,
           correctAnswers: parsedAnswerContent.correctAnswer,
           type: 'right-left'
-        };
+        }
       } else {
         const options = parsedAnswerContent.options || []
         const answers = {}
         options.forEach(({ key, value }) => {
-          answers[key] = value;
-        });
-        const correctAnswers = {};
-        (parsedAnswerContent.correctAnswer || []).forEach(({ key, value }) => {
-          correctAnswers[key] = value;
-        });
+          answers[key] = value
+        })
+        const correctAnswers = {}
+        ;(parsedAnswerContent.correctAnswer || []).forEach(({ key, value }) => {
+          correctAnswers[key] = value
+        })
         return {
           id: questionData.ID,
           question: questionData.Content,
           answers,
           correctAnswers,
           type: 'paragraph'
-        };
+        }
       }
     } catch (error) {
-      console.error('Error parsing question data:', error);
-      return null;
+      console.error('Error parsing question data:', error)
+      return null
     }
-  }, [questionData]);
+  }, [questionData])
 
-  const memoizedProcessedData = useMemo(() => processedData, [processedData]);
+  const memoizedProcessedData = useMemo(() => processedData, [processedData])
   useEffect(() => {
-    if (!memoizedProcessedData) return;
+    if (!memoizedProcessedData) {
+      return
+    }
 
-    const currentUserAnswer = userAnswer[memoizedProcessedData.id] || {};
+    const currentUserAnswer = userAnswer[memoizedProcessedData.id] || {}
     setSelectedOptions(prev => ({
       ...prev,
       ...currentUserAnswer
-    }));
+    }))
 
-    setError({});
-  }, [memoizedProcessedData, userAnswer]);
+    setError({})
+  }, [memoizedProcessedData, userAnswer])
 
+  const handleSelectChange = async (key, value) => {
+    const updatedAnswers = { ...selectedOptions, [key]: value }
+    setSelectedOptions(updatedAnswers)
 
+    try {
+      await validationSchema.validate({ selectedOption: value })
+      setError(prev => ({ ...prev, [key]: '' }))
 
-const handleSelectChange = async (key, value) => {
-  const updatedAnswers = { ...selectedOptions, [key]: value };
-  setSelectedOptions(updatedAnswers);
-
-  try {
-    await validationSchema.validate({ selectedOption: value });
-    setError(prev => ({ ...prev, [key]: '' }));
-
-    setUserAnswer(prev => ({
-      ...prev,
-      [processedData.id]: updatedAnswers
-    }));
-  } catch (validationError) {
-    setError(prev => ({ ...prev, [key]: validationError.message }));
+      setUserAnswer(prev => ({
+        ...prev,
+        [processedData.id]: updatedAnswers
+      }))
+    } catch (validationError) {
+      setError(prev => ({ ...prev, [key]: validationError.message }))
+    }
   }
-};
 
-
-  if (!processedData) return <p className="text-center text-gray-600">No question data available.</p>;
+  if (!processedData) {
+    return <p className="text-center text-gray-600">No question data available.</p>
+  }
   return (
     <div className={`${className} mx-auto max-w-4xl rounded-lg bg-white p-6 shadow-lg`}>
       <p className="mb-4 whitespace-pre-wrap text-sm font-semibold text-gray-800">{processedData.question}</p>
-      {processedData.type === "paragraph" ? (
+      {processedData.type === 'paragraph' ? (
         Object.entries(processedData.answers).map(([key, options]) => (
           <div key={key} className="mb-4 flex w-full">
             <div className={`flex w-1/2`}>
               <Select
                 onChange={value => handleSelectChange(key, value)}
-                value={selectedOptions?.[key] || ""}
+                value={selectedOptions?.[key] || ''}
                 className={`w-2/3 ${small ? 'h-8 text-xs' : 'h-8 text-sm'} rounded-md border border-gray-300`}
               >
                 {options.map(option => (
@@ -121,7 +124,7 @@ const handleSelectChange = async (key, value) => {
               <div className="w-1/2">
                 <Select
                   onChange={value => handleSelectChange(leftItem, value)}
-                  value={selectedOptions[leftItem] || ""}
+                  value={selectedOptions[leftItem] || ''}
                   className={`w-2/3 ${small ? 'h-8 text-xs' : 'h-8 text-xs'} rounded-md border border-gray-300`}
                 >
                   {processedData.rightItems.map(rightItem => (
@@ -137,6 +140,6 @@ const handleSelectChange = async (key, value) => {
         </div>
       )}
     </div>
-  );
-};
-export default DropdownQuestion;
+  )
+}
+export default DropdownQuestion
