@@ -1,5 +1,4 @@
 // import { lazy } from 'react';
-import SampleTestPage from '@/pages/Sample'
 import PlayStopButton from '@features/Listening/ui/PlayStopButton'
 import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage.jsx'
 import GrammarVocabPage from '@pages/GrammarVocabPage.jsx'
@@ -9,9 +8,6 @@ import ListeningPage from '@pages/ListeningPage.jsx'
 import ReadingTestPage from '@pages/ReadingPage.jsx'
 import WaitingForApproval from '@pages/WaitingForApproval.jsx'
 import WritingTestPage from '@pages/WritingTestPage.jsx'
-import TestAudioPage from '../../pages/AudioTest'
-import SampleDrop from '../../pages/SampleDropdown'
-import SubmissionScreen from '../../shared/ui/Submission/SubmissionScreen'
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute.jsx'
 
 const PrivateRoute = [
@@ -55,22 +51,6 @@ const PrivateRoute = [
         path: 'waiting-for-approval',
         element: <WaitingForApproval />
       },
-            {
-        path: 'sample',
-        element: <SampleTestPage />
-      },
-                        {
-        path: 'audio-test',
-        element: <TestAudioPage />
-      },
-         {
-        path: 'success',
-        element: <SubmissionScreen />
-      },
-                  {
-        path: 'dropdown',
-        element: <SampleDrop />
-      }
     ]
   }
 ]
