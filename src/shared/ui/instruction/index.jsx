@@ -2,21 +2,19 @@ import { Button, Typography } from 'antd'
 import { ArrowRightOutlined } from '@ant-design/icons'
 const { Title } = Typography
 
-const WritingInstructions = ({ testData, onStartTest }) => {
+export const Instruction = ({ data, onStart }) => {
   return (
     <div className="flex min-h-screen flex-col font-sans">
       <div className="mx-auto max-w-3xl flex-1 px-6 py-10 text-left">
         <Title level={2} className="mb-4 text-2xl">
-          {testData.testName} Instructions
+          {data.testName} Instructions
         </Title>
 
         <Title level={4} className="mb-6 text-xl">
-          {testData.section}
+          {data.section}
         </Title>
 
-        <Typography className="mb-4 text-base">
-          The test has four parts and takes up to {testData.timeAllowed}.
-        </Typography>
+        <Typography className="mb-4 text-base">The test has four parts and takes up to {data.timeAllowed}.</Typography>
 
         <Typography className="mb-4 text-base">Recommended times:</Typography>
 
@@ -33,17 +31,18 @@ const WritingInstructions = ({ testData, onStartTest }) => {
         </Typography>
       </div>
 
-      <div className="flex justify-end border-t border-gray-200 p-4">
+      <hr className="border-t border-gray-200" />
+
+      <div className="flex justify-end border-t border-gray-300 bg-white p-6">
         <Button
           type="primary"
-          className="flex h-[60px] min-w-[110px] items-center rounded border-[#003087] bg-[#003087] px-5"
-          onClick={onStartTest}
+          className="flex h-[50px] min-w-[120px] items-center justify-center rounded-lg bg-blue-900 px-6 text-white hover:bg-blue-800"
+          onClick={onStart}
         >
-          <span>Next</span> <ArrowRightOutlined className="ml-3 text-lg" />
+          <span className="text-base font-medium">Next</span>
+          <ArrowRightOutlined className="ml-2 text-lg" />
         </Button>
       </div>
     </div>
   )
 }
-
-export default WritingInstructions
