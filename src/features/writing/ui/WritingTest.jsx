@@ -6,7 +6,7 @@ import TimeRemaining from "@shared/ui/TimeRemaining/TimeRemaining";
 import QuestionNavigator from "@shared/ui/QuestionNavigatior/QuestionNavigatior";
 import FlagButton from "@shared/ui/FLagButton/FlagButton";
 import NavigationButtons from '@shared/ui/NavigationButtons/NavigationButtons';
-import { navigateLogo } from '@assets/Images/assets';
+import { navigateLogo } from '@assets/Images/index';
 import { DEFAULT_MAX_WORDS } from '../constance/WritingConst';
 import { fetchWritingTestDetails } from '../api/writingAPI'
 

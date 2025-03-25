@@ -1,30 +1,29 @@
-import { Button, Typography } from "antd";
-import { ArrowRightOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { Button, Typography } from 'antd'
+import { ArrowRightOutlined } from '@ant-design/icons'
+const { Title } = Typography
 
-const { Title } = Typography;
-
-const WritingInstructions = () => {
-  const navigate = useNavigate();
-
+export const Instruction = ({ data, onStart }) => {
   return (
     <div className="flex min-h-screen flex-col font-sans">
       <div className="mx-auto max-w-3xl flex-1 px-6 py-10 text-left">
         <Title level={2} className="mb-4 text-2xl">
-          Aptis General Practice Test Instructions
+          {data.testName} Instructions
         </Title>
 
-        <Title level={4} className="mb-6 text-xl">Writing Section</Title>
+        <Title level={4} className="mb-6 text-xl">
+          {data.section}
+        </Title>
 
-        <Typography className="mb-4 text-base">
-          The test has four parts and takes up to 50 minutes.
-        </Typography>
+        <Typography className="mb-4 text-base">The test has four parts and takes up to {data.timeAllowed}.</Typography>
 
         <Typography className="mb-4 text-base">Recommended times:</Typography>
 
         <Typography className="mb-2 text-base">Part One: 3 minutes</Typography>
+
         <Typography className="mb-2 text-base">Part Two: 7 minutes</Typography>
+
         <Typography className="mb-2 text-base">Part Three: 10 minutes</Typography>
+
         <Typography className="mb-2 text-base">Part Four: 30 minutes</Typography>
 
         <Typography className="mt-8 text-base">
@@ -38,14 +37,12 @@ const WritingInstructions = () => {
         <Button
           type="primary"
           className="flex h-[50px] min-w-[120px] items-center justify-center rounded-lg bg-blue-900 px-6 text-white hover:bg-blue-800"
-          onClick={() => navigate("/writing/test")}
+          onClick={onStart}
         >
           <span className="text-base font-medium">Next</span>
           <ArrowRightOutlined className="ml-2 text-lg" />
         </Button>
       </div>
     </div>
-  );
-};
-
-export default WritingInstructions;
+  )
+}

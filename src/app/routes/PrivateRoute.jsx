@@ -1,16 +1,19 @@
-import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage.jsx'
-import PlayStopButton from '@features/Listening/ui/PlayStopButton'
-import HomePage from '@pages/HomePage.jsx'
-import GrammarVocabPage from '@pages/GrammarVocabPage.jsx'
-import WritingTestPage from '@pages/WritingTestPage.jsx'
 import IntroductionScreen from '@pages/IntroductionScreen'
-import ListeningPage from '@pages/ListeningPage.jsx'
-import ReadingTestPage from '@pages/ReadingPage.jsx'
 import SpeakingPage from '@pages/SpeakingPage'
-import WaitingForApproval from '@pages/WaitingForApproval.jsx'
-import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute.jsx'
-import WritingIntroduction from '@features/writing/ui/WritingIntroduction'
-import WritingInstructions from '@features/writing/ui/WritingInstructions'
+import PlayStopButton from '@features/listening/ui/PlayStopButton'
+import HomePage from '@pages/HomePage'
+import GrammarVocabPage from '@pages/GrammarVocabPage'
+import ListeningPage from '@pages/ListeningPage'
+import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage'
+import ReadingTestPage from '@pages/ReadingPage'
+import WaitingForApproval from '@pages/WaitingForApproval'
+import Introduction from '@pages/listening/Introduction'
+import Instruction from '@pages/listening/Instruction'
+import { WritingPage } from '@pages/writing'
+import { InstructionWriting } from '@features/writing/ui/WritingInstruction'
+import { IntroductionWriting } from '@features/writing/ui/WritingIntroduction'
+
+import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 import WritingTest from '@features/writing/ui/WritingTest'
 
 const PrivateRoute = [
@@ -19,25 +22,25 @@ const PrivateRoute = [
     element: <ProtectedRoute />,
     children: [
       {
-        path: 'homepage',
+        index: true,
         element: <HomePage />
       },
       {
         path: 'writing',
-        element: <WritingTestPage />,
+        element: <WritingPage />,
         children: [
           {
             index: true,
-            element: <WritingIntroduction />,
+            element: <IntroductionWriting />
           },
           {
-            path: 'instructions',
-            element: <WritingInstructions />
+            path: 'instruction',
+            element: <InstructionWriting />
           },
           {
             path: 'test',
             element: <WritingTest />
-          },
+          }
         ]
       },
       {
@@ -50,7 +53,21 @@ const PrivateRoute = [
       },
       {
         path: 'listening',
-        element: <ListeningPage />
+        element: <ListeningPage />,
+        children: [
+          {
+            index: true,
+            element: <Introduction />
+          },
+          {
+            path: 'instruction',
+            element: <Instruction />
+          },
+          {
+            path: 'test',
+            element: <div>Test page</div>
+          }
+        ]
       },
       {
         path: 'rejectpage',

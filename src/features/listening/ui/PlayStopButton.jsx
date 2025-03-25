@@ -12,7 +12,9 @@ const AudioPlayer = ({ src, id }) => {
 
   const handlePlayPause = () => {
     const audio = audioRef.current
-    if (!audio) return
+    if (!audio) {
+      return
+    }
 
     if (isPlaying) {
       audio.pause()
