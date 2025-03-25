@@ -161,7 +161,7 @@ const MatchingQuestion = ({ leftItems, rightItems, matches, onChange, disabled =
           width: '100%',
           height: '100%',
           pointerEvents: 'none',
-          zIndex: 1
+          zIndex: 0
         }}
       >
         {lines.map(line => (
@@ -190,7 +190,7 @@ const MatchingQuestion = ({ leftItems, rightItems, matches, onChange, disabled =
         `}
       </style>
 
-      <div className="relative grid grid-cols-2 gap-8 md:gap-16" style={{ zIndex: 2 }}>
+      <div className="relative grid grid-cols-2 gap-8 md:gap-16" style={{ zIndex: 0 }}>
         <div className="left-items space-y-4">
           <h3 className="mb-4 text-lg font-semibold">Column A</h3>
           {leftItems.map(item => (

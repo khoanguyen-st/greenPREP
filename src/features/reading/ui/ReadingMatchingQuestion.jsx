@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import axiosInstance from '@shared/config/axios' // Update the import path as needed
 import { Spin, Alert } from 'antd'
-import MatchingQuestion from '@shared/ui/questionType/MatchingQuestion.jsx'
+import MatchingQuestion from '@shared/ui/questionType/MatchingQuestion'
 import NavigationButtons from '@shared/ui/NavigationButtons/NavigationButtons'
-import TimeRemaining from '@shared/ui/TimeRemaining/TimeRemaining.jsx'
+import TimeRemaining from '@shared/ui/TimeRemaining/TimeRemaining'
 import QuestionNavigator from '@shared/ui/QuestionNavigatior/QuestionNavigatior'
 import FlagButton from '@shared/ui/FLagButton/FlagButton'
 
