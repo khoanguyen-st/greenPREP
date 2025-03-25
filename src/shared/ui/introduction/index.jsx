@@ -2,7 +2,7 @@ import { Button, Typography } from 'antd'
 
 const { Title, Text } = Typography
 
-const WritingIntroduction = ({ testData, onStartTest }) => {
+export const Introduction = ({ data, onStart }) => {
   return (
     <div className="flex min-h-screen flex-col text-center font-sans">
       <div className="mx-auto mb-6 flex max-w-3xl flex-1 flex-col items-center justify-center text-center">
@@ -11,10 +11,10 @@ const WritingIntroduction = ({ testData, onStartTest }) => {
         </Title>
         <div className="mb-6 w-full text-left">
           <Title level={4} className="m-0 leading-normal">
-            {testData.testName}
+            {data.testName}
           </Title>
           <Title level={5} className="m-0 leading-normal">
-            {testData.section}
+            {data.section}
           </Title>
 
           <div className="mb-6">
@@ -23,13 +23,13 @@ const WritingIntroduction = ({ testData, onStartTest }) => {
                 <Text strong className="mb-1">
                   Number of Questions
                 </Text>
-                <Text className="text-base">{testData.questionCount}</Text>
+                <Text className="text-base">{data.questionCount}</Text>
               </div>
               <div className="mb-6 flex flex-1 flex-col">
                 <Text strong className="mb-1">
                   Time Allowed
                 </Text>
-                <Text className="text-base">{testData.timeAllowed}</Text>
+                <Text className="text-base">{data.timeAllowed}</Text>
               </div>
             </div>
 
@@ -38,7 +38,7 @@ const WritingIntroduction = ({ testData, onStartTest }) => {
                 <Text strong className="mb-1">
                   Assessment Description
                 </Text>
-                <Text className="text-base">{testData.assessmentDescription}</Text>
+                <Text className="text-base">{data.assessmentDescription}</Text>
               </div>
             </div>
 
@@ -47,7 +47,7 @@ const WritingIntroduction = ({ testData, onStartTest }) => {
                 <Text strong className="mb-1">
                   Form Description
                 </Text>
-                <Text className="text-base">{testData.formDescription}</Text>
+                <Text className="text-base">{data.formDescription}</Text>
               </div>
             </div>
           </div>
@@ -58,7 +58,7 @@ const WritingIntroduction = ({ testData, onStartTest }) => {
           size="large"
           className="h-10 w-[200px] text-base"
           style={{ backgroundColor: '#003087', borderColor: '#003087' }}
-          onClick={onStartTest}
+          onClick={onStart}
         >
           Start
         </Button>
@@ -66,5 +66,3 @@ const WritingIntroduction = ({ testData, onStartTest }) => {
     </div>
   )
 }
-
-export default WritingIntroduction
