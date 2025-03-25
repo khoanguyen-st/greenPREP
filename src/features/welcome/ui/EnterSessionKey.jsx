@@ -12,7 +12,7 @@ const EnterSessionKey = () => {
   const navigate = useNavigate()
 
   const handleStart = (sessionKey) => {
-    localStorage.getItem(sessionKey)
+    localStorage.setItem('sessionKey', sessionKey);
     navigate("/waiting-for-approval");
   };
 
