@@ -1,34 +1,34 @@
-import axios from "axios";
+import axios from 'axios'
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
   headers: {
-    "Content-Type": "application/json",
-  },
-});
+    'Content-Type': 'application/json'
+  }
+})
 
 axiosInstance.interceptors.request.use(
-  (config) => {
-    const accessToken = localStorage.getItem("access_token");
+  config => {
+    const accessToken = localStorage.getItem('access_token')
     if (accessToken) {
-      config.headers["Authorization"] = `Bearer ${JSON.parse(accessToken)}`;
+      config.headers['Authorization'] = `Bearer ${JSON.parse(accessToken)}`
     }
-    return config;
+    return config
   },
-  (error) => {
-    return Promise.reject(error);
+  error => {
+    return Promise.reject(error)
   }
-);
+)
 
 axiosInstance.interceptors.response.use(
-  (response) => response,
-  (error) => {
+  response => response,
+  error => {
     if (error.response && error.response.status === 401) {
-      localStorage.removeItem("access_token");
-      window.location.href = "/login";
+      localStorage.removeItem('access_token')
+      window.location.href = '/login'
     }
-    return Promise.reject(error);
+    return Promise.reject(error)
   }
-);
+)
 
-export default axiosInstance;
+export default axiosInstance

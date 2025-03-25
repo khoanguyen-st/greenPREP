@@ -1,10 +1,7 @@
-import {
-  answerContentSchema,
-  dropdownQuestionSchema,
-} from "@shared/model/questionType/dropdownQuestion.schema";
-import { Select } from "antd";
-import { useEffect, useMemo, useState } from "react";
-import * as yup from "yup";
+import { answerContentSchema, dropdownQuestionSchema } from '@shared/model/questionType/dropdownQuestion.schema'
+import { Select } from 'antd'
+import { useEffect, useMemo, useState } from 'react'
+import * as yup from 'yup'
 
 const { Option } = Select
 
@@ -18,7 +15,9 @@ const DropdownQuestion = ({ questionData, onChange, className = '', small = fals
   const [error, setError] = useState({})
 
   const processedData = useMemo(() => {
-    if (!questionData) return null
+    if (!questionData) {
+      return null
+    }
     try {
       const parsedAnswerContent =
         typeof questionData.AnswerContent === 'string'
@@ -36,8 +35,8 @@ const DropdownQuestion = ({ questionData, onChange, className = '', small = fals
           type: 'right-left'
         }
       } else {
-        const options = parsedAnswerContent.options || [];
-        const answers = {};
+        const options = parsedAnswerContent.options || []
+        const answers = {}
         options.forEach(({ key, value }) => {
           answers[key] = value
         })
@@ -82,7 +81,9 @@ const DropdownQuestion = ({ questionData, onChange, className = '', small = fals
     }
   }
 
-  if (!processedData) return <p className="text-center text-gray-600">No question data available.</p>
+  if (!processedData) {
+    return <p className="text-center text-gray-600">No question data available.</p>
+  }
 
   const isSingleQuestion = processedData.type === 'paragraph' && Object.keys(processedData.answers).length === 1
 
@@ -95,7 +96,7 @@ const DropdownQuestion = ({ questionData, onChange, className = '', small = fals
       >
         <p className="mb-4 whitespace-pre-wrap text-sm font-semibold text-gray-800">{processedData.question}</p>
 
-        {processedData.type === "paragraph" ? (
+        {processedData.type === 'paragraph' ? (
           Object.entries(processedData.answers).map(([key, options]) => (
             <div key={key} className="mb-4 flex w-full">
               {Object.keys(processedData.answers).length > 1 && (
