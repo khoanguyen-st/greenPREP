@@ -11,21 +11,21 @@ const EnterSessionKey = () => {
   const [form] = Form.useForm()
   const navigate = useNavigate()
 
-  const handleStart = (sessionKey) => {
-    localStorage.setItem('sessionKey', sessionKey);
-    navigate("/waiting-for-approval");
-  };
+  const handleStart = sessionKey => {
+    localStorage.setItem('sessionKey', sessionKey)
+    navigate('/waiting-for-approval')
+  }
 
   return (
     <Layout>
-      <Content className="flex flex-col md:flex-row items-center justify-center min-h-screen bg-white px-5 md:px-20 gap-10 md:gap-40">
-        <div className="w-full md:w-[30%] flex justify-center items-center">
+      <Content className="flex min-h-screen flex-col items-center justify-center gap-10 bg-white px-5 md:flex-row md:gap-40 md:px-20">
+        <div className="flex w-full items-center justify-center md:w-[30%]">
           <Image
             src={sessionKey}
             preview={false}
             height={550}
             width={550}
-            className="object-cover transform -translate-y-12"
+            className="-translate-y-12 transform object-cover"
           />
         </div>
         <div className="mt-0 flex w-full flex-col items-center pr-0 md:mt-[-20%] md:w-[70%] md:items-start md:pr-5">
@@ -34,10 +34,10 @@ const EnterSessionKey = () => {
               Welcome to <span className="text-[#003087]">GreenPREP !</span>
             </Title>
             <div className="flex flex-col items-center md:items-start">
-              <Text className="text-lg md:text-[40px] font-normal leading-tight text-center mb-4 md:mb-5">
+              <Text className="mb-4 text-center text-lg font-normal leading-tight md:mb-5 md:text-[40px]">
                 Have you received the session key?
               </Text>
-              <Text className="text-gray-600 text-sm md:text-[20px] w-fit text-left">
+              <Text className="w-fit text-left text-sm text-gray-600 md:text-[20px]">
                 Please enter session key to start test
               </Text>
             </div>
@@ -69,11 +69,11 @@ const EnterSessionKey = () => {
                 }
               />
             </Form.Item>
-            <div className="w-full flex justify-center md:justify-start">
+            <div className="flex w-full justify-center md:justify-start">
               <Button
                 type="primary"
                 size="large"
-                className="bg-[#003087] hover:!bg-[#131663] rounded-md px-6 py-2"
+                className="rounded-md bg-[#003087] px-6 py-2 hover:!bg-[#131663]"
                 htmlType="submit"
               >
                 Submit key

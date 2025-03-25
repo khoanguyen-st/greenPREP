@@ -1,6 +1,6 @@
 import IntroductionScreen from '@pages/IntroductionScreen'
 import SpeakingPage from '@pages/SpeakingPage'
-import PlayStopButton from '@features/Listening/ui/PlayStopButton'
+import PlayStopButton from '@features/listening/ui/PlayStopButton'
 import HomePage from '@pages/HomePage'
 import GrammarVocabPage from '@pages/GrammarVocabPage'
 import ListeningPage from '@pages/ListeningPage'
@@ -21,7 +21,7 @@ const PrivateRoute = [
     element: <ProtectedRoute />,
     children: [
       {
-        path: 'homepage',
+        index: true,
         element: <HomePage />
       },
       {
