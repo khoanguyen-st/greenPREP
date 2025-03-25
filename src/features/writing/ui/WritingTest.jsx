@@ -1,8 +1,11 @@
-import { Form, Input, Typography, Image, Spin } from 'antd'
+import { Form, Input, Typography, Image, Spin, Button } from 'antd'
 import { useState, useEffect } from 'react'
 import NavigationButtons from '@shared/ui/NavigationButtons/NavigationButtons'
+import { MenuOutlined } from "@ant-design/icons";
 import { useQuery } from '@tanstack/react-query'
 import { fetchWritingTestDetails } from '../api/writingAPI'
+import TimeRemaining from "@shared/ui/TimeRemaining/TimeRemaining";
+import QuestionNavigator from "@shared/ui/QuestionNavigatior/QuestionNavigatior";
 
 const { Title, Text } = Typography
 const DEFAULT_MAX_WORDS = {
@@ -32,6 +35,7 @@ const WritingTest = () => {
   const [answers, setAnswers] = useState(() => {
     return JSON.parse(localStorage.getItem('writingAnswers')) || {}
   })
+  const [isNavigatorOpen, setIsNavigatorOpen] = useState(false);
 
   useEffect(() => {
     if (data) {
@@ -137,8 +141,35 @@ const WritingTest = () => {
         })}
       </Form>
 
-      <div className="fixed bottom-8 left-4 z-50 hidden w-fit mdL:block">
-        <Image src="src/assets/Images/navigate-logo.png" alt="Logo" preview={false} className="h-[100px] w-auto" />
+      <Button
+        className="md:hidden fixed bottom-[50%] right-5 bg-blue-500 text-white rounded-full p-2 shadow-lg"
+        onClick={() => setIsNavigatorOpen(!isNavigatorOpen)}
+      >
+        <MenuOutlined />
+      </Button>
+      <div className={`fixed right-2 z-50 w-60 h-auto border border-gray-300 rounded-lg shadow-lg bg-white p-2
+                 ${isNavigatorOpen ? 'block' : 'hidden'} md:block
+                 bottom-[65%] mdL:bottom-[75%]`}>
+        <TimeRemaining duration={10 * 60} onAutoSubmit={handleSubmit} />
+        <QuestionNavigator
+          values={data.Parts.map((part) => ({
+            type: Object.keys(answers).some(
+              (key) => key.startsWith(`answer-${part.ID}`) && answers[key]?.trim() !== ""
+            )
+              ? "answered"
+              : "unanswered",
+          }))}
+          action={setCurrentPartIndex}
+          position={currentPartIndex}
+        />
+      </div>
+      <div className="fixed bottom-8 left-4 z-50 w-fit hidden mdL:block ">
+        <Image
+          src="src/assets/Images/navigate-logo.png"
+          alt="Logo"
+          preview={false}
+          className="h-[100px] w-auto"
+        />
       </div>
       <div className="bottom-0 shadow-md">
         <NavigationButtons
