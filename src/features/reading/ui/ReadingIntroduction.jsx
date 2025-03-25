@@ -1,70 +1,46 @@
-import { Button, Typography } from 'antd'
-
-const { Title, Text } = Typography
-
 const ReadingIntroduction = ({ testData, onStartTest }) => {
   return (
-    <div className="flex min-h-screen flex-col text-center font-sans">
-      <div className="mx-auto mb-6 flex max-w-3xl flex-1 flex-col items-center justify-center text-center">
-        <Title className="mb-6 text-3xl" style={{ color: '#003087' }}>
-          GreenPREP
-        </Title>
-        <div className="mb-6 w-full text-left">
-          <div className="flex items-center gap-1">
-            <Text className="m-0 text-lg leading-normal">{testData.section}</Text>
-            <Text className="m-0 text-lg leading-normal">{testData.testName}</Text>
+    <div className="flex min-h-screen flex-col items-center justify-center px-4 text-center font-sans">
+      <div className="w-full max-w-3xl">
+        <h1 className="mb-6 text-3xl font-bold text-blue-900">GreenPREP</h1>
+
+        <div className="mb-6 text-left">
+          <div className="flex items-center gap-2 text-lg">
+            <p className="m-0">{testData.section}</p>
+            <p className="m-0">{testData.testName}</p>
           </div>
-          <Title level={5} className="leading-normal">
-            {testData.section}
-          </Title>
+          <h5 className="mt-2 text-lg font-semibold">{testData.section}</h5>
 
           <div className="mb-6">
             <div className="mb-6 flex flex-col justify-between md:flex-row">
-              <div className="mb-6 flex flex-1 flex-col md:mb-0">
-                <Text strong className="mb-1">
-                  Number of Questions
-                </Text>
-                <Text className="text-base">{testData.questionCount}</Text>
+              <div className="mb-6 flex-1 md:mb-0">
+                <p className="mb-1 font-semibold">Number of Questions</p>
+                <p className="text-base">{testData.questionCount}</p>
               </div>
-              <div className="mb-6 flex flex-1 flex-col">
-                <Text strong className="mb-1">
-                  Time Allowed
-                </Text>
-                <Text className="text-base" style={{ marginLeft: '20px' }}>
-                  {testData.timeAllowed}
-                </Text>
+              <div className="mb-6 flex-1">
+                <p className="mb-1 font-semibold">Time Allowed</p>
+                <p className="text-base">{testData.timeAllowed}</p>
               </div>
             </div>
 
-            <div className="mb-6" style={{ marginTop: '-30px' }}>
-              <div className="flex w-full flex-col">
-                <Text strong className="mb-1">
-                  Assessment Description
-                </Text>
-                <Text className="text-base">{testData.assessmentDescription}</Text>
-              </div>
+            <div className="mb-5">
+              <p className="mb-1 font-semibold">Assessment Description</p>
+              <p className="text-base">{testData.assessmentDescription}</p>
             </div>
 
-            <div className="mb-6" style={{ marginTop: '-10px' }}>
-              <div className="flex w-full flex-col">
-                <Text strong className="mb-1">
-                  Form Description
-                </Text>
-                <Text className="text-base">{testData.formDescription}</Text>
-              </div>
+            <div className="mb-5">
+              <p className="mb-1 font-semibold">Form Description</p>
+              <p className="text-base">{testData.formDescription}</p>
             </div>
           </div>
         </div>
 
-        <Button
-          type="primary"
-          size="large"
-          className="h-10 w-[200px] text-base"
-          style={{ backgroundColor: '#003087', borderColor: '#003087' }}
+        <button
+          className="h-10 w-48 rounded-md bg-blue-900 text-base font-medium text-white transition hover:bg-blue-800"
           onClick={onStartTest}
         >
           Start
-        </Button>
+        </button>
       </div>
     </div>
   )
