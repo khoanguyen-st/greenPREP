@@ -10,7 +10,7 @@ const VocabIntroduction = ({ setStep }) => {
 
   return (
     <Layout className="min-h-screen">
-      <Content className="px-0 py-0">
+      <Content className="bg-[white] px-0 py-0">
         <Row className="mx-auto min-h-screen w-full flex-col border-t border-[#f8d7da]">
           <Col className="border-b border-[#f8d7da] py-6 sm:py-8 md:py-12" span={24}></Col>
 

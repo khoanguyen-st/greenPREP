@@ -1,7 +1,7 @@
 import { Layout, Typography, Button, Space, Row, Col } from 'antd'
 import { ArrowRightOutlined } from '@ant-design/icons'
 
-const { Content } = Layout
+const { Content, Footer } = Layout
 const { Title, Text } = Typography
 
 const VocabInstruction = ({ setStep }) => {
@@ -11,8 +11,8 @@ const VocabInstruction = ({ setStep }) => {
 
   return (
     <Layout className="min-h-screen">
-      <Content className="px-0 py-0">
-        <Row className="mx-auto min-h-screen w-full flex-col border-t border-[#f8d7da]">
+      <Content className="bg-[white] px-0 py-0">
+        <Row className="mx-auto w-full flex-col border-t border-[#f8d7da]">
           <Col className="border-b border-[#f8d7da] py-4 sm:py-6 md:py-8 lg:py-12" span={24}></Col>
 
           <Col className="border-b border-[#f8d7da]" span={24}>
@@ -50,25 +50,25 @@ const VocabInstruction = ({ setStep }) => {
               </Col>
             </Row>
           </Col>
-
-          <Col className="border-b border-[#f8d7da]" span={24}>
-            <Row className="flex justify-end px-4 py-6 sm:px-6 sm:py-8 md:px-10 md:py-10 lg:px-16">
-              <Col>
-                <Button
-                  type="primary"
-                  size="large"
-                  className="flex h-8 w-20 items-center justify-center bg-[#003087] sm:h-9 sm:w-24 md:h-10 md:w-28"
-                  onClick={handleNext}
-                >
-                  Next <ArrowRightOutlined />
-                </Button>
-              </Col>
-            </Row>
-          </Col>
-
-          <Col className="flex-grow border-b border-[#f8d7da]" span={24}></Col>
         </Row>
       </Content>
+
+      <Footer className="bg-[#f3f4f6] p-0">
+        <Row className="w-full">
+          <Col span={24} className="border-t-[3px] border-solid border-[#cccccc]">
+            <Row justify="end" className="bg-white px-8 py-6">
+              <Button
+                type="primary"
+                size="large"
+                className="flex h-14 w-32 items-center justify-center rounded-[5px] bg-[#003087]"
+                onClick={handleNext}
+              >
+                Next <ArrowRightOutlined />
+              </Button>
+            </Row>
+          </Col>
+        </Row>
+      </Footer>
     </Layout>
   )
 }
