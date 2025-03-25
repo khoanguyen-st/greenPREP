@@ -1,7 +1,10 @@
-import { Select } from 'antd'
-import { useEffect, useMemo, useState } from 'react'
-import * as yup from 'yup'
-import { answerContentSchema, dropdownQuestionSchema } from '../../model/questionType/dropdownQuestion.schema'
+import {
+  answerContentSchema,
+  dropdownQuestionSchema,
+} from "@shared/model/questionType/dropdownQuestion.schema";
+import { Select } from "antd";
+import { useEffect, useMemo, useState } from "react";
+import * as yup from "yup";
 
 const { Option } = Select
 
@@ -24,7 +27,6 @@ const DropdownQuestion = ({ questionData, onChange, className = '', small = fals
       answerContentSchema.validateSync(parsedAnswerContent)
 
       if (parsedAnswerContent.leftItems && parsedAnswerContent.rightItems) {
-        // Kiểu 2: right, left item
         return {
           id: questionData.ID,
           question: questionData.Content,
@@ -34,9 +36,8 @@ const DropdownQuestion = ({ questionData, onChange, className = '', small = fals
           type: 'right-left'
         }
       } else {
-        // Kiểu 1: paragraph
-        const options = parsedAnswerContent.options || []
-        const answers = {}
+        const options = parsedAnswerContent.options || [];
+        const answers = {};
         options.forEach(({ key, value }) => {
           answers[key] = value
         })
@@ -94,8 +95,7 @@ const DropdownQuestion = ({ questionData, onChange, className = '', small = fals
       >
         <p className="mb-4 whitespace-pre-wrap text-sm font-semibold text-gray-800">{processedData.question}</p>
 
-        {processedData.type === 'paragraph' ? (
-          // Kiểu 1: paragraph
+        {processedData.type === "paragraph" ? (
           Object.entries(processedData.answers).map(([key, options]) => (
             <div key={key} className="mb-4 flex w-full">
               {Object.keys(processedData.answers).length > 1 && (
@@ -121,7 +121,6 @@ const DropdownQuestion = ({ questionData, onChange, className = '', small = fals
             </div>
           ))
         ) : (
-          // Kiểu 2: right, left item
           <div className="w-full">
             {processedData.leftItems.map((leftItem, index) => (
               <div key={index} className="mb-4 flex w-full">
