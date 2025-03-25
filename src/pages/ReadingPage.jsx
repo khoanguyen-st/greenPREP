@@ -6,7 +6,7 @@ import ReadingTestInstructions from '@features/reading/ui/ReadingInstruction.jsx
 const ReadingTestPage = () => {
   // Mock data
   const [testData] = useState({
-    testName: 'Aptis General Practice Test',
+    testName: 'Aptis General Reading Test',
     section: 'Reading',
     questionCount: 5,
     timeAllowed: '35 mins',
@@ -32,7 +32,7 @@ const ReadingTestPage = () => {
         return <ReadingIntroduction testData={testData && testData} onStartTest={handleStartTest} />
       case 'instructions':
         return (
-          <ReadingTestInstructions onStartTest={handleNext}/>
+          <ReadingTestInstructions testData={testData && testData} onStartTest={handleNext}/>
         )
       case 'test':
         return <div>Test</div>
