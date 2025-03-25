@@ -9,6 +9,7 @@ import SpeakingPage from '@pages/SpeakingPage'
 import WaitingForApproval from '@pages/WaitingForApproval.jsx'
 import WritingTestPage from '@pages/WritingTestPage.jsx'
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute.jsx'
+import ReadingPage from '@pages/Reading-Question.jsx'
 
 const PrivateRoute = [
   {
@@ -51,7 +52,14 @@ const PrivateRoute = [
         path: 'waiting-for-approval',
         element: <WaitingForApproval />
       },
-      { path: 'speaking', element: <SpeakingPage /> }
+      {
+        path: 'speaking',
+        element: <SpeakingPage />
+      },
+      {
+        path: 'reading-question',
+        element: <ReadingPage />
+      }
     ]
   }
 ]
