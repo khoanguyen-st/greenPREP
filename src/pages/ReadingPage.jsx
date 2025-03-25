@@ -2,9 +2,10 @@
 import React, { useState, useEffect } from 'react'
 import ReadingIntroduction from '@features/reading/ui/ReadingIntroduction.jsx'
 import ReadingTestInstructions from '@features/reading/ui/ReadingInstruction.jsx'
+import ReadingOrderingQuestion from '@features/reading/ui/ReadingOrderingQuestion.jsx'
+import ReadingMatchingQuestion from '@features/reading/ui/ReadingMatchingQuestion'
 
 const ReadingTestPage = () => {
-  // Mock data
   const [testData] = useState({
     testName: 'Aptis General Practice Test',
     section: 'Reading',
@@ -23,7 +24,7 @@ const ReadingTestPage = () => {
   }
 
   const handleNext = () => {
-    setPageState('test')
+    setPageState('test'), setPageState('orderingQuestion')
   }
 
   const renderContent = () => {
@@ -33,7 +34,9 @@ const ReadingTestPage = () => {
       case 'instructions':
         return <ReadingTestInstructions onStartTest={handleNext} />
       case 'test':
-        return <div>Test</div>
+        return <ReadingMatchingQuestion />
+      case 'orderingQuestion':
+        return <ReadingOrderingQuestion />
       default:
         return <div>Loading...</div>
     }
