@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import ReadingIntroduction from '@features/reading/ui/ReadingIntroduction.jsx'
 import ReadingTestInstructions from '@features/reading/ui/ReadingInstruction.jsx'
+import ReadingOrderingQuestion from '@features/reading/ui/ReadingOrderingQuestion.jsx'
 import ReadingMatchingQuestion from '@features/reading/ui/ReadingMatchingQuestion'
 
 const ReadingTestPage = () => {
@@ -23,7 +24,7 @@ const ReadingTestPage = () => {
   }
 
   const handleNext = () => {
-    setPageState('test')
+    setPageState('test'), setPageState('orderingQuestion')
   }
 
   const renderContent = () => {
@@ -34,6 +35,8 @@ const ReadingTestPage = () => {
         return <ReadingTestInstructions onStartTest={handleNext} />
       case 'test':
         return <ReadingMatchingQuestion />
+      case 'orderingQuestion':
+        return <ReadingOrderingQuestion />
       default:
         return <div>Loading...</div>
     }

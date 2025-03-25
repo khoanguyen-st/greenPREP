@@ -7,9 +7,9 @@ import ListeningPage from '@pages/ListeningPage.jsx'
 import ReadingTestPage from '@pages/ReadingPage.jsx'
 import SpeakingPage from '@pages/SpeakingPage'
 import WaitingForApproval from '@pages/WaitingForApproval.jsx'
-import WritingTestPage from '@pages/WritingTestPage.jsx'
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute.jsx'
 import ReadingPage from '@pages/Reading-Question.jsx'
+import WritingTestPage from '@pages/WritingTestPage.jsx'
 
 const PrivateRoute = [
   {
