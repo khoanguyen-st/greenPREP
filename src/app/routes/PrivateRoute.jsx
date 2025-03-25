@@ -10,13 +10,14 @@ import IntroductionScreen from '@pages/IntroductionScreen'
 import Instruction from '@pages/listening/Instruction'
 import Introduction from '@pages/listening/Introduction'
 import ListeningPage from '@pages/ListeningPage'
-import ReadingTestPage from '@pages/ReadingPage'
+// import ReadingTestPage from '@pages/ReadingPage'
 import { SpeakingPage } from '@pages/speaking'
 import WaitingForApproval from '@pages/WaitingForApproval'
 import { WritingPage } from '@pages/writing'
 
+import Introparts from '../../features/Speaking/ui/Introparts'
+import Parts from '../../features/Speaking/ui/Parts'
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
-
 
 const PrivateRoute = [
   {
@@ -71,10 +72,10 @@ const PrivateRoute = [
         path: 'rejectpage',
         element: <DesktopRejectRequestPage />
       },
-      {
-        path: 'reading',
-        element: <ReadingTestPage />
-      },
+      // {
+      //   path: 'reading',
+      //   element: <ReadingTestPage />
+      // },
       {
         path: 'introduction',
         element: <IntroductionScreen />
@@ -96,14 +97,17 @@ const PrivateRoute = [
             element: <InstructionSpeaking />
           },
           {
-            path: 'test',
-            element: <div>Test page</div>
+            path: 'instruction/:part',
+            element: <Introparts />
+          },
+          {
+            path: 'test/:part',
+            element: <Parts />
           }
         ]
       }
     ]
   }
 ]
-
 
 export default PrivateRoute

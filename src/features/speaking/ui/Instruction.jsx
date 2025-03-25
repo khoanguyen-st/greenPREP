@@ -5,8 +5,9 @@ import { useNavigate } from 'react-router-dom'
 export const InstructionSpeaking = () => {
   const navigate = useNavigate()
   const data = useSpeakingData()
+  const part = 1 // Set the param value to 1
   const onStart = () => {
-    navigate('/speaking/test')
+    navigate(`/speaking/instruction/${part}`)
   }
   return <Instruction data={data} onStart={onStart} />
 }

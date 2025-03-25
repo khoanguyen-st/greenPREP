@@ -1,10 +1,10 @@
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { Button } from "antd";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const Introduction = () => {
+const Intropart = () => {
   const navigate = useNavigate();
-    const location = useLocation();
+  const location = useLocation();
   return (
     <div className="bg-white rounded-xl h-screen w-full box-border pt-28 px-28">
       <h1 className="text-4xl m-0 font-bold text-[#003087] mb-6">Speaking Test</h1>
@@ -19,7 +19,7 @@ const Introduction = () => {
         <div className="flex justify-center mt-20">
           <Button
             type="primary"
-            onClick={() => navigate(`${location.pathname}/part1`)}
+            onClick={() => navigate(`${location}/question`)}
             className="bg-[#003087] text-[20px] hover:bg-blue-700 h-[60px] w-[150px]"
           >
           Next
@@ -30,4 +30,4 @@ const Introduction = () => {
   )
 }
 
-export default Introduction
+export default Intropart
