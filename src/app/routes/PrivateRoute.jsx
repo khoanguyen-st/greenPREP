@@ -2,13 +2,14 @@ import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage.jsx'
 import PlayStopButton from '@features/Listening/ui/PlayStopButton'
 import HomePage from '@pages/HomePage.jsx'
 import GrammarVocabPage from '@pages/GrammarVocabPage.jsx'
-import WritingTestPage from '@pages/WritingTestPage.jsx'
 import IntroductionScreen from '@pages/IntroductionScreen'
 import ListeningPage from '@pages/ListeningPage.jsx'
 import ReadingTestPage from '@pages/ReadingPage.jsx'
 import SpeakingPage from '@pages/SpeakingPage'
 import WaitingForApproval from '@pages/WaitingForApproval.jsx'
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute.jsx'
+import ReadingPage from '@pages/Reading-Question.jsx'
+import WritingTestPage from '@pages/WritingTestPage.jsx'
 
 const PrivateRoute = [
   {
@@ -51,7 +52,14 @@ const PrivateRoute = [
         path: 'waiting-for-approval',
         element: <WaitingForApproval />
       },
-      { path: 'speaking', element: <SpeakingPage /> }
+      {
+        path: 'speaking',
+        element: <SpeakingPage />
+      },
+      {
+        path: 'reading-question',
+        element: <ReadingPage />
+      }
     ]
   }
 ]
