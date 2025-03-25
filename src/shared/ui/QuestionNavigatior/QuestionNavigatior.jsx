@@ -1,18 +1,15 @@
 export default function QuestionNavigator({ values, action, position }) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 p-2 sm:p-4 max-w-[260px] lg:min-w-[200px] mx-auto">
+    <div className="mx-auto grid max-w-[260px] grid-cols-2 gap-2 p-2 sm:grid-cols-3 sm:p-4 md:grid-cols-4 lg:min-w-[200px] lg:grid-cols-5">
       {values.map(({ type }, i) => (
         <div
           key={i}
           onClick={() => action(i)}
-          className={`relative flex flex-col items-center justify-center rounded-sm border-2 border-gray-400 border-solid
-            ${
-              position === i
-                ? " outline outline-3 outline-gray-800 shadow-lg "
-                : "border-gray-500 border-solid rounded-sm"
-            }
-            hover:outline hover:outline-2 hover:rounded-md hover:outline-gray-500 hover:cursor-pointer`}
+          className={`relative flex flex-col items-center justify-center rounded-sm border-2 border-solid border-gray-400 ${
+            position === i ? 'outline-3 shadow-lg outline outline-gray-800' : 'rounded-sm border-solid border-gray-500'
+          } hover:cursor-pointer hover:rounded-md hover:outline hover:outline-2 hover:outline-gray-500`}
         >
+
           {(type === "flagged" || type === "answered-flagged") && (
             <div className="absolute right-0 top-[-0.5px] flex h-[14px] w-[14px] items-center justify-center">
               <svg
@@ -21,20 +18,19 @@ export default function QuestionNavigator({ values, action, position }) {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
+
                 <path d="M0,-4 L16,12" stroke="red" strokeWidth="5" />
               </svg>
             </div>
           )}
           <span className="text-sm hover:cursor-pointer">{i + 1}</span>
           <div
-            className={`w-full h-3 border-t-black rounded-b-xsm ${
-              type === "answered" || type === "answered-flagged"
-                ? "bg-green-500"
-                : "bg-gray-400"
+            className={`rounded-b-xsm h-3 w-full border-t-black ${
+              type === 'answered' || type === 'answered-flagged' ? 'bg-green-500' : 'bg-gray-400'
             }`}
           />
         </div>
       ))}
     </div>
-  );
+  )
 }

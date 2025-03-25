@@ -1,5 +1,8 @@
+
 // Define public routes accessible to all users
 import SpeakingPage from '../../pages/SpeakingPage';
+
+
 const PublicRoute = [
   {
     path: "login",
@@ -7,4 +10,5 @@ const PublicRoute = [
   },
 ];
 
-export default PublicRoute;
+
+export default PublicRoute
