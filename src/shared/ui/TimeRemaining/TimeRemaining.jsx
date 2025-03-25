@@ -27,7 +27,7 @@ const TimeRemaining = ({ duration, label = 'Time remaining', onAutoSubmit }) => 
   const percentage = ((timeLeft / duration) * 100).toFixed(2)
 
   return (
-    <div className="fixed right-2 top-4 z-50 flex w-60 flex-col items-center space-y-2 rounded-lg border border-black bg-white px-2 py-2 shadow-md">
+    <div className="fixed right-2 top-4 z-40 flex w-60 flex-col items-center space-y-2 rounded-lg border border-black bg-white px-2 py-2 shadow-md">
       {/* Time */}
       <div className="text-3xl font-bold text-black">{formatTime(timeLeft)}</div>
 

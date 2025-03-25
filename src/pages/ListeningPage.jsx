@@ -4,6 +4,7 @@ import Introduction from '../features/Listening/ui/Introduction'
 import Instruction from '../features/Listening/ui/Instruction'
 import useAntiCheat from '../shared/utils/antiCheat'
 import CustomAlert from '../shared/ui/CustomAlert/CustomAlert'
+import Test from '@features/Listening/ui/Test'
 
 const ListeningPage = () => {
   const [currentView, setCurrentView] = useState('introduction')
@@ -34,11 +35,7 @@ const ListeningPage = () => {
         {currentView === 'introduction' && <Introduction onStart={handleStartTest} />}
         {currentView === 'instruction' && <Instruction onNext={handleNext} />}
 
-        {currentView === 'test' && (
-          <div className="p-12 text-center">
-            <h2 className="text-2xl font-bold">Listening Test Started</h2>
-          </div>
-        )}
+        {currentView === 'test' && <Test />}
       </div>
     </ConfigProvider>
   )
