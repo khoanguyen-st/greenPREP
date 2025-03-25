@@ -2,7 +2,6 @@ import IntroductionScreen from '@pages/IntroductionScreen'
 import SpeakingPage from '@pages/SpeakingPage'
 import PlayStopButton from '@features/listening/ui/PlayStopButton'
 import HomePage from '@pages/HomePage'
-import WritingTestPage from '@pages/WritingTestPage'
 import GrammarVocabPage from '@pages/GrammarVocabPage'
 import ListeningPage from '@pages/ListeningPage'
 import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage'
@@ -10,6 +9,9 @@ import ReadingTestPage from '@pages/ReadingPage'
 import WaitingForApproval from '@pages/WaitingForApproval'
 import Introduction from '@pages/listening/Introduction'
 import Instruction from '@pages/listening/Instruction'
+import { WritingPage } from '@pages/writing'
+import { IntroductionWriting } from '@features/writing/ui/introduction'
+import { InstructionWriting } from '@features/writing/ui/instruction'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 
@@ -24,19 +26,15 @@ const PrivateRoute = [
       },
       {
         path: 'writing',
-        element: <WritingTestPage />,
+        element: <WritingPage />,
         children: [
           {
             index: true,
-            element: <div>Introduction</div>
+            element: <IntroductionWriting />
           },
           {
             path: 'instruction',
-            element: <div>Instruction</div>
-          },
-          {
-            path: 'test',
-            element: <div>Test page</div>
+            element: <InstructionWriting />
           }
         ]
       },
