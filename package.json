@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && cp -r src/assets/images dist/assets/ && echo 'Build completed!'",
     "lint": "eslint .",
     "preview": "vite preview",
     "prepare": "husky install",
