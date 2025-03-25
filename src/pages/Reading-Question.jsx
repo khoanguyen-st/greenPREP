@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { Select } from 'antd'
+
 import TimeRemaining from '../shared/ui/TimeRemaining/TimeRemaining'
 
 const { Option } = Select
@@ -14,10 +15,7 @@ const fetchTopic = async () => {
 }
 
 // Function to handle auto submit when time runs out
-const handleAutoSubmit = () => {
-  console.log('Time is up! Auto-submitting...')
-  // Thêm logic submit bài kiểm tra ở đây (Gửi dữ liệu lên server hoặc lưu trữ)
-}
+const handleAutoSubmit = () => {}
 
 // Render fill-in-the-blank question
 const renderFillInTheBlank = answerContent => {
@@ -123,8 +121,12 @@ const ReadingPage = () => {
     queryFn: fetchTopic
   })
 
-  if (isLoading) return <div className="p-4 text-center">Loading...</div>
-  if (error) return <div className="p-4 text-center text-red-500">Error: {error.message}</div>
+  if (isLoading) {
+    return <div className="p-4 text-center">Loading...</div>
+  }
+  if (error) {
+    return <div className="p-4 text-center text-red-500">Error: {error.message}</div>
+  }
 
   return (
     <div className="mx-auto max-w-4xl p-4">

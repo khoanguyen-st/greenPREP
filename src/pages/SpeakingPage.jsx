@@ -1,8 +1,6 @@
 import Instruction from '@features/speaking/ui/Instruction'
 import Introduction from '@features/speaking/ui/Introduction'
-//import MicrophoneTest from '@features/speaking/ui/MicrophoneTest'
 import { useState } from 'react'
-// import SpeakingTest from './SpeakingTest'
 
 const SpeakingPage = () => {
   const [step, setStep] = useState(1)
