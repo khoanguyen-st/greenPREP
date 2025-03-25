@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import WritingIntroduction from '@features/writing/ui/Introduction.jsx'
 import WritingInstructions from '@features/writing/ui/Instructions'
+import { Outlet } from 'react-router-dom'
 
 const WritingTestPage = () => {
   const [testData] = useState({
@@ -24,18 +25,22 @@ const WritingTestPage = () => {
     setPageState('test')
   }
 
-  const renderContent = () => {
-    switch (pageState) {
-      case 'intro':
-        return <WritingIntroduction testData={testData} onStartTest={handleStartTest} />
-      case 'instructions':
-        return <WritingInstructions testData={testData} onStartTest={handleBeginTest} />
-      default:
-        return <div>Loading...</div>
-    }
-  }
+  // const renderContent = () => {
+  //   switch (pageState) {
+  //     case 'intro':
+  //       return <WritingIntroduction testData={testData} onStartTest={handleStartTest} />
+  //     case 'instructions':
+  //       return <WritingInstructions testData={testData} onStartTest={handleBeginTest} />
+  //     default:
+  //       return <div>Loading...</div>
+  //   }
+  // }
 
-  return renderContent()
+  return (
+    <>
+      <Outlet />
+    </>
+  )
 }
 
 export default WritingTestPage

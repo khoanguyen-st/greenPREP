@@ -8,8 +8,8 @@ import ListeningPage from '@pages/ListeningPage'
 import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage'
 import ReadingTestPage from '@pages/ReadingPage'
 import WaitingForApproval from '@pages/WaitingForApproval'
-import Introduction from '@features/listening/ui/Introduction'
-import Instruction from '@features/listening/ui/Instruction'
+import Introduction from '@pages/listening/Introduction'
+import Instruction from '@pages/listening/Instruction'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 
@@ -24,7 +24,21 @@ const PrivateRoute = [
       },
       {
         path: 'writing',
-        element: <WritingTestPage />
+        element: <WritingTestPage />,
+        children: [
+          {
+            index: true,
+            element: <div>Introduction</div>
+          },
+          {
+            path: 'instruction',
+            element: <div>Instruction</div>
+          },
+          {
+            path: 'test',
+            element: <div>Test page</div>
+          }
+        ]
       },
       {
         path: 'play-stop-button',

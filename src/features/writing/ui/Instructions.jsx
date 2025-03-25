@@ -33,13 +33,16 @@ const WritingInstructions = ({ testData, onStartTest }) => {
         </Typography>
       </div>
 
-      <div className="flex justify-end border-t border-gray-200 p-4">
+      <hr className="border-t border-gray-200" />
+
+      <div className="flex justify-end border-t border-gray-300 bg-white p-6">
         <Button
           type="primary"
-          className="flex h-[60px] min-w-[110px] items-center rounded border-[#003087] bg-[#003087] px-5"
+          className="flex h-[50px] min-w-[120px] items-center justify-center rounded-lg bg-blue-900 px-6 text-white hover:bg-blue-800"
           onClick={onStartTest}
         >
-          <span>Next</span> <ArrowRightOutlined className="ml-3 text-lg" />
+          <span className="text-base font-medium">Next</span>
+          <ArrowRightOutlined className="ml-2 text-lg" />
         </Button>
       </div>
     </div>
