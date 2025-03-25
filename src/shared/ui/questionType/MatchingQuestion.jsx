@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import * as yup from 'yup'
+import { Typography } from 'antd'
+const { Title } = Typography
 
 const itemSchema = yup.object().shape({
   id: yup.string().required('Item must have an ID'),
@@ -16,10 +18,11 @@ const matchingQuestionSchema = yup.object().shape({
     )
   }),
   disabled: yup.boolean(),
-  className: yup.string()
+  className: yup.string(),
+  question: yup.string()
 })
 
-const MatchingQuestion = ({ leftItems, rightItems, matches, onChange, disabled = false, className = '' }) => {
+const MatchingQuestion = ({ leftItems, rightItems, matches, onChange, disabled = false, className = '', question }) => {
   useEffect(() => {
     const validateData = async () => {
       try {
@@ -152,6 +155,10 @@ const MatchingQuestion = ({ leftItems, rightItems, matches, onChange, disabled =
       ref={containerRef}
       style={{ position: 'relative' }}
     >
+      <Title level={5} className="mb-6">
+        {question}
+      </Title>
+
       <svg
         className="absolute inset-0 h-full w-full"
         style={{

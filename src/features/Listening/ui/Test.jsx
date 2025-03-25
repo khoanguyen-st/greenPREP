@@ -266,6 +266,7 @@ const Test = () => {
                       })
                     }}
                     className="mt-6"
+                    question={currentQuestion.Content}
                   />
                 ) : null}
               </>
