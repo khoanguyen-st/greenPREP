@@ -1,7 +1,4 @@
-export default function ReadingTestInstructions() {
-  const handleNext = () => {
-    console.log("Starting the test...")
-  }
+const ReadingTestInstructions = ({onStartTest}) => {
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -20,7 +17,7 @@ export default function ReadingTestInstructions() {
       <footer className="border-t border-gray-200 py-4">
         <div className="max-w-3xl mx-auto px-4 flex justify-end">
           <button
-            onClick={handleNext}
+            onClick={onStartTest}
             className="bg-blue-900 text-white px-6 py-2 rounded flex items-center gap-2 hover:bg-blue-800 transition-colors"
           >
             Next
@@ -31,3 +28,5 @@ export default function ReadingTestInstructions() {
     </div>
   )
 }
+
+export default ReadingTestInstructions

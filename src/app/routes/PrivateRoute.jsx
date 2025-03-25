@@ -8,7 +8,7 @@ import ListeningPage from '@pages/ListeningPage.jsx'
 import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage.jsx'
 import ReadingTestPage from '@pages/ReadingPage.jsx'
 import WaitingForApproval from '@pages/WaitingForApproval.jsx'
-import ReadingTestInstructions from '@features/reading/ui/ReadingInstruction.jsx'
+import ReadingPage from '@pages/Reading-Question.jsx'
 
 const PrivateRoute = [
   {
@@ -44,16 +44,16 @@ const PrivateRoute = [
         element: <ReadingTestPage />
       },
       {
-        path: 'reading-instructions',
-        element: <ReadingTestInstructions />
-      },
-      {
         path: 'introduction',
         element: <IntroductionScreen />
       },
       {
         path: 'waiting-for-approval',
         element: <WaitingForApproval />
+      },
+      {
+        path: 'reading-question',
+        element: <ReadingPage />
       }
     ]
   }
