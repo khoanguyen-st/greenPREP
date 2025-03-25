@@ -1,10 +1,9 @@
 // Define public routes accessible to all users
-import FlagButton from '../../shared/ui/FlagButton/FlagButton.jsx'
-
+import SpeakingPage from '../../pages/SpeakingPage';
 const PublicRoute = [
   {
     path: "login",
-    element: <FlagButton onFlag={() => console.log("clicked")} initialFlagged={true} />
+    element:<SpeakingPage/>
   },
 ];
 
