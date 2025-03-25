@@ -1,4 +1,4 @@
-import { sessionKey } from '@assets/images/index'
+import { sessionKey } from '@assets/images/session-key.png'
 
 const CustomAlert = ({ show, onConfirm, message }) => {
   if (!show) {
