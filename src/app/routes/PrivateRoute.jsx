@@ -1,17 +1,19 @@
-import IntroductionScreen from '@pages/IntroductionScreen'
-import SpeakingPage from '@pages/SpeakingPage'
 import PlayStopButton from '@features/listening/ui/PlayStopButton'
-import HomePage from '@pages/HomePage'
-import GrammarVocabPage from '@pages/GrammarVocabPage'
-import ListeningPage from '@pages/ListeningPage'
-import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage'
-import ReadingTestPage from '@pages/ReadingPage'
-import WaitingForApproval from '@pages/WaitingForApproval'
-import Introduction from '@pages/listening/Introduction'
-import Instruction from '@pages/listening/Instruction'
-import { WritingPage } from '@pages/writing'
+import { InstructionSpeaking } from '@features/speaking/ui/Instruction'
+import { IntroductionSpeaking } from '@features/speaking/ui/Introduction'
 import { InstructionWriting } from '@features/writing/ui/instruction'
-import { IntroductionWriting } from '@features/writing/ui/introduction'
+import { IntroductionWriting } from '@features/writing/ui/Introduction'
+import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage'
+import GrammarVocabPage from '@pages/GrammarVocabPage'
+import HomePage from '@pages/HomePage'
+import IntroductionScreen from '@pages/IntroductionScreen'
+import Instruction from '@pages/listening/Instruction'
+import Introduction from '@pages/listening/Introduction'
+import ListeningPage from '@pages/ListeningPage'
+import ReadingTestPage from '@pages/ReadingPage'
+import { SpeakingPage } from '@pages/speaking'
+import WaitingForApproval from '@pages/WaitingForApproval'
+import { WritingPage } from '@pages/writing'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 
@@ -81,7 +83,24 @@ const PrivateRoute = [
         path: 'waiting-for-approval',
         element: <WaitingForApproval />
       },
-      { path: 'speaking', element: <SpeakingPage /> }
+      {
+        path: 'speaking',
+        element: <SpeakingPage />,
+        children: [
+          {
+            index: true,
+            element: <IntroductionSpeaking />
+          },
+          {
+            path: 'instruction',
+            element: <InstructionSpeaking />
+          },
+          {
+            path: 'test',
+            element: <div>Test page</div>
+          }
+        ]
+      }
     ]
   }
 ]
