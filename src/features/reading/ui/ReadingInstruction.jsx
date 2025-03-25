@@ -1,33 +1,36 @@
-export default function ReadingTestInstructions() {
-  const handleNext = () => {
-    console.log("Starting the test...")
-  }
-
+export default function QuestionNavigator({ values, action, position }) {
   return (
-    <div className="flex flex-col min-h-screen">
-      <main className="flex-1 max-w-3xl mx-auto px-4 py-12 w-full">
-        <div className="mb-12">
-          <h1 className="text-3xl font-bold text-center mb-8">Aptis General Reading Test Instructions</h1>
-          <h2 className="text-xl font-semibold mb-4">Reading</h2>
-          <div className="space-y-4">
-            <p>The test has five parts.</p>
-            <p>You have 35 minutes to complete the test.</p>
-            <p>When you click on the &apos;Next&apos; button, the test will begin.</p>
-          </div>
-        </div>
-      </main>
+    <div className="mx-auto grid max-w-[260px] grid-cols-2 gap-2 p-2 sm:grid-cols-3 sm:p-4 md:grid-cols-4 lg:min-w-[200px] lg:grid-cols-5">
+      {values.map(({ type }, i) => (
+        <div
+          key={i}
+          onClick={() => action(i)}
+          className={`relative flex flex-col items-center justify-center rounded-sm border-2 border-solid border-gray-400 ${
+            position === i ? 'outline-3 shadow-lg outline outline-gray-800' : 'rounded-sm border-solid border-gray-500'
+          } hover:cursor-pointer hover:rounded-md hover:outline hover:outline-2 hover:outline-gray-500`}
+        >
 
-      <footer className="border-t border-gray-200 py-4">
-        <div className="max-w-3xl mx-auto px-4 flex justify-end">
-          <button
-            onClick={handleNext}
-            className="bg-blue-900 text-white px-6 py-2 rounded flex items-center gap-2 hover:bg-blue-800 transition-colors"
-          >
-            Next
-            <span className="ml-1">→</span>
-          </button> 
+          {(type === "flagged" || type === "answered-flagged") && (
+            <div className="absolute right-0 top-[-0.5px] flex h-[14px] w-[14px] items-center justify-center">
+              <svg
+                className="w-full h-full"
+                viewBox="0 0 14 14"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+
+                <path d="M0,-4 L16,12" stroke="red" strokeWidth="5" />
+              </svg>
+            </div>
+          )}
+          <span className="text-sm hover:cursor-pointer">{i + 1}</span>
+          <div
+            className={`rounded-b-xsm h-3 w-full border-t-black ${
+              type === 'answered' || type === 'answered-flagged' ? 'bg-green-500' : 'bg-gray-400'
+            }`}
+          />
         </div>
-      </footer>
+      ))}
     </div>
   )
 }

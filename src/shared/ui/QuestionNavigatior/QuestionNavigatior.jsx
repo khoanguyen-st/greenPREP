@@ -9,9 +9,16 @@ export default function QuestionNavigator({ values, action, position }) {
             position === i ? 'outline-3 shadow-lg outline outline-gray-800' : 'rounded-sm border-solid border-gray-500'
           } hover:cursor-pointer hover:rounded-md hover:outline hover:outline-2 hover:outline-gray-500`}
         >
-          {(type === 'flagged' || type === 'answered-flagged') && (
-            <div className="absolute right-0 top-[-0.5px] h-[14px] w-[14px]">
-              <svg className="h-full w-full" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+          {(type === "flagged" || type === "answered-flagged") && (
+            <div className="absolute right-0 top-[-0.5px] flex h-[14px] w-[14px] items-center justify-center">
+              <svg
+                className="w-full h-full"
+                viewBox="0 0 14 14"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+
                 <path d="M0,-4 L16,12" stroke="red" strokeWidth="5" />
               </svg>
             </div>

@@ -2846,7 +2846,7 @@ goober@^2.1.10:
   resolved "https://registry.npmjs.org/goober/-/goober-2.1.16.tgz"
   integrity sha512-erjk19y1U33+XAMe1VTvIONHYoSqE4iS7BYUZfHaqeohLmnC0FdxEh7rQU+6MZ4OajItzjZFSRtVANrQwNq6/g==
 
-"google-auth-library@^8.8.0 || ^9.0.0", google-auth-library@^9.15.0:
+google-auth-library@^9.15.0:
   version "9.15.1"
   resolved "https://registry.npmjs.org/google-auth-library/-/google-auth-library-9.15.1.tgz"
   integrity sha512-Jb6Z0+nvECVz+2lzSMt9u98UsoakXxA2HGHMCxh+so3n90XgYWkq5dur19JAJV7ONiJY22yBTyJB1TSkvPq9Ng==
@@ -5351,7 +5351,7 @@ uuid@^9.0.1:
   resolved "https://registry.npmjs.org/uuid/-/uuid-9.0.1.tgz"
   integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==
 
-"vite@^4.2.0 || ^5.0.0", vite@^5.4.9:
+vite@^5.4.9:
   version "5.4.14"
   resolved "https://registry.npmjs.org/vite/-/vite-5.4.14.tgz"
   integrity sha512-EK5cY7Q1D8JNhSaPKVK4pwBFvaTmZxEnoKXLG/U9gmdDcihQGNzFlgIvaxezFR4glP1LsuiedwMBqCXH3wZccA==

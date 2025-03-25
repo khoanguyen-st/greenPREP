@@ -11,7 +11,6 @@ const EnterSessionKey = () => {
   const navigate = useNavigate()
 
   const handleStart = (sessionKey) => {
-    localStorage.getItem(sessionKey)
     navigate("/waiting-for-approval");
   };
 
