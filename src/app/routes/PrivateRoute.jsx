@@ -1,5 +1,4 @@
 import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage.jsx'
-import InstructionsGrammarPage from '@pages/InstructionsGrammarPage.jsx'
 import PlayStopButton from '@features/Listening/ui/PlayStopButton'
 import HomePage from '@pages/HomePage.jsx'
 import GrammarVocabPage from '@pages/GrammarVocabPage.jsx'
@@ -10,6 +9,9 @@ import ReadingTestPage from '@pages/ReadingPage.jsx'
 import SpeakingPage from '@pages/SpeakingPage'
 import WaitingForApproval from '@pages/WaitingForApproval.jsx'
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute.jsx'
+import WritingIntroduction from '@features/writing/ui/WritingIntroduction'
+import WritingInstructions from '@features/writing/ui/WritingInstructions'
+import WritingTest from '@features/writing/ui/WritingTest'
 
 const PrivateRoute = [
   {
@@ -22,7 +24,21 @@ const PrivateRoute = [
       },
       {
         path: 'writing',
-        element: <WritingTestPage />
+        element: <WritingTestPage />,
+        children: [
+          {
+            index: true,
+            element: <WritingIntroduction />,
+          },
+          {
+            path: 'instructions',
+            element: <WritingInstructions />
+          },
+          {
+            path: 'test',
+            element: <WritingTest />
+          },
+        ]
       },
       {
         path: 'play-stop-button',

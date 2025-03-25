@@ -1,18 +1,16 @@
-import { Form, Input, Typography, Image, Spin, Button } from 'antd'
-import { useState, useEffect } from 'react'
-import NavigationButtons from '@shared/ui/NavigationButtons/NavigationButtons'
+import { Form, Input, Typography, Image, Spin, Button } from 'antd';
+import { useState, useEffect } from 'react';
 import { MenuOutlined } from "@ant-design/icons";
-import { useQuery } from '@tanstack/react-query'
-import { fetchWritingTestDetails } from '../api/writingAPI'
+import { useQuery } from '@tanstack/react-query';
 import TimeRemaining from "@shared/ui/TimeRemaining/TimeRemaining";
 import QuestionNavigator from "@shared/ui/QuestionNavigatior/QuestionNavigatior";
+import FlagButton from "@shared/ui/FLagButton/FlagButton";
+import NavigationButtons from '@shared/ui/NavigationButtons/NavigationButtons';
+import { navigateLogo } from '@assets/Images/assets';
+import { DEFAULT_MAX_WORDS } from '../constance/WritingConst';
+import { fetchWritingTestDetails } from '../api/writingAPI'
 
 const { Title, Text } = Typography
-const DEFAULT_MAX_WORDS = {
-  2: 45,
-  3: 60,
-  4: 225
-}
 
 const WritingTest = () => {
   const { data, isLoading, isError } = useQuery({
@@ -24,6 +22,7 @@ const WritingTest = () => {
         const partNumberB = parseInt(b.Content.match(/Part (\d+)/)?.[1]) || 0
         return partNumberA - partNumberB
       })
+
 
       return { ...response, Parts: sortedParts }
     }
@@ -61,6 +60,16 @@ const WritingTest = () => {
     setWordCounts(newWordCounts)
   }
 
+  const [flaggedQuestions, setFlaggedQuestions] = useState(() => {
+    return JSON.parse(localStorage.getItem("flaggedQuestions")) || {};
+  });
+
+  const handleFlagToggle = (questionId) => {
+    const updatedFlags = { ...flaggedQuestions, [questionId]: !flaggedQuestions[questionId] };
+    setFlaggedQuestions(updatedFlags);
+    localStorage.setItem("flaggedQuestions", JSON.stringify(updatedFlags));
+  };
+
   const handleTextChange = (field, text) => {
     const newAnswers = { ...answers, [field]: text }
     setAnswers(newAnswers)
@@ -93,7 +102,7 @@ const WritingTest = () => {
       <Text className="text-l mb-5 font-semibold xs:mx-2 md:mx-0 md:text-2xl">
         Question {currentPartIndex + 1} of {data.Parts.length}
       </Text>
-      <Text className="mb-3 block text-lg xs:mx-2 md:mx-0 md:text-xl">{currentPart.Content}</Text>
+      <Text className="mb-3 block text-lg xs:mx-2 md:mx-0 md:text-xl font-semibold mt-8">{currentPart.Content}</Text>
       <Form form={form} layout="vertical">
         {currentPart.Questions.map((question, index) => {
           const fieldName = `answer-${currentPart.ID}-${index}`
@@ -101,20 +110,28 @@ const WritingTest = () => {
           return (
             <Form.Item
               key={fieldName}
-              label={<Text className="xs:mx-2 md:mx-0">{question.Content}</Text>}
+              label={
+                <div className="flex items-center justify-between w-full">
+                <Text className="xs:mx-2 md:mx-0">{question.Content}</Text>
+                <FlagButton
+                  initialFlagged={flaggedQuestions[fieldName] || false}
+                  onFlag={() => handleFlagToggle(fieldName)}
+                />
+              </div>
+              }
               name={fieldName}
               initialValue={answers[fieldName] || ''}
               rules={[
                 { required: false },
                 ...(maxWords
                   ? [
-                      {
-                        validator: (_, value) =>
-                          countWords(value || '') > maxWords
-                            ? Promise.reject(`Maximum ${maxWords} words!`)
-                            : Promise.resolve()
-                      }
-                    ]
+                    {
+                      validator: (_, value) =>
+                        countWords(value || '') > maxWords
+                          ? Promise.reject(`Maximum ${maxWords} words!`)
+                          : Promise.resolve()
+                    }
+                  ]
                   : [])
               ]}
             >
@@ -147,9 +164,9 @@ const WritingTest = () => {
       >
         <MenuOutlined />
       </Button>
-      <div className={`fixed right-2 z-50 w-60 h-auto border border-gray-300 rounded-lg shadow-lg bg-white p-2
+      <div className={`fixed right-2 z-50 w-60 h-auto border border-black-300 rounded-lg shadow-lg bg-white p-2
                  ${isNavigatorOpen ? 'block' : 'hidden'} md:block
-                 bottom-[65%] mdL:bottom-[75%]`}>
+                 bottom-[65%] mdL:bottom-[70%]`}>
         <TimeRemaining duration={10 * 60} onAutoSubmit={handleSubmit} />
         <QuestionNavigator
           values={data.Parts.map((part) => ({
@@ -163,9 +180,9 @@ const WritingTest = () => {
           position={currentPartIndex}
         />
       </div>
-      <div className="fixed bottom-8 left-4 z-50 w-fit hidden mdL:block ">
+      <div className="fixed bottom-12 left-4 z-50 w-fit hidden mdL:block ">
         <Image
-          src="src/assets/Images/navigate-logo.png"
+          src={navigateLogo}
           alt="Logo"
           preview={false}
           className="h-[100px] w-auto"
