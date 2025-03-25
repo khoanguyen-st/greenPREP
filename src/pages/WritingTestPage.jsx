@@ -1,65 +1,33 @@
-import { useState, useEffect } from "react";
-import WritingIntroduction from "@features/writing/ui/Introduction.jsx";
-import WritingInstructions from "@features/writing/ui/Instructions";
-import WritingTest from "@features/writing/ui/WritingTest"
+import { useState } from 'react'
+import WritingIntroduction from '@features/writing/ui/Introduction.jsx'
+import WritingInstructions from '@features/writing/ui/Instructions'
 
 const WritingTestPage = () => {
-  const [testData, setTestData] = useState({
-    testName: "Aptis General Practice Test",
-    section: "Writing",
+  const [testData] = useState({
+    testName: 'Aptis General Practice Test',
+    section: 'Writing',
     questionCount: 4,
-    timeAllowed: "50 mins",
-    assessmentDescription:
-      "This assessment evaluates your ability to write in English for different purposes.",
-    formDescription:
-      "You will need to complete various writing tasks including emails, essays, and short responses.",
-  });
-  const [testContent, setTestContent] = useState({
-    testName: "Aptis General Practice Test",
-    section: "Writing",
-    questionCount: 4,
-    timeAllowed: "50 mins",
-    assessmentDescription:
-      "This assessment evaluates your ability to write in English for different purposes.",
-    formDescription:
-      "You will need to complete various writing tasks including emails, essays, and short responses.",
+    timeAllowed: '50 mins',
+    assessmentDescription: 'This assessment evaluates your ability to write in English for different purposes.',
+    formDescription: 'You will need to complete various writing tasks including emails, essays, and short responses.'
   });
 
-  const [pageState, setPageState] = useState("intro");
-
-  useEffect(() => {}, []);
+  const [pageState, setPageState] = useState('intro');
 
   const handleStartTest = () => {
-    setPageState("instructions");
+    setPageState('instructions');
   };
 
-  const handleBeginTest = () =>{
-    setPageState("test");
-  }
+  const handleBeginTest = () => {
+    setPageState('test');
+  };
 
   const renderContent = () => {
     switch (pageState) {
-      case "intro":
-        return (
-          <WritingIntroduction
-            testData={testData}
-            onStartTest={handleStartTest}
-          />
-        );
-      case "instructions":
-        return (
-          <WritingInstructions
-            testData={testData}
-            onStartTest={handleBeginTest}
-          />
-        );
-        case "test":
-        return (
-          <WritingTest
-            testContent = {testContent}
-            onStartTest={handleBeginTest}
-          />
-        );
+      case 'intro':
+        return <WritingIntroduction testData={testData} onStartTest={handleStartTest} />;
+      case 'instructions':
+        return <WritingInstructions testData={testData} onStartTest={handleBeginTest} />;
       default:
         return <div>Loading...</div>;
     }

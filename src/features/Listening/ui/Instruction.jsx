@@ -1,15 +1,8 @@
 'use client'
-
 import { Button, Typography } from 'antd'
 import { ArrowRightOutlined } from '@ant-design/icons'
 
 const { Title, Paragraph, Text } = Typography
-
-// Constants
-const COLORS = {
-  primary: '#003087'
-}
-
 const TEXT = {
   title: 'Aptis General Listening Test Instructions',
   heading: 'Listening',
@@ -25,33 +18,41 @@ const TEXT = {
 const Instruction = ({ onNext }) => {
   return (
     <div className="flex min-h-screen flex-col">
-      <div className="mx-auto max-w-3xl flex-grow px-4">
-        <div className="mb-8 text-center">
-          <Title level={2} style={{ color: COLORS.primary, fontWeight: 'bold' }} className="font-bold">
-            {TEXT.title}
-          </Title>
-        </div>
+      <div className="flex flex-grow items-center justify-center px-4 py-8 sm:px-6 sm:py-10 md:px-8">
+        <div className="w-full max-w-3xl">
+          <div className="mb-6 px-2 sm:mb-8 sm:px-3">
+            <Title
+              level={2}
+              className="text-left text-5xl font-bold sm:text-4xl sm:leading-tight md:whitespace-nowrap md:text-5xl"
+            >
+              {TEXT.title}
+            </Title>
+          </div>
 
-        <div className="mb-10">
-          <Title level={4} className="mb-4 font-bold">
-            {TEXT.heading}
-          </Title>
+          <div className="mb-6 px-2 sm:mb-8 sm:px-3">
+            <Title level={4} className="mb-3 text-xl font-bold sm:mb-4 sm:text-2xl">
+              {TEXT.heading}
+            </Title>
 
-          {TEXT.paragraphs.map((paragraph, index) => (
-            <Paragraph key={index} className="mb-3 text-base">
-              {index === 2 ? (
-                <>
-                  You can listen to each recording <Text strong>TWO TIMES ONLY</Text>
-                </>
-              ) : (
-                paragraph
-              )}
-            </Paragraph>
-          ))}
-        </div>
+            {TEXT.paragraphs.map((paragraph, index) => (
+              <Paragraph key={index} className="mx-1 mb-3 text-base sm:mx-0 sm:text-lg">
+                {index === 2 ? (
+                  <>
+                    You can listen to each recording{' '}
+                    <Text strong className="text-lg sm:text-xl">
+                      TWO TIMES ONLY
+                    </Text>
+                  </>
+                ) : (
+                  paragraph
+                )}
+              </Paragraph>
+            ))}
+          </div>
 
-        <div className="mt-12 pt-4">
-          <Paragraph className="text-gray-700">{TEXT.footer}</Paragraph>
+          <div className="mx-1 mt-6 px-2 pt-3 sm:mx-0 sm:mt-8 sm:px-3">
+            <Paragraph className="text-base text-gray-700 sm:text-lg">{TEXT.footer}</Paragraph>
+          </div>
         </div>
       </div>
 
