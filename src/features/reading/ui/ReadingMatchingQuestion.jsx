@@ -81,7 +81,8 @@ const ReadingMatchingQuestion = ({
     return (
       <React.Fragment key={index}>
         {'\n'}
-        {`Paragraph ${paragraph}`}
+        <strong>{`Paragraph ${paragraph.split(' - ')[0]} `}</strong>
+        {paragraph.split(' - ')[1]}
       </React.Fragment>
     )
   })
