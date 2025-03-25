@@ -1,7 +1,8 @@
 // @ts-nocheck
 import { Layout, Typography, Image } from 'antd'
+
 import SharedHeader from '../shared/ui/SharedHeader'
-import WaitingGif from '../assets/Images/waiting.gif'
+import WaitingGif from '../assets/images/waiting.gif'
 
 const { Content } = Layout
 const { Title, Text } = Typography

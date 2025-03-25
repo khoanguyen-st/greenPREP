@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { ConfigProvider } from 'antd'
+
 import GrammarIntroduction from '../features/grammarvocab/ui/VocabIntroduction'
 import VocabInstruction from '../features/grammarvocab/ui/VocabInstruction'
 import useAntiCheat from '../shared/utils/antiCheat'

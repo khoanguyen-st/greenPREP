@@ -47,7 +47,9 @@ const OrderingQuestion = ({ options = [], onChange, className = '', value = [] }
 
   const handleDragEnter = (e, index) => {
     e.preventDefault()
-    if (dragItem.current === index) return
+    if (dragItem.current === index) {
+      return
+    }
 
     dragOverItem.current = index
     const listItems = [...items]

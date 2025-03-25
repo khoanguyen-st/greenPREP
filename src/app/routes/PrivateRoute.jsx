@@ -1,16 +1,17 @@
-import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage.jsx'
-import InstructionsGrammarPage from '@pages/InstructionsGrammarPage.jsx'
-import PlayStopButton from '@features/Listening/ui/PlayStopButton'
-import HomePage from '@pages/HomePage.jsx'
-import GrammarVocabPage from '@pages/GrammarVocabPage.jsx'
-import WritingTestPage from '@pages/WritingTestPage.jsx'
 import IntroductionScreen from '@pages/IntroductionScreen'
-import ListeningPage from '@pages/ListeningPage.jsx'
-import ReadingTestPage from '@pages/ReadingPage.jsx'
 import SpeakingPage from '@pages/SpeakingPage'
-import WaitingForApproval from '@pages/WaitingForApproval.jsx'
-import WritingTestPage from '@pages/WritingTestPage.jsx'
-import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute.jsx'
+import PlayStopButton from '@features/listening/ui/PlayStopButton'
+import HomePage from '@pages/HomePage'
+import WritingTestPage from '@pages/WritingTestPage'
+import GrammarVocabPage from '@pages/GrammarVocabPage'
+import ListeningPage from '@pages/ListeningPage'
+import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage'
+import ReadingTestPage from '@pages/ReadingPage'
+import WaitingForApproval from '@pages/WaitingForApproval'
+import Introduction from '@features/listening/ui/Introduction'
+import Instruction from '@features/listening/ui/Instruction'
+
+import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 
 const PrivateRoute = [
   {
@@ -35,7 +36,21 @@ const PrivateRoute = [
       },
       {
         path: 'listening',
-        element: <ListeningPage />
+        element: <ListeningPage />,
+        children: [
+          {
+            index: true,
+            element: <Introduction />
+          },
+          {
+            path: 'instruction',
+            element: <Instruction />
+          },
+          {
+            path: 'test',
+            element: <div>Test page</div>
+          }
+        ]
       },
       {
         path: 'rejectpage',

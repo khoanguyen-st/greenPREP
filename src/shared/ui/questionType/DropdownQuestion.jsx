@@ -1,6 +1,7 @@
 import { Select } from 'antd'
 import { useEffect, useMemo, useState } from 'react'
 import * as yup from 'yup'
+
 import { answerContentSchema, dropdownQuestionSchema } from '../../model/questionType/dropdownQuestion.schema'
 
 const { Option } = Select
@@ -15,7 +16,9 @@ const DropdownQuestion = ({ questionData, onChange, className = '', small = fals
   const [error, setError] = useState({})
 
   const processedData = useMemo(() => {
-    if (!questionData) return null
+    if (!questionData) {
+      return null
+    }
     try {
       const parsedAnswerContent =
         typeof questionData.AnswerContent === 'string'
@@ -81,7 +84,9 @@ const DropdownQuestion = ({ questionData, onChange, className = '', small = fals
     }
   }
 
-  if (!processedData) return <p className="text-center text-gray-600">No question data available.</p>
+  if (!processedData) {
+    return <p className="text-center text-gray-600">No question data available.</p>
+  }
 
   const isSingleQuestion = processedData.type === 'paragraph' && Object.keys(processedData.answers).length === 1
 
