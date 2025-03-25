@@ -1,8 +1,7 @@
-import { Layout, Input, Button, Typography, Form } from 'antd'
+import { Layout, Input, Button, Typography, Form, Image } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
-import { sessionKey } from '@assets/images'
-
+import { sessionKey } from '@assets/Images/index'
 const { Content } = Layout
 const { Title, Text } = Typography
 
@@ -12,7 +11,8 @@ const EnterSessionKey = () => {
   const [form] = Form.useForm()
   const navigate = useNavigate()
 
-  const handleStart = () => {
+  const handleStart = sessionKey => {
+    localStorage.setItem('sessionKey', sessionKey)
     navigate('/waiting-for-approval')
   }
 
@@ -20,7 +20,13 @@ const EnterSessionKey = () => {
     <Layout>
       <Content className="flex min-h-screen flex-col items-center justify-center gap-10 bg-white px-5 md:flex-row md:gap-40 md:px-20">
         <div className="flex w-full items-center justify-center md:w-[30%]">
-          <img src={sessionKey} alt="Mascot" className="max-w-[250px] object-contain md:max-w-[550px]" />
+          <Image
+            src={sessionKey}
+            preview={false}
+            height={550}
+            width={550}
+            className="-translate-y-12 transform object-cover"
+          />
         </div>
         <div className="mt-0 flex w-full flex-col items-center pr-0 md:mt-[-20%] md:w-[70%] md:items-start md:pr-5">
           <div className="mb-6 w-full text-center">

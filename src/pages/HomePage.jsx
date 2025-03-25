@@ -4,7 +4,7 @@ import SharedHeader from '@shared/ui/SharedHeader'
 
 const HomePage = () => {
   return (
-    <Layout className="min-h-screen">
+    <Layout className="h-screen overflow-hidden">
       <SharedHeader />
       <EnterSessionKey />
     </Layout>

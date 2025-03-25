@@ -10,8 +10,8 @@ import WaitingForApproval from '@pages/WaitingForApproval'
 import Introduction from '@pages/listening/Introduction'
 import Instruction from '@pages/listening/Instruction'
 import { WritingPage } from '@pages/writing'
-import { InstructionWriting } from '@features/writing/ui/instruction'
-import { IntroductionWriting } from '@features/writing/ui/introduction'
+import { InstructionWriting } from '@features/writing/ui/WritingInstruction'
+import { IntroductionWriting } from '@features/writing/ui/WritingIntroduction'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 
@@ -21,7 +21,7 @@ const PrivateRoute = [
     element: <ProtectedRoute />,
     children: [
       {
-        path: 'homepage',
+        index: true,
         element: <HomePage />
       },
       {
