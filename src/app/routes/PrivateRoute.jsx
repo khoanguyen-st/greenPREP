@@ -1,6 +1,6 @@
 import IntroductionScreen from '@pages/IntroductionScreen'
 import SpeakingPage from '@pages/SpeakingPage'
-import PlayStopButton from '@features/listening/ui/PlayStopButton'
+import PlayStopButton from '@features/Listening/ui/PlayStopButton'
 import HomePage from '@pages/HomePage'
 import GrammarVocabPage from '@pages/GrammarVocabPage'
 import ListeningPage from '@pages/ListeningPage'
@@ -10,8 +10,8 @@ import WaitingForApproval from '@pages/WaitingForApproval'
 import Introduction from '@pages/listening/Introduction'
 import Instruction from '@pages/listening/Instruction'
 import { WritingPage } from '@pages/writing'
-import { InstructionWriting } from '@features/writing/ui/instruction'
-import { IntroductionWriting } from '@features/writing/ui/introduction'
+import { InstructionWriting } from '@features/writing/ui/WritingInstruction'
+import { IntroductionWriting } from '@features/writing/ui/WritingIntroduction'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 

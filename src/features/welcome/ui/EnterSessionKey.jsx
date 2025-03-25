@@ -1,7 +1,7 @@
 import { Layout, Input, Button, Typography, Form, Image } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
-import { sessionKey } from '@assets/Images/assets'
+import { sessionKey } from '@assets/Images/index'
 const { Content } = Layout
 const { Title, Text } = Typography
 
@@ -22,8 +22,10 @@ const EnterSessionKey = () => {
         <div className="w-full md:w-[30%] flex justify-center items-center">
           <Image
             src={sessionKey}
-            alt="Mascot"
-            className="max-w-[250px] md:max-w-[550px] object-contain -translate-y-12"
+            preview={false}
+            height={550}
+            width={550}
+            className="object-cover transform -translate-y-12"
           />
         </div>
         <div className="mt-0 flex w-full flex-col items-center pr-0 md:mt-[-20%] md:w-[70%] md:items-start md:pr-5">
