@@ -1,30 +1,24 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
 import { Spin, Alert } from 'antd'
 import MatchingQuestion from '@shared/ui/questionType/MatchingQuestion.jsx'
 import NavigationButtons from '@shared/ui/NavigationButtons/NavigationButtons.jsx'
 import TimeRemaining from '@shared/ui/TimeRemaining/TimeRemaining.jsx'
-import FlagButton from '@shared/ui/FlagButton/FlagButton.jsx'
 import QuestionNavigator from '@shared/ui/QuestionNavigatior/QuestionNavigatior.jsx'
+import FlagButton from '@shared/ui/FLagButton/FlagButton'
 
 const fetchTestData = async (topicId, questionType, skillName) => {
   const baseUrl = 'https://greenprep-api.onrender.com/api/topics'
-  const url = `${baseUrl}/${topicId}?questionType=${encodeURIComponent(questionType)}&skillName=${encodeURIComponent(skillName)}`
+  const url = `${baseUrl}/${topicId}`
 
   try {
-    const response = await fetch(url, {
-      method: 'GET',
+    const response = await axios.get(url, {
+      params: { questionType, skillName },
       headers: { 'Content-Type': 'application/json' }
     })
-
-    if (!response.ok) {
-      const errorText = await response.text()
-      console.error('Failed to fetch test data:', response.status, errorText)
-      throw new Error(`Error ${response.status}: ${errorText}`)
-    }
-
-    return response.json()
+    return response.data
   } catch (error) {
     console.error('Fetch error:', error)
     throw error
