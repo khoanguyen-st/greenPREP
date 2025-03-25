@@ -1,22 +1,16 @@
-import SampleTestPage from '@/pages/Sample'
 // import { lazy } from 'react';
+import SampleTestPage from '@/pages/Sample'
 import PlayStopButton from '@features/Listening/ui/PlayStopButton'
-import HomePage from '@pages/HomePage.jsx'
-import GrammarVocabPage from '@pages/GrammarVocabPage.jsx'
-import WritingTestPage from '@pages/WritingTestPage.jsx'
-import IntroductionScreen from '@pages/IntroductionScreen'
-import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute.jsx'
-import ListeningPage from '@pages/ListeningPage.jsx'
 import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage.jsx'
 import GrammarVocabPage from '@pages/GrammarVocabPage.jsx'
 import HomePage from '@pages/HomePage.jsx'
-import InstructionsGrammarPage from '@pages/InstructionsGrammarPage.jsx'
 import IntroductionScreen from '@pages/IntroductionScreen'
 import ListeningPage from '@pages/ListeningPage.jsx'
 import ReadingTestPage from '@pages/ReadingPage.jsx'
 import WaitingForApproval from '@pages/WaitingForApproval.jsx'
 import WritingTestPage from '@pages/WritingTestPage.jsx'
 import TestAudioPage from '../../pages/AudioTest'
+import SampleDrop from '../../pages/SampleDropdown'
 import SubmissionScreen from '../../shared/ui/Submission/SubmissionScreen'
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute.jsx'
 
@@ -72,6 +66,10 @@ const PrivateRoute = [
          {
         path: 'success',
         element: <SubmissionScreen />
+      },
+                  {
+        path: 'dropdown',
+        element: <SampleDrop />
       }
     ]
   }
