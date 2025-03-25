@@ -1,6 +1,7 @@
 'use client'
 import { Button, Typography } from 'antd'
 import { ArrowRightOutlined } from '@ant-design/icons'
+import { useNavigate } from 'react-router-dom'
 
 const { Title, Paragraph, Text } = Typography
 const TEXT = {
@@ -15,7 +16,9 @@ const TEXT = {
   footer: "When you click on the 'Next' button, the test will begin."
 }
 
-const Instruction = ({ onNext }) => {
+const Instruction = () => {
+  const navigate = useNavigate()
+
   return (
     <div className="flex min-h-screen flex-col">
       <div className="flex flex-grow items-center justify-center px-4 py-8 sm:px-6 sm:py-10 md:px-8">
@@ -58,7 +61,7 @@ const Instruction = ({ onNext }) => {
 
       <div className="mb-auto mt-auto flex justify-end border-t border-solid border-gray-400 px-4 pb-4 pt-4">
         <Button
-          onClick={onNext}
+          onClick={() => navigate('/listening/test')}
           type="primary"
           size="large"
           className="mx-4 border-2 border-[#003087] bg-[#003087] text-white hover:border-[#FF6E00]/90 hover:bg-[#003087]/90 focus:ring-2 focus:ring-[#003087]/50"
