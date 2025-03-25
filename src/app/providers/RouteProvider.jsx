@@ -1,17 +1,16 @@
-import PublicRoute from "@app/routes/PublicRoute";
-import PrivateRoute from "@app/routes/PrivateRoute";
-import { Outlet, createBrowserRouter } from "react-router-dom";
-import { RouterProvider } from "react-router-dom";
-import NotFound from "@pages/NotFoundPage";
+import PublicRoute from '@app/routes/PublicRoute'
+import PrivateRoute from '@app/routes/PrivateRoute'
+import { Outlet, createBrowserRouter, RouterProvider } from 'react-router-dom'
+import NotFound from '@pages/NotFoundPage'
 
 const router = createBrowserRouter(
   [
     {
-      path: "/",
+      path: '/',
       element: <Outlet />,
       errorElement: <NotFound />,
-      children: [...PublicRoute, ...PrivateRoute],
-    },
+      children: [...PublicRoute, ...PrivateRoute]
+    }
   ],
   {
     future: {
@@ -19,19 +18,19 @@ const router = createBrowserRouter(
       v7_normalizeFormMethod: true,
       v7_partialHydration: true,
       v7_relativeSplatPath: true,
-      v7_skipActionErrorRevalidation: true,
-    },
+      v7_skipActionErrorRevalidation: true
+    }
   }
-);
+)
 
 const RouteProvider = () => {
   return (
     <RouterProvider
       future={{
-        v7_startTransition: true,
+        v7_startTransition: true
       }}
       router={router}
     />
-  );
-};
-export default RouteProvider;
+  )
+}
+export default RouteProvider

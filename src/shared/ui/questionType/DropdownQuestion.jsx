@@ -1,10 +1,7 @@
-import {
-  answerContentSchema,
-  dropdownQuestionSchema,
-} from "@shared/model/questionType/dropdownQuestion.schema";
-import { Select } from "antd";
-import { useEffect, useMemo, useState } from "react";
-import * as yup from "yup";
+import { answerContentSchema, dropdownQuestionSchema } from '@shared/model/questionType/dropdownQuestion.schema'
+import { Select } from 'antd'
+import { useEffect, useMemo, useState } from 'react'
+import * as yup from 'yup'
 
 const { Option } = Select
 
@@ -35,8 +32,8 @@ const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className =
           type: 'right-left'
         };
       } else {
-        const options = parsedAnswerContent.options || [];
-        const answers = {};
+        const options = parsedAnswerContent.options || []
+        const answers = {}
         options.forEach(({ key, value }) => {
           answers[key] = value;
         });

@@ -1,6 +1,6 @@
-import { Layout } from "antd";
-import EnterSessionKey from "@features/welcome/ui/EnterSessionKey";
-import SharedHeader from "@shared/ui/SharedHeader";
+import { Layout } from 'antd'
+import EnterSessionKey from '@features/welcome/ui/EnterSessionKey'
+import SharedHeader from '@shared/ui/SharedHeader'
 
 const HomePage = () => {
   return (
@@ -8,7 +8,7 @@ const HomePage = () => {
       <SharedHeader />
       <EnterSessionKey />
     </Layout>
-  );
-};
+  )
+}
 
-export default HomePage;
+export default HomePage
