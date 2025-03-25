@@ -1,17 +1,17 @@
-import { Typography, Spin, Image } from 'antd';
-import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { fetchWritingTestDetails } from '../api/writingAPI';
-import QuestionForm from './WritingQuestionForm';
-import QuestionNavigatorContainer from './WritingQuestionNavigatorContainer';
-import { DEFAULT_MAX_WORDS } from '../constance/WritingConst';
+import { Typography, Spin, Image } from "antd";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchWritingTestDetails } from "../api/writingAPI";
+import QuestionForm from "./WritingQuestionForm";
+import QuestionNavigatorContainer from "./WritingQuestionNavigatorContainer";
+import { DEFAULT_MAX_WORDS } from "../constance/WritingConst";
 import FooterNavigator from "./WritingFooterNavigator";
 
 const { Title, Text } = Typography;
 
 const WritingTest = () => {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['writingQuestions'],
+    queryKey: ["writingQuestions"],
     queryFn: async () => {
       const response = await fetchWritingTestDetails();
       const sortedParts = response.Parts.sort((a, b) => {
@@ -20,31 +20,38 @@ const WritingTest = () => {
         return partNumberA - partNumberB;
       });
       return { ...response, Parts: sortedParts };
-    }
+    },
   });
 
   const [currentPartIndex, setCurrentPartIndex] = useState(0);
-  const [answers, setAnswers] = useState(() => JSON.parse(localStorage.getItem('writingAnswers')) || {});
+  const [answers, setAnswers] = useState(
+    () => JSON.parse(localStorage.getItem("writingAnswers")) || {},
+  );
   const [wordCounts, setWordCounts] = useState({});
-  const [flaggedQuestions, setFlaggedQuestions] = useState(() => JSON.parse(localStorage.getItem("flaggedQuestions")) || {});
+  const [flaggedQuestions, setFlaggedQuestions] = useState(
+    () => JSON.parse(localStorage.getItem("flaggedQuestions")) || {},
+  );
 
   useEffect(() => {
     if (data) {
-      const storedAnswers = JSON.parse(localStorage.getItem('writingAnswers')) || {};
+      const storedAnswers =
+        JSON.parse(localStorage.getItem("writingAnswers")) || {};
       setAnswers(storedAnswers);
       updateWordCounts(storedAnswers);
     }
   }, [data, currentPartIndex]);
 
-  const countWords = text => text.trim().split(/\s+/).filter(Boolean).length;
+  const countWords = (text) => text.trim().split(/\s+/).filter(Boolean).length;
 
-  const updateWordCounts = updatedAnswers => {
+  const updateWordCounts = (updatedAnswers) => {
     const newWordCounts = {};
     if (data?.Parts) {
-      data.Parts.forEach(part => {
+      data.Parts.forEach((part) => {
         part.Questions.forEach((question, index) => {
           const fieldName = `answer-${part.ID}-${index}`;
-          newWordCounts[fieldName] = countWords(updatedAnswers[fieldName] || '');
+          newWordCounts[fieldName] = countWords(
+            updatedAnswers[fieldName] || "",
+          );
         });
       });
     }
@@ -52,7 +59,10 @@ const WritingTest = () => {
   };
 
   const handleFlagToggle = (questionId) => {
-    const updatedFlags = { ...flaggedQuestions, [questionId]: !flaggedQuestions[questionId] };
+    const updatedFlags = {
+      ...flaggedQuestions,
+      [questionId]: !flaggedQuestions[questionId],
+    };
     setFlaggedQuestions(updatedFlags);
     localStorage.setItem("flaggedQuestions", JSON.stringify(updatedFlags));
   };
@@ -60,10 +70,10 @@ const WritingTest = () => {
   const handleTextChange = (field, text) => {
     const newAnswers = { ...answers, [field]: text };
     setAnswers(newAnswers);
-    localStorage.setItem('writingAnswers', JSON.stringify(newAnswers));
-    setWordCounts(prev => ({
+    localStorage.setItem("writingAnswers", JSON.stringify(newAnswers));
+    setWordCounts((prev) => ({
       ...prev,
-      [field]: countWords(text)
+      [field]: countWords(text),
     }));
   };
 
@@ -73,21 +83,32 @@ const WritingTest = () => {
     localStorage.removeItem("flaggedQuestions");
   };
 
-  if (isLoading) return <Spin className="flex h-screen items-center justify-center" />;
-  if (isError) return <div className="text-center text-red-500">Error fetching data</div>;
+  if (isLoading)
+    return <Spin className="flex h-screen items-center justify-center" />;
+  if (isError)
+    return <div className="text-center text-red-500">Error fetching data</div>;
 
   if (!data || !data.Parts || data.Parts.length === 0) {
-    return <div className="text-center text-gray-500">No test data available</div>;
+    return (
+      <div className="text-center text-gray-500">No test data available</div>
+    );
   }
 
   const currentPart = data.Parts[currentPartIndex];
-  const partNumber = parseInt(currentPart.Content.match(/Part (\d+)/)?.[1]) || 0;
+  const partNumber =
+    parseInt(currentPart.Content.match(/Part (\d+)/)?.[1]) || 0;
 
   return (
     <div className="relative mx-auto min-h-screen max-w-3xl pb-24">
-      <Title level={1} className="mt-12 text-left text-3xl font-bold">Writing Test</Title>
-      <Text className="text-l mb-5 font-semibold">Question {currentPartIndex + 1} of {data.Parts.length}</Text>
-
+      <Title level={1} className="mt-12 text-left text-3xl font-bold">
+        Writing Test
+      </Title>
+      <Text className="text-l mb-5 font-semibold">
+        Question {currentPartIndex + 1} of {data.Parts.length}
+      </Text>
+      <Text className="mb-3 block text-lg xs:mx-2 md:mx-0 md:text-xl font-semibold mt-8">
+        {currentPart.Content}
+      </Text>
       <QuestionForm
         currentPart={currentPart}
         partNumber={partNumber}
