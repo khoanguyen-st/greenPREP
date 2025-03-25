@@ -1,3 +1,3 @@
 import iconRe from './icon_re.jpg'
-
-export { iconRe }
+import sessionKey from './sessionKey.png'
+export { iconRe, sessionKey }
