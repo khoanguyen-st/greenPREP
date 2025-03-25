@@ -8,6 +8,7 @@ import TimeRemaining from '@shared/ui/TimeRemaining/TimeRemaining'
 import QuestionNavigator from '@shared/ui/QuestionNavigatior/QuestionNavigatior'
 import { useQuery } from '@tanstack/react-query'
 import PlayStopButton from './PlayStopButton'
+import MatchingQuestion from '@shared/ui/questionType/MatchingQuestion'
 
 const { Text } = Typography
 
@@ -17,7 +18,6 @@ const Test = () => {
   const [userAnswers, setUserAnswers] = useState({})
   const [flaggedQuestions, setFlaggedQuestions] = useState([])
 
-  // Fetch test data using useQuery
   const {
     data: testData,
     isLoading,
@@ -25,10 +25,20 @@ const Test = () => {
   } = useQuery({
     queryKey: ['listeningTest'],
     queryFn: async () => {
-      const response = await axiosInstance.get(
+      // Fetch multiple choice questions
+      const mcResponse = await axiosInstance.get(
         '/topics/ef6b69aa-2ec2-4c65-bf48-294fd12e13fc?questionType=multiple-choice&skillName=LISTENING'
       )
-      return response.data
+      // Fetch matching questions
+      const matchingResponse = await axiosInstance.get(
+        '/topics/ef6b69aa-2ec2-4c65-bf48-294fd12e13fc?questionType=matching&skillName=LISTENING'
+      )
+
+      // Combine the parts from both responses
+      return {
+        ...mcResponse.data,
+        Parts: [...mcResponse.data.Parts, ...matchingResponse.data.Parts]
+      }
     }
   })
 
@@ -127,29 +137,45 @@ const Test = () => {
     if (!question) return null
 
     try {
-      const answerContent =
-        typeof question.AnswerContent === 'string' ? JSON.parse(question.AnswerContent) : question.AnswerContent
+      if (question.Type === 'multiple-choice') {
+        const answerContent =
+          typeof question.AnswerContent === 'string' ? JSON.parse(question.AnswerContent) : question.AnswerContent
 
-      const options = Array.isArray(answerContent.options)
-        ? answerContent.options.map((option, index) => ({
-            key: String.fromCharCode(65 + index),
-            value: option
+        const options = Array.isArray(answerContent.options)
+          ? answerContent.options.map((option, index) => ({
+              key: String.fromCharCode(65 + index),
+              value: option
+            }))
+          : []
+
+        return {
+          ...question,
+          AnswerContent: JSON.stringify([
+            {
+              title: question.Content,
+              options,
+              correctAnswer: answerContent.correctAnswer
+            }
+          ])
+        }
+      } else if (question.Type === 'matching') {
+        const answerContent =
+          typeof question.AnswerContent === 'string' ? JSON.parse(question.AnswerContent) : question.AnswerContent
+
+        return {
+          ...question,
+          leftItems: answerContent.leftItems.map((item, index) => ({
+            id: `left-${index}`,
+            label: item
+          })),
+          rightItems: answerContent.rightItems.map((item, index) => ({
+            id: `right-${index}`,
+            label: item
           }))
-        : []
-
-      const formattedData = {
-        ...question,
-        AnswerContent: JSON.stringify([
-          {
-            title: question.Content,
-            options,
-            correctAnswer: answerContent.correctAnswer
-          }
-        ])
+        }
       }
 
-      console.log('Formatted question data:', formattedData)
-      return formattedData
+      return null
     } catch (error) {
       console.error('Error formatting question data:', error)
       return null
@@ -210,8 +236,12 @@ const Test = () => {
               {testData.Parts[0].Questions[0].Skill.Name}
             </Text>
 
+            <Text strong className="text-4xl">
+              {testData.Parts[0].Content}
+            </Text>
+
             <div className="flex justify-between">
-              <Text strong className="text-4xl">
+              <Text strong className="text-2xl">
                 Question {flatIndex + 1} of {totalQuestions}
               </Text>
 
@@ -222,8 +252,26 @@ const Test = () => {
 
             <PlayStopButton />
 
+            {/* Question */}
             {formattedQuestion && (
-              <MultipleChoice questionData={formattedQuestion} onSubmit={handleAnswerSubmit} className="mt-6" />
+              <>
+                {currentQuestion.Type === 'multiple-choice' ? (
+                  <MultipleChoice questionData={formattedQuestion} onSubmit={handleAnswerSubmit} className="mt-6" />
+                ) : currentQuestion.Type === 'matching' ? (
+                  <MatchingQuestion
+                    leftItems={formattedQuestion.leftItems}
+                    rightItems={formattedQuestion.rightItems}
+                    matches={userAnswers[currentQuestion.ID] || {}}
+                    onChange={(leftId, rightId) => {
+                      handleAnswerSubmit({
+                        ...userAnswers[currentQuestion.ID],
+                        [leftId]: rightId
+                      })
+                    }}
+                    className="mt-6"
+                  />
+                ) : null}
+              </>
             )}
 
             <div className="mt-8 flex justify-between">
