@@ -9,8 +9,9 @@ const IntroductionScreen = () => {
   const navigate = useNavigate()
 
   const handleNext = () => {
-    navigate('/reading')
+    navigate('/speaking')
   }
+
   const testSections = [
     {
       number: '01',

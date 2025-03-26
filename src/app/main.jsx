@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client'
 import './main.css'
 import { Provider } from 'react-redux'
 import RouteProvider from '@app/providers/RouteProvider'
+
 import store from './providers/store'
 
 const queryClient = new QueryClient()

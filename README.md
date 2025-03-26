@@ -9,7 +9,7 @@ FSD/
 ├── src/
 │   ├── app/
 │   ├── assets/
-│   │   └── Images/
+│   │   └── images/
 │   │       └── logo.png
 │   ├── entities/
 │   │   └── user/
@@ -66,7 +66,7 @@ This folder is intended for application-wide configurations and setups.
 
 This folder contains the static assets like images, icons, etc.
 
-- **Images/**: Contains image files used in the application.
+- **images/**: Contains image files used in the application.
   - **GreenPREP.png**: The logo image for the application.
 
 #### `src/entities/`
@@ -146,17 +146,20 @@ This file provides an overview of the project and explains the folder structure.
 To get started with the project, follow these steps:
 
 1. **Clone the repository**:
+
    ```bash
    git clone <repository-url>
    ```
 
 2. **Install dependencies**:
+
    ```bash
    cd FSD
    yarn install
    ```
 
 3. **Start the development server**:
+
    ```bash
    yarn dev
    ```
