@@ -1,5 +1,6 @@
 import { Typography, Spin, Card, Divider } from 'antd'
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 
 import { fetchWritingTestDetails } from '../api/writingAPI'
@@ -7,7 +8,6 @@ import QuestionForm from './writing-question-form'
 import QuestionNavigatorContainer from './writing-question-navigator-container'
 import { DEFAULT_MAX_WORDS } from '../constance/WritingConst'
 import FooterNavigator from './writing-footer-navigator'
-import { useNavigate } from 'react-router-dom'
 
 const { Title, Text } = Typography
 
@@ -104,7 +104,7 @@ const WritingTest = () => {
         <Typography.Title level={1}>Writing test</Typography.Title>
       </Divider>
 
-      <Card className="mb-6">
+      <Card className="mb-32">
         <Title level={3} className="text-l mb-5 font-semibold">
           Question {currentPartIndex + 1} of {data.Parts.length}
         </Title>
