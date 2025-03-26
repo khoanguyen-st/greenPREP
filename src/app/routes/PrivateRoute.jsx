@@ -1,24 +1,25 @@
-import IntroductionScreen from '@pages/IntroductionScreen'
+import { GrammarIntroduction } from '@features/grammar/ui/grammar-introduction'
+import ListeningHeadphoneCheck from '@features/listening/ui/listening-headphonecheck'
+import { ListeningIntroduction } from '@features/listening/ui/listening-introduction'
 import PlayStopButton from '@features/listening/ui/PlayStopButton'
-import HomePage from '@pages/HomePage'
+import { ReadingIntroduction } from '@features/reading/ui/reading-instroduction'
+import ReadingMatchingQuestion from '@features/reading/ui/ReadingMatchingQuestion'
+import ReadingOrderingQuestion from '@features/reading/ui/ReadingOrderingQuestion'
+import { SpeakingIntroduction } from '@features/speaking/ui/speaking-introduction'
+import { WritingIntroduction } from '@features/writing/ui/writing-introduction'
 import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage'
+import { GrammarPage } from '@pages/grammar'
+import HomePage from '@pages/HomePage'
+import IntroductionScreen from '@pages/IntroductionScreen'
+import { ListeningPage } from '@pages/listening'
+import { ReadingPage } from '@pages/reading'
+import { SpeakingPage } from '@pages/speaking'
 import WaitingForApproval from '@pages/WaitingForApproval'
 import { WritingPage } from '@pages/writing'
-import { WritingIntroduction } from '@features/writing/ui/writing-introduction'
-import { ListeningPage } from '@pages/listening'
-import { SpeakingIntroduction } from '@features/speaking/ui/speaking-introduction'
-import { ListeningIntroduction } from '@features/listening/ui/listening-introduction'
-import { GrammarPage } from '@pages/grammar'
-import { GrammarIntroduction } from '@features/grammar/ui/grammar-introduction'
-import { SpeakingPage } from '@pages/speaking'
-import { ReadingPage } from '@pages/reading'
-import { ReadingIntroduction } from '@features/reading/ui/reading-instroduction'
-import WritingTest from '@features/writing/ui/writing-test'
 import MicrophoneTest from '@shared/ui/MicrophoneTest/MicrophoneTest'
-import ReadingMatchingQuestion from '@features/reading/ui/ReadingMatchingQuestion'
 import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
-import ListeningHeadphoneCheck from '@features/listening/ui/listening-headphonecheck'
-import ReadingOrderingQuestion from '@features/reading/ui/ReadingOrderingQuestion'
+import Introparts from '@features/speaking/ui/Introparts'
+import Parts from '@features/speaking/ui/Parts'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 
@@ -38,11 +39,11 @@ const PrivateRoute = [
           {
             index: true,
             element: <WritingIntroduction />
-          },
-          {
-            path: 'test',
-            element: <WritingTest />
           }
+          // {
+          //   path: 'test',
+          //   element: <WritingTest />
+          // }
         ]
       },
       {
@@ -59,7 +60,7 @@ const PrivateRoute = [
           },
           {
             path: 'test',
-            element: <div> Listening Test page</div>
+            element: <div>Listening Test page</div>
           }
         ]
       },
@@ -86,12 +87,16 @@ const PrivateRoute = [
             element: <SpeakingIntroduction />
           },
           {
-            path: 'microphonetest',
-            element: <MicrophoneTest />
+            path: 'instruction/:part',
+            element: <Introparts />
           },
           {
-            path: 'test',
-            element: <div>Speaking Test page</div>
+            path: 'test/:part',
+            element: <Parts />
+          },
+          {
+            path: 'microphonetest',
+            element: <MicrophoneTest />
           }
         ]
       },
@@ -121,7 +126,6 @@ const PrivateRoute = [
         path: 'play-stop-button',
         element: <PlayStopButton />
       },
-
       {
         path: 'rejectpage',
         element: <DesktopRejectRequestPage />

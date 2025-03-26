@@ -1,6 +1,7 @@
 import { SpeakingProvider } from '@shared/context/speaking-context'
 import { Outlet } from 'react-router-dom'
 
+
 import { SPEAKING_DATA } from '@/__mock/speaking'
 
 export const SpeakingPage = () => {
