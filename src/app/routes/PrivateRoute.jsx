@@ -16,10 +16,9 @@ import { ReadingIntroduction } from '@features/reading/ui/reading-instroduction'
 import WritingTest from '@features/writing/ui/writing-test'
 import MicrophoneTest from '@shared/ui/MicrophoneTest/MicrophoneTest'
 import ReadingMatchingQuestion from '@features/reading/ui/ReadingMatchingQuestion'
-import ReadingOrderingQuestion from '@features/reading/ui/ReadingOrderingQuestion'
-import ListeningTestPart1 from '@features/listening/ui/test-part1'
-import ListeningTestPart2 from '@features/listening/ui/test-part2'
 import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
+import ListeningHeadphoneCheck from '@features/listening/ui/listening-headphonecheck'
+import ReadingOrderingQuestion from '@features/reading/ui/ReadingOrderingQuestion'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 
@@ -55,12 +54,12 @@ const PrivateRoute = [
             element: <ListeningIntroduction />
           },
           {
-            path: 'test-part1',
-            element: <ListeningTestPart1 />
+            path: 'headphonecheck',
+            element: <ListeningHeadphoneCheck />
           },
           {
-            path: 'test-part2',
-            element: <ListeningTestPart2 />
+            path: 'test',
+            element: <div> Listening Test page</div>
           }
         ]
       },
