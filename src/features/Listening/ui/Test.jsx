@@ -250,9 +250,10 @@ const Test = () => {
                 {currentQuestion.Type === 'multiple-choice' ? (
                   <MultipleChoice
                     questionData={formattedQuestion}
+                    userAnswer={userAnswers}
+                    setUserAnswer={setUserAnswers}
                     onSubmit={handleAnswerSubmit}
                     className="mt-6"
-                    savedAnswer={userAnswers[currentQuestion.ID]}
                   />
                 ) : currentQuestion.Type === 'matching' ? (
                   <MatchingQuestion

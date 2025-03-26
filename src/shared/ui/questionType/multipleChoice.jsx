@@ -1,22 +1,13 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { Typography } from 'antd'
 import { multipleChoiceAnswerSchema } from '@shared/model/questionType/multipleQuestion.schemas'
 const { Title, Text } = Typography
-
-const MultipleChoice = ({ questionData, onSubmit, className = '', savedAnswer }) => {
-  const [selectedOption, setSelectedOption] = useState(savedAnswer)
+const MultipleChoice = ({ questionData, userAnswer, setUserAnswer, onSubmit, className = '' }) => {
+  const [selectedOption, setSelectedOption] = useState(null)
   const [error, setError] = useState(null)
-
-  // Update selectedOption when savedAnswer changes
-  useEffect(() => {
-    setSelectedOption(savedAnswer)
-  }, [savedAnswer])
-
-  // Parse và validate AnswerContent với useMemo
   const { options, isValid } = useMemo(() => {
     try {
       const parsedContent = JSON.parse(questionData.AnswerContent)[0]
-      // Validate với schema
       multipleChoiceAnswerSchema.validateSync(parsedContent)
       return { options: parsedContent.options, isValid: true }
     } catch (err) {
@@ -24,12 +15,19 @@ const MultipleChoice = ({ questionData, onSubmit, className = '', savedAnswer })
       return { options: [], isValid: false }
     }
   }, [questionData.AnswerContent])
-
+  useMemo(() => {
+    if (userAnswer && userAnswer[questionData.ID]) {
+      setSelectedOption(userAnswer[questionData.ID])
+    }
+  }, [userAnswer, questionData.ID])
   const handleClick = optionValue => {
     setSelectedOption(optionValue)
-    onSubmit(optionValue)
+    setUserAnswer(prev => ({
+      ...prev,
+      [questionData.ID]: optionValue
+    }))
+    onSubmit?.(optionValue)
   }
-
   if (!isValid) {
     return (
       <div className="rounded-md bg-red-50 p-4 text-red-500">
@@ -37,7 +35,6 @@ const MultipleChoice = ({ questionData, onSubmit, className = '', savedAnswer })
       </div>
     )
   }
-
   return (
     <div className={`w-full ${className}`}>
       <Title level={5} className="mb-6">
@@ -68,7 +65,7 @@ const MultipleChoice = ({ questionData, onSubmit, className = '', savedAnswer })
                 </Text>
               </div>
               <div className="flex flex-1 items-center">
-                <Text className="select-none px-5 text-base" style={{ color: isSelected ? '#1a56db' : '#374151' }}>
+                <Text className="select-none px-5 text-base" style={{ color: isSelected ? '#1A56DB' : '#374151' }}>
                   {option.value}
                 </Text>
               </div>
@@ -79,5 +76,4 @@ const MultipleChoice = ({ questionData, onSubmit, className = '', savedAnswer })
     </div>
   )
 }
-
 export default MultipleChoice

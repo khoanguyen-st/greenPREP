@@ -45,7 +45,7 @@ const NavigationButtons = ({ totalQuestions, currentQuestion, setCurrentQuestion
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-300 bg-white p-4 shadow-lg">
+    <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-gray-300 bg-white p-4 shadow-lg">
       <hr className="my-4 border-t border-gray-300" />
       <div className="mx-auto flex max-w-4xl items-center justify-end gap-4">
         <button
