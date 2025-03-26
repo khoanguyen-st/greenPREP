@@ -21,6 +21,7 @@ import ListeningTest from '@features/listening/ui/test'
 import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
 import Introparts from '@features/speaking/ui/Introparts'
 import Parts from '@features/speaking/ui/Parts'
+import WritingTest from '@features/writing/ui/writing-test'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 
@@ -40,11 +41,11 @@ const PrivateRoute = [
           {
             index: true,
             element: <WritingIntroduction />
+          },
+          {
+            path: 'test',
+            element: <WritingTest />
           }
-          // {
-          //   path: 'test',
-          //   element: <WritingTest />
-          // }
         ]
       },
       {
