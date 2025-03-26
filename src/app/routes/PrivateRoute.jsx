@@ -1,5 +1,5 @@
 import IntroductionScreen from '@pages/IntroductionScreen'
-import PlayStopButton from '@features/listening/ui/PlayStopButton'
+import PlayStopButton from '@features/Listening/ui/PlayStopButton'
 import HomePage from '@pages/HomePage'
 import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage'
 import WaitingForApproval from '@pages/WaitingForApproval'
@@ -7,7 +7,7 @@ import { WritingPage } from '@pages/writing'
 import { WritingIntroduction } from '@features/writing/ui/writing-introduction'
 import { ListeningPage } from '@pages/listening'
 import { SpeakingIntroduction } from '@features/speaking/ui/speaking-introduction'
-import { ListeningIntroduction } from '@features/listening/ui/listening-introduction'
+import { ListeningIntroduction } from '@features/Listening/ui/listening-introduction'
 import { GrammarPage } from '@pages/grammar'
 import { GrammarIntroduction } from '@features/grammar/ui/grammar-introduction'
 import { SpeakingPage } from '@pages/speaking'
@@ -15,9 +15,10 @@ import { ReadingPage } from '@pages/reading'
 import { ReadingIntroduction } from '@features/reading/ui/reading-instroduction'
 import WritingTest from '@features/writing/ui/writing-test'
 import ReadingMatchingQuestion from '@features/reading/ui/ReadingMatchingQuestion'
+import ReadingOrderingQuestion from '@features/reading/ui/ReadingOrderingQuestion'
+import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
-import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
 
 const PrivateRoute = [
   {
@@ -95,6 +96,10 @@ const PrivateRoute = [
           {
             path: 'test',
             element: <ReadingMatchingQuestion />
+          },
+          {
+            path: 'ordering',
+            element: <ReadingOrderingQuestion />
           },
           {
             path: 'part3',
