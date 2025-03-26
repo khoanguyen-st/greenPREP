@@ -14,11 +14,13 @@ import { SpeakingPage } from '@pages/speaking'
 import { ReadingPage } from '@pages/reading'
 import { ReadingIntroduction } from '@features/reading/ui/reading-instroduction'
 import WritingTest from '@features/writing/ui/writing-test'
+import MicrophoneTest from '@shared/ui/MicrophoneTest/MicrophoneTest'
 import ReadingMatchingQuestion from '@features/reading/ui/ReadingMatchingQuestion'
 import ListeningTestPart1 from '@features/listening/ui/test-part1'
 import ListeningTestPart2 from '@features/listening/ui/test-part2'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
+import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
 
 const PrivateRoute = [
   {
@@ -84,6 +86,10 @@ const PrivateRoute = [
             element: <SpeakingIntroduction />
           },
           {
+            path: 'microphonetest',
+            element: <MicrophoneTest />
+          },
+          {
             path: 'test',
             element: <div>Speaking Test page</div>
           }
@@ -123,6 +129,10 @@ const PrivateRoute = [
       {
         path: 'waiting-for-approval',
         element: <WaitingForApproval />
+      },
+      {
+        path: 'complete-test',
+        element: <SubmissionScreen />
       }
     ]
   }

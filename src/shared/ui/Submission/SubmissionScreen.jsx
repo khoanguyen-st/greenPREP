@@ -10,7 +10,7 @@ const SubmissionScreen = () => {
 
   const handleNavigation = async () => {
     try {
-      navigate('/homepage')
+      navigate('/')
     } catch (err) {
       setError(err.message)
       message.error('Navigation failed. Please try again.')
