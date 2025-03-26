@@ -18,6 +18,8 @@ import MicrophoneTest from '@shared/ui/MicrophoneTest/MicrophoneTest'
 import ReadingMatchingQuestion from '@features/reading/ui/ReadingMatchingQuestion'
 import ListeningTest from '@features/listening/ui/test'
 import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
+import ListeningHeadphoneCheck from '@features/listening/ui/listening-headphonecheck'
+import ReadingOrderingQuestion from '@features/reading/ui/ReadingOrderingQuestion'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 
@@ -101,6 +103,10 @@ const PrivateRoute = [
           {
             path: 'test',
             element: <ReadingMatchingQuestion />
+          },
+          {
+            path: 'ordering',
+            element: <ReadingOrderingQuestion />
           },
           {
             path: 'part3',
