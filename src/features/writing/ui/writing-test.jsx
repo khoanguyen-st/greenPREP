@@ -1,13 +1,13 @@
 import { Typography, Spin, Card, Divider } from 'antd'
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
 
 import { fetchWritingTestDetails } from '../api/writingAPI'
 import QuestionForm from './writing-question-form'
 import QuestionNavigatorContainer from './writing-question-navigator-container'
 import { DEFAULT_MAX_WORDS } from '../constance/WritingConst'
 import FooterNavigator from './writing-footer-navigator'
-import { useNavigate } from 'react-router-dom'
 
 const { Title, Text } = Typography
 
