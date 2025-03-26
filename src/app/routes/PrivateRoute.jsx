@@ -17,6 +17,7 @@ import WritingTest from '@features/writing/ui/writing-test'
 import MicrophoneTest from '@shared/ui/MicrophoneTest/MicrophoneTest'
 import ReadingMatchingQuestion from '@features/reading/ui/ReadingMatchingQuestion'
 import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
+import ListeningHeadphoneCheck from '@features/listening/ui/listening-headphonecheck'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 
@@ -53,7 +54,7 @@ const PrivateRoute = [
           },
           {
             path: 'headphonecheck',
-            element: <div> Listening Test page</div>
+            element: <ListeningHeadphoneCheck />
           },
           {
             path: 'test',

@@ -5,7 +5,7 @@ import { navigateLogo } from '@assets/images'
 const FooterNavigator = ({ totalQuestions, currentQuestion, setCurrentQuestion, handleSubmit }) => {
   return (
     <>
-      <div className="z-20 fixed bottom-8 left-4 hidden w-fit mdL:block">
+      <div className="fixed bottom-8 left-4 z-20 hidden w-fit mdL:block">
         <Image src={navigateLogo} alt="Logo" preview={false} className="h-[100px] w-auto" />
       </div>
 
