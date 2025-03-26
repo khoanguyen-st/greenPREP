@@ -50,6 +50,7 @@ const useAntiCheat = () => {
     document.addEventListener('keydown', handleRestrictedActions)
     document.addEventListener('contextmenu', blockContextMenu)
 
+    // eslint-disable-next-line consistent-return
     return () => {
       document.removeEventListener('fullscreenchange', handleFullScreenChange)
       document.removeEventListener('visibilitychange', handleVisibilityChange)

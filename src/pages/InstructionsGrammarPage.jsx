@@ -1,12 +1,15 @@
 import { Layout, Typography, Button, Space, Row, Col } from 'antd'
 import { ArrowRightOutlined } from '@ant-design/icons'
+import { useNavigate } from 'react-router-dom'
 
 const { Content } = Layout
 const { Title, Text } = Typography
 
-const VocabInstruction = ({ setStep }) => {
+const InstructionsGrammarPage = () => {
+  const navigate = useNavigate()
+
   const handleNext = () => {
-    setStep(3)
+    navigate('/grammar-test1')
   }
 
   return (
@@ -73,4 +76,4 @@ const VocabInstruction = ({ setStep }) => {
   )
 }
 
-export default VocabInstruction
+export default InstructionsGrammarPage

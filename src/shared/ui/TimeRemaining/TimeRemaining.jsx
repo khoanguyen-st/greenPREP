@@ -7,7 +7,7 @@ import formatTime from '../../utils/useCountdownTimer'
 /**Cách dùng TimeRemaining trong mỗi Skills (speaking, listening, reading, writing, vocal/grammar)
  * B1: ⚠️Import TimeRemaining from "../shared/ui/TimeRemaining/TimeRemaining";⚠️
  * B2: ⚠️Phải có handleAutoSubmit để đếm ngược thời gian kết thúc thì auto submit⚠️
- * B3: Add dòng này ⚠️<TimeRemaining duration={số phút của skill * 60} onAutoSubmit{handAutoSubmit}/>⚠️
+ * B3: Add dòng này ⚠️<TimeRemaining duration={số phút của skill * 60} onAutoSubmit={handAutoSubmit}/>⚠️
  */
 
 const TimeRemaining = ({ duration, label = 'Time remaining', onAutoSubmit }) => {
@@ -25,6 +25,7 @@ const TimeRemaining = ({ duration, label = 'Time remaining', onAutoSubmit }) => 
       setTimeLeft(prev => prev - 1)
     }, 1000)
 
+    // eslint-disable-next-line consistent-return
     return () => clearInterval(timer)
   }, [timeLeft, onAutoSubmit])
 
