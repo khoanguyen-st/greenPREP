@@ -1,9 +1,7 @@
-import { Outlet} from "react-router-dom";
+import { Outlet } from 'react-router-dom'
 
 const WritingTestPage = () => {
-  return (
-    <Outlet/>
-  )
-};
+  return <Outlet />
+}
 
-export default WritingTestPage;
+export default WritingTestPage
