@@ -5,7 +5,18 @@ import { sessionKey } from '@assets/images'
 const { Content } = Layout
 const { Title, Text } = Typography
 
-const FAKE_SESSION_KEYS = ['ABC123XYZ', 'TEST-SESSION-001', 'MOCK_KEY_2025', 'APTIS-EXAM-456', 'VALIDKEY789']
+const FAKE_SESSION_KEYS = [
+  'eAlB4v6JvU',
+  'FeVrSuOi5M',
+  'qvuuIYZCnZ',
+  'rYF4AnmdRu',
+  'gQiqwp2OoO',
+  'nl5NcjSoZk',
+  'UYsNI87myY',
+  'RkNC21XYC4',
+  '9KOMzb0J9u',
+  'xbSxjAfogY'
+]
 
 const EnterSessionKey = () => {
   const [form] = Form.useForm()

@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import axiosInstance from '@shared/config/axios'
 import { Spin, Alert } from 'antd'
-import MatchingQuestion from '@shared/ui/questionType/MatchingQuestion.jsx'
+import MatchingQuestion from '@shared/ui/questionType/MatchingQuestion'
 import NavigationButtons from '@shared/ui/NavigationButtons/NavigationButtons'
-import TimeRemaining from '@shared/ui/TimeRemaining/TimeRemaining.jsx'
+import TimeRemaining from '@shared/ui/TimeRemaining/TimeRemaining'
 import QuestionNavigator from '@shared/ui/QuestionNavigatior/QuestionNavigatior'
 import FlagButton from '@shared/ui/FLagButton/FlagButton'
 
@@ -38,24 +38,9 @@ const ReadingMatchingQuestion = ({
     staleTime: 6000
   })
 
-  const [matches, setMatches] = useState({})
-  const [currentQuestion, setCurrentQuestion] = useState(0)
-  const [flaggedQuestions, setFlaggedQuestions] = useState({})
-  const totalQuestions = testData?.Parts?.[0]?.Questions?.length || 1
-
-  const handleMatchChange = (leftId, rightId) => {
-    setMatches(prev => ({ ...prev, [leftId]: rightId }))
-  }
-
-  const handleFlag = isFlagged => {
-    setFlaggedQuestions(prev => ({
-      ...prev,
-      [currentQuestion]: isFlagged
-    }))
-  }
-
-  const handleAutoSubmit = () => alert('Auto-submit triggered')
-  const handleSubmit = () => alert('Test submitted')
+  const [userAnswers, setUserAnswers] = useState({})
+  const [flaggedQuestions, setFlaggedQuestions] = useState([])
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
 
   if (isLoading) {
     return (
@@ -65,7 +50,7 @@ const ReadingMatchingQuestion = ({
     )
   }
 
-  if (isError || !testData || !testData.Parts?.[0]?.Questions?.[0]) {
+  if (isError || !testData?.Parts?.[0]?.Questions?.length) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Alert message="Error" description="Failed to load test data. Please try again." type="error" showIcon />
@@ -73,10 +58,10 @@ const ReadingMatchingQuestion = ({
     )
   }
 
-  const question = testData.Parts[0].Questions[currentQuestion]
-  const answerContent = question.AnswerContent
+  const totalQuestions = testData.Parts[0].Questions.length
+  const currentQuestion = testData.Parts[0].Questions[currentQuestionIndex]
 
-  const formattedContent = question.Content.split('Paragraph ').map((paragraph, index) => {
+  const formattedContent = currentQuestion.Content.split('Paragraph ').map((paragraph, index) => {
     if (index === 0) {
       return paragraph
     }
@@ -89,42 +74,82 @@ const ReadingMatchingQuestion = ({
     )
   })
 
+  const formatQuestionData = question => {
+    if (!question) {
+      return null
+    }
+
+    try {
+      const answerContent =
+        typeof question.AnswerContent === 'string' ? JSON.parse(question.AnswerContent) : question.AnswerContent
+
+      if (!answerContent.leftItems || !answerContent.rightItems) {
+        throw new Error('Invalid question format: missing required fields')
+      }
+
+      return {
+        leftItems: answerContent.leftItems.map((item, index) => ({ id: index + 1, label: item })),
+        rightItems: answerContent.rightItems.map((item, index) => ({
+          id: String.fromCharCode(97 + index),
+          label: item
+        }))
+      }
+    } catch (error) {
+      console.error('Error formatting question data:', error)
+      return null
+    }
+  }
+
+  const formattedQuestion = formatQuestionData(currentQuestion)
+  const handleAnswerSubmit = answer => {
+    if (!currentQuestion) {
+      return
+    }
+    setUserAnswers({ ...userAnswers, [currentQuestion.ID]: answer })
+  }
+
+  const toggleFlag = isFlagged => {
+    if (!currentQuestion) {
+      return
+    }
+    setFlaggedQuestions(prev =>
+      isFlagged ? [...prev, currentQuestion.ID] : prev.filter(id => id !== currentQuestion.ID)
+    )
+  }
+
   return (
     <div className="flex flex-col p-4 sm:p-8 md:flex-row md:p-12">
       <div className="flex-1">
-        <FlagButton onFlag={handleFlag} initialFlagged={Boolean(flaggedQuestions[currentQuestion])} />
-
+        <FlagButton onFlag={toggleFlag} initialFlagged={flaggedQuestions.includes(currentQuestion?.ID)} />
         <h1 className="mb-6 text-xl font-bold sm:text-2xl md:text-3xl">{testData.Name}</h1>
         <p className="mb-8 space-y-3 whitespace-pre-line px-4 text-base leading-relaxed text-gray-800 sm:text-lg">
           {formattedContent}
         </p>
-
         <div className="mb-6">
-          <MatchingQuestion
-            leftItems={answerContent.leftItems.map(item => ({ id: item, label: item }))}
-            rightItems={answerContent.rightItems.map(item => ({ id: item, label: item }))}
-            matches={matches}
-            onChange={handleMatchChange}
-          />
+          {formattedQuestion && (
+            <MatchingQuestion
+              leftItems={formattedQuestion.leftItems}
+              rightItems={formattedQuestion.rightItems}
+              userAnswer={userAnswers[currentQuestion?.ID] || []}
+              setUserAnswer={handleAnswerSubmit}
+            />
+          )}
         </div>
       </div>
-
       <div className="flex w-full flex-col space-y-6 md:w-1/3 lg:w-1/4">
-        <TimeRemaining duration={35 * 60} onAutoSubmit={handleAutoSubmit} />
-
+        <TimeRemaining duration={35 * 60} onAutoSubmit={() => alert('Auto-submit triggered')} />
         <QuestionNavigator
           values={Array.from({ length: totalQuestions }, (_, i) => ({
-            type: flaggedQuestions[i] ? 'flagged' : 'unanswered'
+            type: flaggedQuestions.includes(i) ? 'flagged' : 'unanswered'
           }))}
-          action={setCurrentQuestion}
-          position={currentQuestion}
+          action={setCurrentQuestionIndex}
+          position={currentQuestionIndex}
         />
-
         <NavigationButtons
           totalQuestions={totalQuestions}
-          currentQuestion={currentQuestion}
-          setCurrentQuestion={setCurrentQuestion}
-          onSubmit={handleSubmit}
+          currentQuestion={currentQuestionIndex}
+          setCurrentQuestion={setCurrentQuestionIndex}
+          onSubmit={() => alert('Test submitted')}
           fetchQuestion={undefined}
         />
       </div>
