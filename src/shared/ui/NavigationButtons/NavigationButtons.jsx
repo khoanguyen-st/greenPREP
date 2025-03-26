@@ -1,5 +1,6 @@
 import { Button, Modal } from 'antd'
 import { useState } from 'react'
+
 const NavigationButtons = ({ totalQuestions, currentQuestion, setCurrentQuestion, fetchQuestion, onSubmit }) => {
   const [isSubmitModalVisible, setIsSubmitModalVisible] = useState(false)
   const [error, setError] = useState(null)
@@ -53,11 +54,21 @@ const NavigationButtons = ({ totalQuestions, currentQuestion, setCurrentQuestion
           <span className="mr-2">←</span> Previous
         </Button>
         {currentQuestion < totalQuestions - 1 ? (
-          <Button type="primary" size="large" onClick={handleNext}>
+          <Button
+            type="primary"
+            size="large"
+            onClick={handleNext}
+            className="!h-[38px] !rounded-md !border-[#003087] !bg-[#003087] !px-6 !text-sm !text-white hover:!bg-[#002670]"
+          >
             Next <span className="ml-2">→</span>
           </Button>
         ) : (
-          <Button type="primary" size="large" onClick={handleSubmit}>
+          <Button
+            type="primary"
+            size="large"
+            onClick={handleSubmit}
+            className="!h-[38px] !rounded-md !border-[#003087] !bg-[#003087] !px-6 !text-sm !text-white hover:!bg-[#002670]"
+          >
             Submit
           </Button>
         )}
@@ -86,10 +97,15 @@ const NavigationButtons = ({ totalQuestions, currentQuestion, setCurrentQuestion
           visible={isSubmitModalVisible}
           onCancel={handleSubmitModalCancel}
           footer={[
-            <Button key="cancel" onClick={handleSubmitModalCancel}>
+            <Button key="cancel" onClick={handleSubmitModalCancel} className="!h-[38px] !rounded-md !px-6 !text-sm">
               Cancel
             </Button>,
-            <Button key="submit" type="primary" onClick={handleSubmitModal}>
+            <Button
+              key="submit"
+              type="primary"
+              onClick={handleSubmitModal}
+              className="!h-[38px] !rounded-md !border-[#003087] !bg-[#003087] !px-6 !text-sm !text-white hover:!bg-[#002670]"
+            >
               Submit
             </Button>
           ]}

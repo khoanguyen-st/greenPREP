@@ -1,4 +1,4 @@
-import SubmissionImage from '@assets/Images/Submission/submission.jpg'
+import { SubmissionImage } from '@assets/images'
 import { Button, message } from 'antd'
 import { useState } from 'react'
 import { AiOutlineCheckCircle } from 'react-icons/ai'
@@ -10,7 +10,7 @@ const SubmissionScreen = () => {
 
   const handleNavigation = async () => {
     try {
-      navigate('/homepage')
+      navigate('/')
     } catch (err) {
       setError(err.message)
       message.error('Navigation failed. Please try again.')

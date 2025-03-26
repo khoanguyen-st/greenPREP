@@ -7,7 +7,7 @@ export const SpeakingIntroduction = () => {
   const part = 1
   const data = useSpeakingData()
   const onStart = () => {
-    navigate(`/speaking/instruction/${part}`)
+    navigate('/speaking/microphonetest')
   }
 
   return <Introduction data={data} onStart={onStart} />
