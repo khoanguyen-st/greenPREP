@@ -16,8 +16,7 @@ import { ReadingIntroduction } from '@features/reading/ui/reading-instroduction'
 import WritingTest from '@features/writing/ui/writing-test'
 import MicrophoneTest from '@shared/ui/MicrophoneTest/MicrophoneTest'
 import ReadingMatchingQuestion from '@features/reading/ui/ReadingMatchingQuestion'
-import ListeningTestPart1 from '@features/listening/ui/test-part1'
-import ListeningTestPart2 from '@features/listening/ui/test-part2'
+import ListeningTest from '@features/listening/ui/test'
 import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
@@ -54,12 +53,8 @@ const PrivateRoute = [
             element: <ListeningIntroduction />
           },
           {
-            path: 'test-part1',
-            element: <ListeningTestPart1 />
-          },
-          {
-            path: 'test-part2',
-            element: <ListeningTestPart2 />
+            path: 'test',
+            element: <ListeningTest />
           }
         ]
       },
@@ -113,11 +108,6 @@ const PrivateRoute = [
           }
         ]
       },
-      {
-        path: 'play-stop-button',
-        element: <PlayStopButton />
-      },
-
       {
         path: 'rejectpage',
         element: <DesktopRejectRequestPage />
