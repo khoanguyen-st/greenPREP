@@ -96,7 +96,7 @@ const WritingTest = () => {
   const partNumber = parseInt(currentPart.Content.match(/Part (\d+)/)?.[1]) || 0
 
   return (
-    <div className="relative mx-auto min-h-screen max-w-3xl pb-24">
+    <div className="relative mx-auto min-h-screen max-w-4xl p-5">
       <Divider orientation="left">
         <Typography.Title level={1}>Writing test</Typography.Title>
       </Divider>
