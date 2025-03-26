@@ -15,8 +15,10 @@ import { ReadingPage } from '@pages/reading'
 import { ReadingIntroduction } from '@features/reading/ui/reading-instroduction'
 import WritingTest from '@features/writing/ui/writing-test'
 import MicrophoneTest from '@shared/ui/MicrophoneTest/MicrophoneTest'
+import ReadingMatchingQuestion from '@features/reading/ui/ReadingMatchingQuestion'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
+import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
 
 const PrivateRoute = [
   {
@@ -97,7 +99,11 @@ const PrivateRoute = [
           },
           {
             path: 'test',
-            element: <div>Reading Test page</div>
+            element: <ReadingMatchingQuestion />
+          },
+          {
+            path: 'part3',
+            element: <div>Reading Part 3</div>
           }
         ]
       },
@@ -117,6 +123,10 @@ const PrivateRoute = [
       {
         path: 'waiting-for-approval',
         element: <WaitingForApproval />
+      },
+      {
+        path: 'complete-test',
+        element: <SubmissionScreen />
       }
     ]
   }
