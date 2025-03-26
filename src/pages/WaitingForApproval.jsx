@@ -1,5 +1,7 @@
 import { Layout, Typography, Image } from 'antd'
 import { Logo } from '@assets/images'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import SharedHeader from '../shared/ui/SharedHeader'
 
@@ -7,6 +9,14 @@ const { Content } = Layout
 const { Title, Text } = Typography
 
 const WaitingForApproval = () => {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    setTimeout(() => {
+      navigate('/introduction')
+    }, 5000)
+  }, [navigate])
+
   return (
     <Layout className="min-h-screen">
       <SharedHeader />

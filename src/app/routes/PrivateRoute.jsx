@@ -15,6 +15,18 @@ import { SpeakingPage } from '@pages/speaking'
 import WaitingForApproval from '@pages/WaitingForApproval'
 import { WritingPage } from '@pages/writing'
 
+import { WritingIntroduction } from '@features/writing/ui/writing-introduction'
+import { ListeningPage } from '@pages/listening'
+import { SpeakingIntroduction } from '@features/speaking/ui/speaking-introduction'
+import { ListeningIntroduction } from '@features/listening/ui/listening-introduction'
+import { GrammarPage } from '@pages/grammar'
+import { GrammarIntroduction } from '@features/grammar/ui/grammar-introduction'
+import { SpeakingPage } from '@pages/speaking'
+import { ReadingPage } from '@pages/reading'
+import { ReadingIntroduction } from '@features/reading/ui/reading-instroduction'
+import WritingTest from '@features/writing/ui/writing-test'
+
+
 import Introparts from '../../features/Speaking/ui/Introparts'
 import Parts from '../../features/Speaking/ui/Parts'
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
@@ -36,7 +48,6 @@ const PrivateRoute = [
             index: true,
             element: <WritingIntroduction />
           },
-
           {
             path: 'test',
             element: <WritingTest />
