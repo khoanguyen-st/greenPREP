@@ -32,7 +32,7 @@ const QuestionNavigatorContainer = ({
       <div
         className={`border-black-300 z-1 fixed right-2 h-auto w-60 rounded-lg border bg-white p-2 shadow-lg ${isNavigatorOpen ? 'block' : 'hidden'} bottom-[65%] md:block mdL:bottom-[70%]`}
       >
-        <TimeRemaining duration={0.3 * 60} onAutoSubmit={() => setIsPopupOpen(true)} />
+        <TimeRemaining duration={1 * 60} onAutoSubmit={() => setIsPopupOpen(true)} />
         <QuestionNavigator
           values={data.Parts.map(part => {
             const isFlagged = part.Questions.some((_, index) => flaggedQuestions[`answer-${part.ID}-${index}`])
@@ -48,7 +48,6 @@ const QuestionNavigatorContainer = ({
             } else if (isAnswered) {
               type = 'answered'
             }
-
             return { type }
           })}
           action={setCurrentPartIndex}
