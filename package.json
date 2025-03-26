@@ -48,10 +48,17 @@
     "@vitejs/plugin-react": "4.3.2",
     "autoprefixer": "10.4.20",
     "eslint": "9.11.1",
+<<<<<<< HEAD
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-react": "7.37.4",
     "eslint-plugin-react-hooks": "5.1.0-rc.0",
     "eslint-plugin-react-refresh": "0.4.12",
+=======
+    "eslint-plugin-react": "7.37.4",
+    "eslint-plugin-react-hooks": "5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "0.4.12",
+    "eslint-plugin-import": "2.31.0",
+>>>>>>> 1d8d7d6518d154ae534da19e48c10d5139e2feee
     "globals": "15.9.0",
     "husky": "9.1.7",
     "lint-staged": "15.5.0",

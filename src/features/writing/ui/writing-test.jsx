@@ -1,7 +1,12 @@
 import { Typography, Spin, Card, Divider } from 'antd'
 import { useState, useEffect } from 'react'
+<<<<<<< HEAD
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
+=======
+import { useNavigate } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+>>>>>>> 1d8d7d6518d154ae534da19e48c10d5139e2feee
 
 import { fetchWritingTestDetails } from '../api/writingAPI'
 import QuestionForm from './writing-question-form'
@@ -17,12 +22,16 @@ const WritingTest = () => {
     queryKey: ['writingQuestions'],
     queryFn: async () => {
       const response = await fetchWritingTestDetails()
+<<<<<<< HEAD
       const sortedParts = response.Parts.sort((a, b) => {
         const partNumberA = parseInt(a.Content.match(/Part (\d+)/)?.[1]) || 0
         const partNumberB = parseInt(b.Content.match(/Part (\d+)/)?.[1]) || 0
         return partNumberA - partNumberB
       })
       return { ...response, Parts: sortedParts }
+=======
+      return { ...response }
+>>>>>>> 1d8d7d6518d154ae534da19e48c10d5139e2feee
     }
   })
 
@@ -104,7 +113,11 @@ const WritingTest = () => {
         <Typography.Title level={1}>Writing test</Typography.Title>
       </Divider>
 
+<<<<<<< HEAD
       <Card className="mb-6">
+=======
+      <Card className="mb-32">
+>>>>>>> 1d8d7d6518d154ae534da19e48c10d5139e2feee
         <Title level={3} className="text-l mb-5 font-semibold">
           Question {currentPartIndex + 1} of {data.Parts.length}
         </Title>

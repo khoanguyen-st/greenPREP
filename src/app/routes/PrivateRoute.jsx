@@ -14,7 +14,14 @@ import { SpeakingPage } from '@pages/speaking'
 import { ReadingPage } from '@pages/reading'
 import { ReadingIntroduction } from '@features/reading/ui/reading-instroduction'
 import WritingTest from '@features/writing/ui/writing-test'
+<<<<<<< HEAD
 import ReadingMatchingQuestion from '@features/reading/ui/ReadingMatchingQuestion'
+=======
+import MicrophoneTest from '@shared/ui/MicrophoneTest/MicrophoneTest'
+import ReadingMatchingQuestion from '@features/reading/ui/ReadingMatchingQuestion'
+import ListeningTestPart1 from '@features/listening/ui/test-part1'
+import ListeningTestPart2 from '@features/listening/ui/test-part2'
+>>>>>>> 1d8d7d6518d154ae534da19e48c10d5139e2feee
 import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
@@ -51,8 +58,17 @@ const PrivateRoute = [
             element: <ListeningIntroduction />
           },
           {
+<<<<<<< HEAD
             path: 'test',
             element: <div> Listening Test page</div>
+=======
+            path: 'test-part1',
+            element: <ListeningTestPart1 />
+          },
+          {
+            path: 'test-part2',
+            element: <ListeningTestPart2 />
+>>>>>>> 1d8d7d6518d154ae534da19e48c10d5139e2feee
           }
         ]
       },
@@ -69,6 +85,7 @@ const PrivateRoute = [
             element: <div>Grammar Test page</div>
           }
         ]
+<<<<<<< HEAD
       },
       {
         path: 'speaking',
@@ -112,6 +129,54 @@ const PrivateRoute = [
         element: <DesktopRejectRequestPage />
       },
 
+=======
+      },
+      {
+        path: 'speaking',
+        element: <SpeakingPage />,
+        children: [
+          {
+            index: true,
+            element: <SpeakingIntroduction />
+          },
+          {
+            path: 'microphonetest',
+            element: <MicrophoneTest />
+          },
+          {
+            path: 'test',
+            element: <div>Speaking Test page</div>
+          }
+        ]
+      },
+      {
+        path: 'reading',
+        element: <ReadingPage />,
+        children: [
+          {
+            index: true,
+            element: <ReadingIntroduction />
+          },
+          {
+            path: 'test',
+            element: <ReadingMatchingQuestion />
+          },
+          {
+            path: 'part3',
+            element: <div>Reading Part 3</div>
+          }
+        ]
+      },
+      {
+        path: 'play-stop-button',
+        element: <PlayStopButton />
+      },
+
+      {
+        path: 'rejectpage',
+        element: <DesktopRejectRequestPage />
+      },
+>>>>>>> 1d8d7d6518d154ae534da19e48c10d5139e2feee
       {
         path: 'introduction',
         element: <IntroductionScreen />
