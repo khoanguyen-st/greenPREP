@@ -23,7 +23,7 @@ const QuestionForm = ({
           <Form.Item
             key={fieldName}
             label={
-              <div className="flex w-[1000px] items-center justify-between gap-2">
+              <div className="flex w-[9000px] items-center justify-between gap-2">
                 <div className="flex-1 pl-2 md:pl-0">{question.Content}</div>
                 <div className="smL:mr-[-12px]">
                   <FlagButton

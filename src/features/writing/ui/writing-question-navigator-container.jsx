@@ -22,7 +22,7 @@ const QuestionNavigatorContainer = ({
         <MenuOutlined />
       </Button>
       <div
-        className={`border-black-300 fixed right-2 z-50 h-auto w-60 rounded-lg border bg-white p-2 shadow-lg ${isNavigatorOpen ? 'block' : 'hidden'} bottom-[65%] md:block mdL:bottom-[70%]`}
+        className={`border-black-300 z-1 fixed right-2 h-auto w-60 rounded-lg border bg-white p-2 shadow-lg ${isNavigatorOpen ? 'block' : 'hidden'} bottom-[65%] md:block mdL:bottom-[70%]`}
       >
         <TimeRemaining duration={10 * 60} onAutoSubmit={handleSubmit} />
         <QuestionNavigator

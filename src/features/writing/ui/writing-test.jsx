@@ -1,4 +1,4 @@
-import { Typography, Spin } from 'antd'
+import { Typography, Spin, Card, Divider } from 'antd'
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
@@ -97,24 +97,27 @@ const WritingTest = () => {
 
   return (
     <div className="relative mx-auto min-h-screen max-w-3xl pb-24">
-      <Title level={1} className="mt-12 text-left text-3xl font-bold">
-        Writing Test
-      </Title>
-      <Text className="text-l mb-5 font-semibold">
-        Question {currentPartIndex + 1} of {data.Parts.length}
-      </Text>
-      <Text className="mb-3 mt-8 block text-lg font-semibold xs:mx-2 md:mx-0 md:text-xl">{currentPart.Content}</Text>
-      <QuestionForm
-        currentPart={currentPart}
-        partNumber={partNumber}
-        answers={answers}
-        flaggedQuestions={flaggedQuestions}
-        handleFlagToggle={handleFlagToggle}
-        handleTextChange={handleTextChange}
-        countWords={countWords}
-        wordCounts={wordCounts}
-        DEFAULT_MAX_WORDS={DEFAULT_MAX_WORDS}
-      />
+      <Divider orientation="left">
+        <Typography.Title level={1}>Writing test</Typography.Title>
+      </Divider>
+
+      <Card className="mb-6">
+        <Title level={3} className="text-l mb-5 font-semibold">
+          Question {currentPartIndex + 1} of {data.Parts.length}
+        </Title>
+        <Text className="mb-3 mt-8 block text-lg font-semibold xs:mx-2 md:mx-0 md:text-xl">{currentPart.Content}</Text>
+        <QuestionForm
+          currentPart={currentPart}
+          partNumber={partNumber}
+          answers={answers}
+          flaggedQuestions={flaggedQuestions}
+          handleFlagToggle={handleFlagToggle}
+          handleTextChange={handleTextChange}
+          countWords={countWords}
+          wordCounts={wordCounts}
+          DEFAULT_MAX_WORDS={DEFAULT_MAX_WORDS}
+        />
+      </Card>
 
       <QuestionNavigatorContainer
         data={data}
