@@ -1,7 +1,8 @@
-import { useState, useMemo } from 'react';
-import { Typography } from 'antd';
-import { multipleChoiceAnswerSchema } from 'src/shared/model/questionType/multipleQuestion.schemas';
-const { Title, Text } = Typography;
+import { useState, useMemo } from 'react'
+import { Typography } from 'antd'
+import { multipleChoiceAnswerSchema } from '@shared/model/questionType/multipleQuestion.schemas'
+const { Title, Text } = Typography
+
 
 const MultipleChoice = ({ 
   questionData,
@@ -18,8 +19,8 @@ const MultipleChoice = ({
       multipleChoiceAnswerSchema.validateSync(parsedContent);
       return { options: parsedContent.options, isValid: true };
     } catch (err) {
-      setError(err.message);
-      return { options: [], isValid: false };
+      setError(err.message)
+      return { options: [], isValid: false }
     }
   }, [questionData.AnswerContent]);
   useMemo(() => {
@@ -37,12 +38,14 @@ const MultipleChoice = ({
     onSubmit?.(optionValue);
   };
 
+
+
   if (!isValid) {
     return (
-      <div className="text-red-500 p-4 bg-red-50 rounded-md">
+      <div className="rounded-md bg-red-50 p-4 text-red-500">
         <p>Lỗi dữ liệu: {error}</p>
       </div>
-    );
+    )
   }
 
   return (
@@ -51,44 +54,40 @@ const MultipleChoice = ({
         {questionData.Content}
       </Title>
       <div className="space-y-3">
-        {options.map((option) => {
-          const isSelected = selectedOption === option.value;
+        {options.map(option => {
+          const isSelected = selectedOption === option.value
           return (
             <div
               key={option.key}
               onClick={() => handleClick(option.value)}
-              className={`
-                flex w-full h-[48px] border rounded-md cursor-pointer transition-all duration-200
-                ${isSelected 
-                  ? 'border-blue-500 bg-blue-50 shadow-sm' 
+              className={`flex h-[48px] w-full cursor-pointer rounded-md border transition-all duration-200 ${
+                isSelected
+                  ? 'border-blue-500 bg-blue-50 shadow-sm'
                   : 'border-gray-200 hover:border-blue-400 hover:bg-blue-50/30 hover:shadow-sm'
-                }
-              `}
+              } `}
             >
-              <div 
-                className={`
-                  flex items-center justify-center w-[48px] min-w-[48px] border-r rounded-l-md
-                  ${isSelected 
-                    ? 'border-blue-500 bg-blue-500 text-white' 
+              <div
+                className={`flex w-[48px] min-w-[48px] items-center justify-center rounded-l-md border-r ${
+                  isSelected
+                    ? 'border-blue-500 bg-blue-500 text-white'
                     : 'border-gray-200 bg-gray-50 group-hover:bg-gray-100'
-                  }
-                `}
+                } `}
               >
                 <Text strong className="select-none text-base" style={{ color: isSelected ? 'white' : 'inherit' }}>
                   {option.key}
                 </Text>
               </div>
-              <div className="flex-1 flex items-center">
-                <Text className="px-5 select-none text-base" style={{ color: isSelected ? '#1a56db' : '#374151' }}>
+              <div className="flex flex-1 items-center">
+                <Text className="select-none px-5 text-base" style={{ color: isSelected ? '#1a56db' : '#374151' }}>
                   {option.value}
                 </Text>
               </div>
             </div>
-          );
+          )
         })}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default MultipleChoice;
+export default MultipleChoice
