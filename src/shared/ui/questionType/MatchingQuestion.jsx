@@ -1,6 +1,44 @@
 import { useEffect, useRef, useState } from 'react'
+import * as yup from 'yup'
+
+const itemSchema = yup.object().shape({
+  id: yup.string().required('Item must have an ID'),
+  label: yup.string().required('Item must have a label')
+})
+
+const matchingQuestionSchema = yup.object().shape({
+  leftItems: yup.array().of(itemSchema).min(1, 'Left items cannot be empty').required('Left items are required'),
+  rightItems: yup.array().of(itemSchema).min(1, 'Right items cannot be empty').required('Right items are required'),
+  matches: yup.object().test('valid-matches', 'Invalid matches format', value => {
+    if (!value) {
+      return true
+    }
+    return Object.entries(value).every(
+      ([leftId, rightId]) => typeof leftId === 'string' && (rightId === null || typeof rightId === 'string')
+    )
+  }),
+  disabled: yup.boolean(),
+  className: yup.string()
+})
 
 const MatchingQuestion = ({ leftItems, rightItems, matches, onChange, disabled = false, className = '' }) => {
+  useEffect(() => {
+    const validateData = async () => {
+      try {
+        await matchingQuestionSchema.validate({
+          leftItems,
+          rightItems,
+          matches,
+          disabled
+        })
+      } catch (error) {
+        console.error('Validation error:', error.message)
+      }
+    }
+
+    validateData()
+  }, [leftItems, rightItems, matches, disabled])
+
   const [selectedLeft, setSelectedLeft] = useState(null)
   const [selectedRight, setSelectedRight] = useState(null)
   const [lines, setLines] = useState([])
@@ -9,7 +47,9 @@ const MatchingQuestion = ({ leftItems, rightItems, matches, onChange, disabled =
   const rightItemsRefs = useRef({})
 
   const drawLine = (start, end) => {
-    if (!start || !end || !containerRef.current) return null
+    if (!start || !end || !containerRef.current) {
+      return null
+    }
     const startRect = start.getBoundingClientRect()
     const endRect = end.getBoundingClientRect()
     const containerRect = containerRef.current.getBoundingClientRect()
@@ -59,7 +99,17 @@ const MatchingQuestion = ({ leftItems, rightItems, matches, onChange, disabled =
   }, [matches, selectedLeft, selectedRight])
 
   const handleLeftSelect = value => {
-    if (disabled) return
+    if (disabled) {
+      return
+    }
+
+    if (matches[value]) {
+      onChange(value, null)
+      setSelectedLeft(null)
+      setSelectedRight(null)
+      return
+    }
+
     if (value === selectedLeft) {
       setSelectedLeft(null)
     } else {
@@ -76,7 +126,18 @@ const MatchingQuestion = ({ leftItems, rightItems, matches, onChange, disabled =
   }
 
   const handleRightSelect = value => {
-    if (disabled) return
+    if (disabled) {
+      return
+    }
+
+    const matchedLeftId = Object.entries(matches).find(([, rightId]) => rightId === value)?.[0]
+    if (matchedLeftId) {
+      onChange(matchedLeftId, null)
+      setSelectedLeft(null)
+      setSelectedRight(null)
+      return
+    }
+
     if (value === selectedRight) {
       setSelectedRight(null)
     } else {
@@ -114,7 +175,7 @@ const MatchingQuestion = ({ leftItems, rightItems, matches, onChange, disabled =
           <path
             key={line.id}
             d={line.path}
-            stroke={line.isMatched ? '#3B82F6' : '#93C5FD'}
+            stroke={line.isMatched ? '#1E40AF' : '#60A5FA'}
             strokeWidth="3"
             fill="none"
             style={{
@@ -136,18 +197,18 @@ const MatchingQuestion = ({ leftItems, rightItems, matches, onChange, disabled =
         `}
       </style>
 
-      <div className="relative grid grid-cols-2 gap-8" style={{ zIndex: 2 }}>
+      <div className="relative grid grid-cols-2 gap-8 md:gap-16" style={{ zIndex: 2 }}>
         <div className="left-items space-y-4">
           <h3 className="mb-4 text-lg font-semibold">Column A</h3>
           {leftItems.map(item => (
             <div
               key={item.id}
               ref={el => (leftItemsRefs.current[item.id] = el)}
-              className={`cursor-pointer rounded-lg border-[12px] p-4 shadow-md transition-all hover:shadow-xl ${
+              className={`cursor-pointer rounded-lg border-[12px] p-4 shadow-md transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-[#1E40AF] ${
                 selectedLeft === item.id
-                  ? 'border-[14px] border-blue-900 bg-blue-50'
+                  ? 'border-slate-950 bg-blue-50'
                   : matches[item.id]
-                    ? 'border-[14px] border-blue-900 bg-blue-50'
+                    ? 'border-[14px] border-[#1E40AF] bg-blue-50 hover:bg-blue-100'
                     : 'border-slate-950 hover:border-blue-800 hover:bg-blue-50'
               }`}
               onClick={() => handleLeftSelect(item.id)}
@@ -163,11 +224,11 @@ const MatchingQuestion = ({ leftItems, rightItems, matches, onChange, disabled =
             <div
               key={item.id}
               ref={el => (rightItemsRefs.current[item.id] = el)}
-              className={`cursor-pointer rounded-lg border-[12px] p-4 shadow-md transition-all hover:shadow-xl ${
+              className={`cursor-pointer rounded-lg border-[12px] p-4 shadow-md transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-[#1E40AF] ${
                 selectedRight === item.id
-                  ? 'border-[14px] border-blue-900 bg-blue-50'
+                  ? 'border-slate-950 bg-blue-50'
                   : Object.values(matches).includes(item.id)
-                    ? 'border-[14px] border-blue-900 bg-blue-50'
+                    ? 'border-[14px] border-[#1E40AF] bg-blue-50 hover:bg-blue-100'
                     : 'border-slate-950 hover:border-blue-800 hover:bg-blue-50'
               }`}
               onClick={() => handleRightSelect(item.id)}
