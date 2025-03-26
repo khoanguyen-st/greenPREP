@@ -16,8 +16,8 @@ import { SpeakingPage } from '@pages/speaking'
 import WaitingForApproval from '@pages/WaitingForApproval'
 import { WritingPage } from '@pages/writing'
 
-import Introparts from '../../features/Speaking/ui/Introparts'
-import Parts from '../../features/Speaking/ui/Parts'
+import Introparts from '@features/speaking/ui/Introparts'
+import Parts from '@features/speaking/ui/Parts'
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 
 const PrivateRoute = [

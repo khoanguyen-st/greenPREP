@@ -20,4 +20,28 @@ const fetchTopicData = async partNumber => {
   }
 }
 
-export default fetchTopicData
+const uploadToCloudinary = async (blob, topicId, partContent, questionIndex) => {
+  try {
+    const formData = new FormData()
+    formData.append('file', blob)
+    formData.append('upload_preset', process.env.VITE_CLOUDINARY_UPLOAD_PRESET)
+    formData.append('filename_override', `speaking_${topicId}_${partContent}_${questionIndex + 1}`)
+
+    const response = await fetch(
+      `${process.env.VITE_CLOUDINARY_API_URL}/${process.env.VITE_CLOUDINARY_CLOUD_NAME}/auto/upload`,
+      {
+        method: 'POST',
+        body: formData
+      }
+    )
+
+    const data = await response.json()
+    console.log('Uploaded successfully:', data)
+    return data
+  } catch (error) {
+    console.error('Upload error:', error)
+    throw error
+  }
+}
+
+export { fetchTopicData, uploadToCloudinary }

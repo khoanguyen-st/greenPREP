@@ -1,6 +1,7 @@
 import { AudioMutedOutlined, AudioOutlined } from '@ant-design/icons'
 import { useEffect, useRef, useState } from 'react'
 import { Modal } from 'antd'
+import { uploadToCloudinary } from '../../api'
 
 /**
  * Part component expects:
@@ -78,22 +79,6 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
     setHasUploaded(false);
   };
 
-  const uploadToCloudinary = blob => {
-    const formData = new FormData()
-    formData.append('file', blob)
-    formData.append('upload_preset', 'GreenPREP')
-    fetch('https://api.cloudinary.com/v1_1/nguyentranson/auto/upload', {
-      method: 'POST',
-      body: formData
-    })
-      .then(res => res.json())
-      .then(data => {
-        console.log('Uploaded successfully:', data)
-        // Handle post-upload behavior as needed.
-      })
-      .catch(err => console.error('Upload error:', err))
-  }
-
   const startRecording = duration => {
     navigator.mediaDevices
       .getUserMedia({ audio: true })
@@ -105,13 +90,17 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
         mediaRecorder.ondataavailable = e => {
           chunks.push(e.data)
         }
-        mediaRecorder.onstop = () => {
+        mediaRecorder.onstop = async () => {
           const blob = new Blob(chunks, { type: 'audio/webm' })
           setRecordedBlob(blob)
           // Upload khi hết giờ
           if (!hasUploaded) {
-            uploadToCloudinary(blob);
-            setHasUploaded(true);
+            try {
+              await uploadToCloudinary(blob, data.TopicID, data.Content, currentQuestionIndex);
+              setHasUploaded(true);
+            } catch (error) {
+              console.error('Failed to upload recording:', error);
+            }
           }
           stream.getTracks().forEach(track => track.stop())
         }

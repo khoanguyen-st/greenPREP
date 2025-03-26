@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import fetchTopicData from '../api' // Import the API function
+import { fetchTopicData } from '@features/speaking/api' // Import the API function
 import Part from './components/Part'
 
 const Parts = () => {
