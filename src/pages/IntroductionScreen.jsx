@@ -1,12 +1,16 @@
 import { Layout, Button, theme } from 'antd'
 import SharedHeader from '@shared/ui/SharedHeader'
+import { useNavigate } from 'react-router-dom'
 
 const { Content } = Layout
 
 const IntroductionScreen = () => {
+  const navigate = useNavigate()
+
   const {
     token: { colorBgContainer }
   } = theme.useToken()
+
   return (
     <Layout>
       <SharedHeader />
@@ -69,7 +73,12 @@ const IntroductionScreen = () => {
                 ))}
               </ol>
               <div className="mt-6 flex justify-center">
-                <Button type="primary" size="large" className="w-72 bg-[#003087] hover:bg-[#003087]">
+                <Button
+                  type="primary"
+                  size="large"
+                  className="w-72 bg-[#003087] hover:bg-[#003087]"
+                  onClick={() => navigate('/speaking')}
+                >
                   Start Now
                 </Button>
               </div>
