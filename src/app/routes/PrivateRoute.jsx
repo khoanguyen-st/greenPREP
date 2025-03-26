@@ -55,6 +55,10 @@ const PrivateRoute = [
             element: <ListeningIntroduction />
           },
           {
+            path: 'headphonecheck',
+            element: <ListeningHeadphoneCheck />
+          },
+          {
             path: 'test',
             element: <ListeningTest />
           }

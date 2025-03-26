@@ -6,6 +6,8 @@ import MatchingQuestion from '@shared/ui/questionType/MatchingQuestion'
 import DropdownQuestion from '@shared/ui/questionType/DropdownQuestion'
 import PlayStopButton from '@features/listening/ui/PlayStopButton'
 import { fetchListeningTestDetails } from '@features/listening/api/listeningAPI'
+import NextScreen from '@shared/ui/Submission/NextScreen'
+import SubmissionImage from '@assets/images/listening_submit.jpg'
 
 import TestNavigation from './TestNavigation'
 
@@ -15,6 +17,7 @@ const Test = () => {
   const [userAnswers, setUserAnswers] = useState({})
   const [flaggedQuestions, setFlaggedQuestions] = useState([])
   const [isAudioPlaying, setIsAudioPlaying] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
 
   const {
     data: testData,
@@ -97,6 +100,10 @@ const Test = () => {
     })
   }
 
+  const handleSubmit = () => {
+    setIsSubmitted(true)
+  }
+
   const toggleFlag = isFlagged => {
     const currentQuestion = getCurrentQuestion()
     if (!currentQuestion) {
@@ -168,6 +175,10 @@ const Test = () => {
     }
   }
 
+  if (isSubmitted) {
+    return <NextScreen nextPath="/grammar" skillName="Listening" imageSrc={SubmissionImage} />
+  }
+
   if (isLoading) {
     return <Spin size="large" className="flex min-h-screen items-center justify-center" />
   }
@@ -193,7 +204,7 @@ const Test = () => {
       onFlag={toggleFlag}
       onQuestionChange={goToQuestion}
       onNext={goToNext}
-      onSubmit={handleAnswerSubmit}
+      onSubmit={handleSubmit}
       userAnswers={userAnswers}
       flaggedQuestions={flaggedQuestions}
       skillName={testData.Parts[0].Questions[0].Skill.Name}
@@ -235,14 +246,14 @@ const Test = () => {
                   handleAnswerSubmit(answer)
                 }
               }}
-              className="z-0 mt-6"
+              className="mt-6"
             />
           ) : questionType === 'dropdown-list' ? (
             <DropdownQuestion
               questionData={currentQuestion}
               userAnswer={userAnswers}
               setUserAnswer={setUserAnswers}
-              className="mt-6"
+              className="z-0 mt-6"
             />
           ) : null}
         </>

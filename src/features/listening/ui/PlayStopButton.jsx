@@ -7,9 +7,11 @@ const playedQuestions = {}
 const AudioPlayer = ({ src, id, questionId, playAttempt, onPlayingChange, isOtherPlaying, setIsOtherPlaying }) => {
   const [isPlaying, setIsPlaying] = useState(false)
   const audioRef = useRef(null)
+  const isPlayingRef = useRef(false)
 
   useEffect(() => {
     setIsPlaying(false)
+    isPlayingRef.current = false
     if (audioRef.current) {
       audioRef.current.pause()
       audioRef.current.currentTime = 0
@@ -21,11 +23,12 @@ const AudioPlayer = ({ src, id, questionId, playAttempt, onPlayingChange, isOthe
   }, [isPlaying, onPlayingChange])
 
   useEffect(() => {
-    if (isOtherPlaying && isPlaying) {
+    if (isOtherPlaying && isPlayingRef.current) {
       audioRef.current?.pause()
       setIsPlaying(false)
+      isPlayingRef.current = false
     }
-  }, [isOtherPlaying, isPlaying])
+  }, [isOtherPlaying])
 
   const handlePlayPause = () => {
     const audio = audioRef.current
@@ -36,6 +39,7 @@ const AudioPlayer = ({ src, id, questionId, playAttempt, onPlayingChange, isOthe
     if (isPlaying) {
       audio.pause()
       setIsPlaying(false)
+      isPlayingRef.current = false
       setIsOtherPlaying(false)
     } else if (!playedQuestions[questionId]?.[playAttempt]) {
       setIsOtherPlaying(true)
@@ -43,6 +47,7 @@ const AudioPlayer = ({ src, id, questionId, playAttempt, onPlayingChange, isOthe
         .play()
         .then(() => {
           setIsPlaying(true)
+          isPlayingRef.current = true
           if (!playedQuestions[questionId]) {
             playedQuestions[questionId] = {}
           }
@@ -54,6 +59,7 @@ const AudioPlayer = ({ src, id, questionId, playAttempt, onPlayingChange, isOthe
 
   const handleEnded = () => {
     setIsPlaying(false)
+    isPlayingRef.current = false
     setIsOtherPlaying(false)
   }
 
