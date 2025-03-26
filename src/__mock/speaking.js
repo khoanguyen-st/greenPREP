@@ -3,7 +3,7 @@ export const SPEAKING_DATA = {
   testName: 'Aptis General Practice Test',
   section: 'speaking',
   testStructure: {
-    desc: 'This test has 4 parts, you will have 30 minutes to complete the test.',
+    desc: 'This test has 4 parts, you will have 12 minutes to complete the test.',
     parts: [
       {
         name: 'Part 1: Personal Information',
