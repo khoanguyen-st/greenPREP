@@ -1,0 +1,145 @@
+import { answerContentSchema, dropdownQuestionSchema } from '@shared/model/questionType/dropdownQuestion.schema'
+import { Select } from 'antd'
+import { useEffect, useMemo, useState } from 'react'
+import * as yup from 'yup'
+
+const { Option } = Select
+
+const validationSchema = yup.object().shape({
+  selectedOption: yup.string().required('Please select an answer')
+})
+
+const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className = '', small = false }) => {
+  dropdownQuestionSchema.validateSync(questionData)
+  const [selectedOptions, setSelectedOptions] = useState({})
+  const [error, setError] = useState({})
+
+  const processedData = useMemo(() => {
+    if (!questionData) {
+      return null
+    }
+    try {
+      const parsedAnswerContent =
+        typeof questionData.AnswerContent === 'string'
+          ? JSON.parse(questionData.AnswerContent)
+          : questionData.AnswerContent
+      answerContentSchema.validateSync(parsedAnswerContent)
+      if (parsedAnswerContent.leftItems && parsedAnswerContent.rightItems) {
+        return {
+          id: questionData.ID,
+          question: questionData.Content,
+          leftItems: parsedAnswerContent.leftItems,
+          rightItems: parsedAnswerContent.rightItems,
+          correctAnswers: parsedAnswerContent.correctAnswer,
+          type: 'right-left'
+        }
+      } else {
+        const options = parsedAnswerContent.options || []
+        const answers = {}
+        options.forEach(({ key, value }) => {
+          answers[key] = value
+        })
+        const correctAnswers = {}
+        ;(parsedAnswerContent.correctAnswer || []).forEach(({ key, value }) => {
+          correctAnswers[key] = value
+        })
+        return {
+          id: questionData.ID,
+          question: questionData.Content,
+          answers,
+          correctAnswers,
+          type: 'paragraph'
+        }
+      }
+    } catch (error) {
+      console.error('Error parsing question data:', error)
+      return null
+    }
+  }, [questionData])
+
+  const memoizedProcessedData = useMemo(() => processedData, [processedData])
+  useEffect(() => {
+    if (!memoizedProcessedData) {
+      return
+    }
+
+    const currentUserAnswer = userAnswer[memoizedProcessedData.id] || {}
+    setSelectedOptions(prev => ({
+      ...prev,
+      ...currentUserAnswer
+    }))
+
+    setError({})
+  }, [memoizedProcessedData, userAnswer])
+
+  const handleSelectChange = async (key, value) => {
+    const updatedAnswers = { ...selectedOptions, [key]: value }
+    setSelectedOptions(updatedAnswers)
+
+    try {
+      await validationSchema.validate({ selectedOption: value })
+      setError(prev => ({ ...prev, [key]: '' }))
+
+      setUserAnswer(prev => ({
+        ...prev,
+        [processedData.id]: updatedAnswers
+      }))
+    } catch (validationError) {
+      setError(prev => ({ ...prev, [key]: validationError.message }))
+    }
+  }
+
+  if (!processedData) {
+    return <p className="text-center text-gray-600">No question data available.</p>
+  }
+  return (
+    <div className={`${className} mx-auto max-w-4xl rounded-lg bg-white p-6 shadow-lg`}>
+      <p className="mb-4 whitespace-pre-wrap text-sm font-semibold text-gray-800">{processedData.question}</p>
+      {processedData.type === 'paragraph' ? (
+        Object.entries(processedData.answers).map(([key, options]) => (
+          <div key={key} className="mb-4 flex w-full">
+            <div className={`flex w-1/2`}>
+              <Select
+                onChange={value => handleSelectChange(key, value)}
+                value={selectedOptions?.[key] || ''}
+                className={`w-2/3 ${small ? 'h-8 text-xs' : 'h-8 text-sm'} rounded-md border border-gray-300`}
+              >
+                {options.map(option => (
+                  <Option key={option} value={option}>
+                    {option}
+                  </Option>
+                ))}
+              </Select>
+            </div>
+            {error[key] && <p className="mt-2 text-xs text-red-500">{error[key]}</p>}
+          </div>
+        ))
+      ) : (
+        <div className="w-full">
+          {processedData.leftItems.map((leftItem, index) => (
+            <div key={index} className="mb-4 flex w-full">
+              <div className="w-1/2 pr-4">
+                <p className="p-1 text-xs text-gray-700">{leftItem}</p>
+              </div>
+              <div className="w-1/2">
+                <Select
+                  onChange={value => handleSelectChange(leftItem, value)}
+                  value={selectedOptions[leftItem] || ''}
+                  className={`w-2/3 ${small ? 'h-8 text-xs' : 'h-8 text-xs'} rounded-md border border-gray-300`}
+                >
+                  {processedData.rightItems.map(rightItem => (
+                    <Option key={rightItem} value={rightItem}>
+                      {rightItem}
+                    </Option>
+                  ))}
+                </Select>
+              </div>
+              {error[leftItem] && <p className="mt-2 text-xs text-red-500">{error[leftItem]}</p>}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+export default DropdownQuestion
