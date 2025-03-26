@@ -19,15 +19,10 @@ const EnterSessionKey = () => {
   return (
     <Layout>
       <Content className="flex min-h-screen flex-col items-center justify-center gap-10 bg-white px-5 md:flex-row md:gap-40 md:px-20">
-        <div className="flex w-full items-center justify-center md:w-[30%]">
-          <Image
-            src={sessionKey}
-            preview={false}
-            height={550}
-            width={550}
-            className="-translate-y-12 transform object-cover"
-          />
+        <div className="-translate-y-18 flex h-[300px] w-[300px] w-full transform items-center justify-center object-cover sm:h-[300px] sm:w-[300px] md:h-[550px] md:w-[30%] md:w-[550px] md:-translate-y-12">
+          <Image src={sessionKey} preview={false} />
         </div>
+
         <div className="mt-0 flex w-full flex-col items-center pr-0 md:mt-[-20%] md:w-[70%] md:items-start md:pr-5">
           <div className="mb-6 w-full text-center">
             <Title className="mb-4 text-[28px] font-bold md:mb-5 md:text-[40px]">
