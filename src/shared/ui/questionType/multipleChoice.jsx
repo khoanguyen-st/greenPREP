@@ -5,17 +5,16 @@ const { Title, Text } = Typography;
 
 const MultipleChoice = ({ 
   questionData,
+  userAnswer,
+  setUserAnswer,
   onSubmit,
   className = '',
 }) => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [error, setError] = useState(null);
-
-  // Parse và validate AnswerContent với useMemo
   const { options, isValid } = useMemo(() => {
     try {
       const parsedContent = JSON.parse(questionData.AnswerContent)[0];
-      // Validate với schema
       multipleChoiceAnswerSchema.validateSync(parsedContent);
       return { options: parsedContent.options, isValid: true };
     } catch (err) {
@@ -23,10 +22,19 @@ const MultipleChoice = ({
       return { options: [], isValid: false };
     }
   }, [questionData.AnswerContent]);
+  useMemo(() => {
+    if (userAnswer && userAnswer[questionData.ID]) {
+      setSelectedOption(userAnswer[questionData.ID]);
+    }
+  }, [userAnswer, questionData.ID]);
 
   const handleClick = (optionValue) => {
     setSelectedOption(optionValue);
-    onSubmit(optionValue);
+    setUserAnswer(prev => ({
+      ...prev,
+      [questionData.ID]: optionValue
+    }));
+    onSubmit?.(optionValue);
   };
 
   if (!isValid) {
