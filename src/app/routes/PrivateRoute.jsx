@@ -1,14 +1,19 @@
-// import { lazy } from 'react';
-import PlayStopButton from '@features/Listening/ui/PlayStopButton'
-import HomePage from '@pages/HomePage.jsx'
-import GrammarVocabPage from '@pages/GrammarVocabPage.jsx'
-import WritingTestPage from '@pages/WritingTestPage.jsx'
 import IntroductionScreen from '@pages/IntroductionScreen'
-import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute.jsx'
-import ListeningPage from '@pages/ListeningPage.jsx'
-import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage.jsx'
-import ReadingTestPage from '@pages/ReadingPage.jsx'
-import WaitingForApproval from '@pages/WaitingForApproval.jsx'
+import SpeakingPage from '@pages/SpeakingPage'
+import PlayStopButton from '@features/listening/ui/PlayStopButton'
+import HomePage from '@pages/HomePage'
+import GrammarVocabPage from '@pages/GrammarVocabPage'
+import ListeningPage from '@pages/ListeningPage'
+import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage'
+import ReadingTestPage from '@pages/ReadingPage'
+import WaitingForApproval from '@pages/WaitingForApproval'
+import Introduction from '@pages/listening/Introduction'
+import Instruction from '@pages/listening/Instruction'
+import { WritingPage } from '@pages/writing'
+import { InstructionWriting } from '@features/writing/ui/WritingInstruction'
+import { IntroductionWriting } from '@features/writing/ui/WritingIntroduction'
+
+import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 
 const PrivateRoute = [
   {
@@ -16,12 +21,22 @@ const PrivateRoute = [
     element: <ProtectedRoute />,
     children: [
       {
-        path: 'homepage',
+        index: true,
         element: <HomePage />
       },
       {
         path: 'writing',
-        element: <WritingTestPage />
+        element: <WritingPage />,
+        children: [
+          {
+            index: true,
+            element: <IntroductionWriting />
+          },
+          {
+            path: 'instruction',
+            element: <InstructionWriting />
+          }
+        ]
       },
       {
         path: 'play-stop-button',
@@ -33,7 +48,21 @@ const PrivateRoute = [
       },
       {
         path: 'listening',
-        element: <ListeningPage />
+        element: <ListeningPage />,
+        children: [
+          {
+            index: true,
+            element: <Introduction />
+          },
+          {
+            path: 'instruction',
+            element: <Instruction />
+          },
+          {
+            path: 'test',
+            element: <div>Test page</div>
+          }
+        ]
       },
       {
         path: 'rejectpage',
@@ -50,7 +79,8 @@ const PrivateRoute = [
       {
         path: 'waiting-for-approval',
         element: <WaitingForApproval />
-      }
+      },
+      { path: 'speaking', element: <SpeakingPage /> }
     ]
   }
 ]

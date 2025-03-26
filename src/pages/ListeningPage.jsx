@@ -1,12 +1,9 @@
-import { useState } from 'react'
 import { ConfigProvider } from 'antd'
-import Introduction from '../features/Listening/ui/Introduction'
-import Instruction from '../features/Listening/ui/Instruction'
-import useAntiCheat from '../shared/utils/antiCheat'
-import CustomAlert from '../shared/ui/CustomAlert/CustomAlert'
+import useAntiCheat from '@shared/utils/antiCheat.js'
+import CustomAlert from '@shared/ui/CustomAlert/CustomAlert.jsx'
+import { Outlet } from 'react-router-dom'
 
 const ListeningPage = () => {
-  const [currentView, setCurrentView] = useState('introduction')
   const { showAlert, alertMessage, enableFullScreen } = useAntiCheat()
 
   const theme = {
@@ -17,29 +14,10 @@ const ListeningPage = () => {
     }
   }
 
-  const handleStartTest = () => {
-    setCurrentView('instruction')
-  }
-
-  const handleNext = async () => {
-    await enableFullScreen()
-    setCurrentView('test')
-  }
-
   return (
     <ConfigProvider theme={theme}>
-      <div className="min-h-screen bg-white">
-        {showAlert && <CustomAlert show={showAlert} onConfirm={enableFullScreen} message={alertMessage} />}
-
-        {currentView === 'introduction' && <Introduction onStart={handleStartTest} />}
-        {currentView === 'instruction' && <Instruction onNext={handleNext} />}
-
-        {currentView === 'test' && (
-          <div className="p-12 text-center">
-            <h2 className="text-2xl font-bold">Listening Test Started</h2>
-          </div>
-        )}
-      </div>
+      <CustomAlert show={showAlert} onConfirm={enableFullScreen} message={alertMessage} />
+      <Outlet />
     </ConfigProvider>
   )
 }
