@@ -1,23 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import * as yup from 'yup'
-
-const itemSchema = yup.object().shape({
-  id: yup.string().required('Item must have an ID'),
-  label: yup.string().required('Item must have a label')
-})
-
-const matchingQuestionSchema = yup.object().shape({
-  leftItems: yup.array().of(itemSchema).min(1, 'Left items cannot be empty').required('Left items are required'),
-  rightItems: yup.array().of(itemSchema).min(1, 'Right items cannot be empty').required('Right items are required'),
-  userAnswer: yup.array().of(
-    yup.object().shape({
-      left: yup.string().required(),
-      right: yup.string().required()
-    })
-  ),
-  disabled: yup.boolean(),
-  className: yup.string()
-})
+import { matchingQuestionSchema } from '@/shared/model/questionType/matchingQuestion.schema'
 
 const MatchingQuestion = ({
   leftItems,
@@ -42,7 +24,7 @@ const MatchingQuestion = ({
     }
 
     validateData()
-  }, [leftItems, rightItems, userAnswer, disabled])
+  }, [leftItems, rightItems, disabled])
 
   const [selectedLeft, setSelectedLeft] = useState(null)
   const [selectedRight, setSelectedRight] = useState(null)
@@ -109,7 +91,7 @@ const MatchingQuestion = ({
   const handleRightSelect = value => {
     if (disabled) return
 
-    const matchedLeftId = Object.entries(matches).find(([rightId]) => rightId === value)?.[0]
+    const matchedLeftId = Object.entries(matches).find(([, rightId]) => rightId === value)?.[0]
     if (matchedLeftId) {
       const newMatches = { ...matches }
       delete newMatches[matchedLeftId]
@@ -188,23 +170,8 @@ const MatchingQuestion = ({
   }, [matches, selectedLeft, selectedRight])
 
   return (
-    <div
-      className={`matching-question relative min-h-[400px] ${className}`}
-      ref={containerRef}
-      style={{ position: 'relative' }}
-    >
-      <svg
-        className="absolute inset-0 h-full w-full"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          pointerEvents: 'none',
-          zIndex: 1
-        }}
-      >
+    <div className={`matching-question relative min-h-[400px] ${className}`} ref={containerRef}>
+      <svg className="pointer-events-none absolute inset-0 z-[1] h-full w-full">
         {lines.map(line => (
           <path
             key={line.id}
@@ -231,7 +198,7 @@ const MatchingQuestion = ({
         `}
       </style>
 
-      <div className="relative grid grid-cols-2 gap-8 md:gap-16" style={{ zIndex: 2 }}>
+      <div className="relative z-[2] grid grid-cols-2 gap-8 md:gap-16">
         <div className="left-items space-y-4">
           <h3 className="mb-4 text-lg font-semibold">Column A</h3>
           {leftItems.map(item => (
