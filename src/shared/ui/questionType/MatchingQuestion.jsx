@@ -1,34 +1,21 @@
 import { useEffect, useRef, useState } from 'react'
-import * as yup from 'yup'
+import { matchingQuestionSchema } from '@shared/model/questionType/matchingQuestion.schema'
 
-const itemSchema = yup.object().shape({
-  id: yup.string().required('Item must have an ID'),
-  label: yup.string().required('Item must have a label')
-})
-
-const matchingQuestionSchema = yup.object().shape({
-  leftItems: yup.array().of(itemSchema).min(1, 'Left items cannot be empty').required('Left items are required'),
-  rightItems: yup.array().of(itemSchema).min(1, 'Right items cannot be empty').required('Right items are required'),
-  matches: yup.object().test('valid-matches', 'Invalid matches format', value => {
-    if (!value) {
-      return true
-    }
-    return Object.entries(value).every(
-      ([leftId, rightId]) => typeof leftId === 'string' && (rightId === null || typeof rightId === 'string')
-    )
-  }),
-  disabled: yup.boolean(),
-  className: yup.string()
-})
-
-const MatchingQuestion = ({ leftItems, rightItems, matches, onChange, disabled = false, className = '' }) => {
+const MatchingQuestion = ({
+  leftItems,
+  rightItems,
+  userAnswer = [],
+  setUserAnswer,
+  disabled = false,
+  className = ''
+}) => {
   useEffect(() => {
     const validateData = async () => {
       try {
         await matchingQuestionSchema.validate({
           leftItems,
           rightItems,
-          matches,
+          userAnswer,
           disabled
         })
       } catch (error) {
@@ -37,14 +24,104 @@ const MatchingQuestion = ({ leftItems, rightItems, matches, onChange, disabled =
     }
 
     validateData()
-  }, [leftItems, rightItems, matches, disabled])
+  }, [leftItems, rightItems, disabled])
 
   const [selectedLeft, setSelectedLeft] = useState(null)
   const [selectedRight, setSelectedRight] = useState(null)
   const [lines, setLines] = useState([])
+  const [matches, setMatches] = useState({})
   const containerRef = useRef(null)
   const leftItemsRefs = useRef({})
   const rightItemsRefs = useRef({})
+
+  useEffect(() => {
+    const newMatches = {}
+    userAnswer.forEach(answer => {
+      const leftId = leftItems.findIndex(item => item.label === answer.left) + 1
+      const rightId = String.fromCharCode(97 + rightItems.findIndex(item => item.label === answer.right))
+      if (leftId > 0) {
+        newMatches[leftId] = rightId
+      }
+    })
+    setMatches(newMatches)
+  }, [userAnswer, leftItems, rightItems])
+
+  const updateUserAnswer = newMatches => {
+    const formattedAnswers = Object.entries(newMatches).map(([leftId, rightId]) => {
+      const leftText = leftItems[parseInt(leftId) - 1].label
+      const rightText = rightItems[rightId.charCodeAt(0) - 97].label
+      return {
+        left: leftText,
+        right: rightText
+      }
+    })
+    setUserAnswer(formattedAnswers)
+  }
+
+  const handleLeftSelect = value => {
+    if (disabled) {
+      return
+    }
+
+    if (matches[value]) {
+      const newMatches = { ...matches }
+      delete newMatches[value]
+      setMatches(newMatches)
+      updateUserAnswer(newMatches)
+      setSelectedLeft(null)
+      setSelectedRight(null)
+      return
+    }
+
+    if (value === selectedLeft) {
+      setSelectedLeft(null)
+    } else {
+      setSelectedLeft(value)
+      if (selectedRight) {
+        const isRightIdMatched = Object.values(matches).includes(selectedRight)
+        if (!isRightIdMatched) {
+          const newMatches = { ...matches, [value]: selectedRight }
+          setMatches(newMatches)
+          updateUserAnswer(newMatches)
+        }
+        setSelectedLeft(null)
+        setSelectedRight(null)
+      }
+    }
+  }
+
+  const handleRightSelect = value => {
+    if (disabled) {
+      return
+    }
+
+    const matchedLeftId = Object.entries(matches).find(([, rightId]) => rightId === value)?.[0]
+    if (matchedLeftId) {
+      const newMatches = { ...matches }
+      delete newMatches[matchedLeftId]
+      setMatches(newMatches)
+      updateUserAnswer(newMatches)
+      setSelectedLeft(null)
+      setSelectedRight(null)
+      return
+    }
+
+    if (value === selectedRight) {
+      setSelectedRight(null)
+    } else {
+      const isRightIdMatched = Object.values(matches).includes(value)
+      if (!isRightIdMatched) {
+        setSelectedRight(value)
+        if (selectedLeft) {
+          const newMatches = { ...matches, [selectedLeft]: value }
+          setMatches(newMatches)
+          updateUserAnswer(newMatches)
+          setSelectedLeft(null)
+          setSelectedRight(null)
+        }
+      }
+    }
+  }
 
   const drawLine = (start, end) => {
     if (!start || !end || !containerRef.current) {
@@ -98,79 +175,9 @@ const MatchingQuestion = ({ leftItems, rightItems, matches, onChange, disabled =
     return () => window.removeEventListener('resize', updateLines)
   }, [matches, selectedLeft, selectedRight])
 
-  const handleLeftSelect = value => {
-    if (disabled) {
-      return
-    }
-
-    if (matches[value]) {
-      onChange(value, null)
-      setSelectedLeft(null)
-      setSelectedRight(null)
-      return
-    }
-
-    if (value === selectedLeft) {
-      setSelectedLeft(null)
-    } else {
-      setSelectedLeft(value)
-      if (selectedRight) {
-        const isRightIdMatched = Object.values(matches).includes(selectedRight)
-        if (!isRightIdMatched) {
-          onChange(value, selectedRight)
-        }
-        setSelectedLeft(null)
-        setSelectedRight(null)
-      }
-    }
-  }
-
-  const handleRightSelect = value => {
-    if (disabled) {
-      return
-    }
-
-    const matchedLeftId = Object.entries(matches).find(([, rightId]) => rightId === value)?.[0]
-    if (matchedLeftId) {
-      onChange(matchedLeftId, null)
-      setSelectedLeft(null)
-      setSelectedRight(null)
-      return
-    }
-
-    if (value === selectedRight) {
-      setSelectedRight(null)
-    } else {
-      const isRightIdMatched = Object.values(matches).includes(value)
-      if (!isRightIdMatched) {
-        setSelectedRight(value)
-        if (selectedLeft) {
-          onChange(selectedLeft, value)
-          setSelectedLeft(null)
-          setSelectedRight(null)
-        }
-      }
-    }
-  }
-
   return (
-    <div
-      className={`matching-question relative min-h-[400px] ${className}`}
-      ref={containerRef}
-      style={{ position: 'relative' }}
-    >
-      <svg
-        className="absolute inset-0 h-full w-full"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          pointerEvents: 'none',
-          zIndex: 1
-        }}
-      >
+    <div className={`matching-question relative min-h-[400px] ${className}`} ref={containerRef}>
+      <svg className="pointer-events-none absolute inset-0 z-[1] h-full w-full">
         {lines.map(line => (
           <path
             key={line.id}
@@ -197,7 +204,7 @@ const MatchingQuestion = ({ leftItems, rightItems, matches, onChange, disabled =
         `}
       </style>
 
-      <div className="relative grid grid-cols-2 gap-8 md:gap-16" style={{ zIndex: 2 }}>
+      <div className="relative z-[2] grid grid-cols-2 gap-8 md:gap-16">
         <div className="left-items space-y-4">
           <h3 className="mb-4 text-lg font-semibold">Column A</h3>
           {leftItems.map(item => (
