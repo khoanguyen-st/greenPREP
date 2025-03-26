@@ -17,12 +17,7 @@ const WritingTest = () => {
     queryKey: ['writingQuestions'],
     queryFn: async () => {
       const response = await fetchWritingTestDetails()
-      const sortedParts = response.Parts.sort((a, b) => {
-        const partNumberA = parseInt(a.Content.match(/Part (\d+)/)?.[1]) || 0
-        const partNumberB = parseInt(b.Content.match(/Part (\d+)/)?.[1]) || 0
-        return partNumberA - partNumberB
-      })
-      return { ...response, Parts: sortedParts }
+      return { ...response }
     }
   })
 
