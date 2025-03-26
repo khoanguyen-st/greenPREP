@@ -2,6 +2,7 @@ import { Typography, Spin, Card, Divider } from 'antd'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
 
 import { fetchWritingTestDetails } from '../api/writingAPI'
 import QuestionForm from './writing-question-form'
