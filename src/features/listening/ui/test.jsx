@@ -16,7 +16,6 @@ const Test = () => {
   const [flaggedQuestions, setFlaggedQuestions] = useState([])
   const [isAudioPlaying, setIsAudioPlaying] = useState(false)
 
-  // Fetch test data
   const {
     data: testData,
     isLoading,
@@ -120,7 +119,6 @@ const Test = () => {
       const answerContent =
         typeof question.AnswerContent === 'string' ? JSON.parse(question.AnswerContent) : question.AnswerContent
 
-      // Check if it's a multiple choice question
       if (answerContent.options && Array.isArray(answerContent.options) && answerContent.correctAnswer) {
         const options = answerContent.options.map((option, index) => ({
           key: String.fromCharCode(65 + index),
@@ -137,9 +135,7 @@ const Test = () => {
             }
           ])
         }
-      }
-      // Check if it's a matching question
-      else if (
+      } else if (
         answerContent.leftItems &&
         Array.isArray(answerContent.leftItems) &&
         answerContent.rightItems &&
@@ -161,10 +157,8 @@ const Test = () => {
           leftItems,
           rightItems
         }
-      }
-      // Check if it's a dropdown question
-      else if (answerContent.type === 'dropdown-list') {
-        return question // Return the raw question data for dropdown questions
+      } else if (answerContent.type === 'dropdown-list') {
+        return question
       }
 
       throw new Error('Invalid question format: missing required fields')
@@ -187,8 +181,6 @@ const Test = () => {
   const flatIndex = getCurrentFlatIndex()
   const totalQuestions = getTotalQuestions()
   const isFlagged = currentQuestion && flaggedQuestions.includes(currentQuestion.ID)
-
-  // Determine question type
   const questionType = currentQuestion?.Type || null
 
   return (

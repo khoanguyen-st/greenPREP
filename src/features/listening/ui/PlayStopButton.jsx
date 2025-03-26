@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react'
 import { Button } from 'antd'
 import { PlayCircleOutlined, PauseCircleOutlined } from '@ant-design/icons'
 
-// Global state to track played questions
 const playedQuestions = {}
 
 const AudioPlayer = ({ src, id, questionId, playAttempt, onPlayingChange, isOtherPlaying, setIsOtherPlaying }) => {
@@ -10,7 +9,6 @@ const AudioPlayer = ({ src, id, questionId, playAttempt, onPlayingChange, isOthe
   const audioRef = useRef(null)
 
   useEffect(() => {
-    // Reset playing state when src changes (new question selected)
     setIsPlaying(false)
     if (audioRef.current) {
       audioRef.current.pause()
@@ -23,12 +21,11 @@ const AudioPlayer = ({ src, id, questionId, playAttempt, onPlayingChange, isOthe
   }, [isPlaying, onPlayingChange])
 
   useEffect(() => {
-    // Stop this audio if another is playing
     if (isOtherPlaying && isPlaying) {
       audioRef.current?.pause()
       setIsPlaying(false)
     }
-  }, [isOtherPlaying])
+  }, [isOtherPlaying, isPlaying])
 
   const handlePlayPause = () => {
     const audio = audioRef.current
@@ -46,7 +43,6 @@ const AudioPlayer = ({ src, id, questionId, playAttempt, onPlayingChange, isOthe
         .play()
         .then(() => {
           setIsPlaying(true)
-          // Mark this play attempt as used
           if (!playedQuestions[questionId]) {
             playedQuestions[questionId] = {}
           }
