@@ -17,6 +17,7 @@ import WritingTest from '@features/writing/ui/writing-test'
 import ReadingMatchingQuestion from '@features/reading/ui/ReadingMatchingQuestion'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
+import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
 
 const PrivateRoute = [
   {
@@ -117,6 +118,10 @@ const PrivateRoute = [
       {
         path: 'waiting-for-approval',
         element: <WaitingForApproval />
+      },
+      {
+        path: 'complete-test',
+        element: <SubmissionScreen />
       }
     ]
   }

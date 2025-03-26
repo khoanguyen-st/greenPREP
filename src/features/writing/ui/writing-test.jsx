@@ -7,10 +7,12 @@ import QuestionForm from './writing-question-form'
 import QuestionNavigatorContainer from './writing-question-navigator-container'
 import { DEFAULT_MAX_WORDS } from '../constance/WritingConst'
 import FooterNavigator from './writing-footer-navigator'
+import { useNavigate } from 'react-router-dom'
 
 const { Title, Text } = Typography
 
 const WritingTest = () => {
+  const navigate = useNavigate()
   const { data, isLoading, isError } = useQuery({
     queryKey: ['writingQuestions'],
     queryFn: async () => {
@@ -79,6 +81,7 @@ const WritingTest = () => {
     console.table(answers)
     localStorage.removeItem('writingAnswers')
     localStorage.removeItem('flaggedQuestions')
+    navigate('/complete-test')
   }
 
   if (isLoading) {
