@@ -18,9 +18,9 @@ import MicrophoneTest from '@shared/ui/MicrophoneTest/MicrophoneTest'
 import ReadingMatchingQuestion from '@features/reading/ui/ReadingMatchingQuestion'
 import ListeningTestPart1 from '@features/listening/ui/test-part1'
 import ListeningTestPart2 from '@features/listening/ui/test-part2'
+import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
-import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
 
 const PrivateRoute = [
   {
