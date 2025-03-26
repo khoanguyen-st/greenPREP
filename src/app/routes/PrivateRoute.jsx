@@ -15,10 +15,10 @@ import { ReadingPage } from '@pages/reading'
 import { ReadingIntroduction } from '@features/reading/ui/reading-instroduction'
 import WritingTest from '@features/writing/ui/writing-test'
 import MicrophoneTest from '@shared/ui/MicrophoneTest/MicrophoneTest'
-import ReadingMatchingQuestion from '@features/reading/ui/ReadingMatchingQuestion'
 import ListeningTestPart1 from '@features/listening/ui/test-part1'
 import ListeningTestPart2 from '@features/listening/ui/test-part2'
 import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
+import ReadingTest from '@features/reading/ui/ReadingTest'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 
@@ -105,7 +105,7 @@ const PrivateRoute = [
           },
           {
             path: 'test',
-            element: <ReadingMatchingQuestion />
+            element: <ReadingTest />
           },
           {
             path: 'part3',
