@@ -16,9 +16,9 @@ import { ReadingIntroduction } from '@features/reading/ui/reading-instroduction'
 import WritingTest from '@features/writing/ui/writing-test'
 import MicrophoneTest from '@shared/ui/MicrophoneTest/MicrophoneTest'
 import ReadingMatchingQuestion from '@features/reading/ui/ReadingMatchingQuestion'
+import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
-import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
 
 const PrivateRoute = [
   {
@@ -50,6 +50,10 @@ const PrivateRoute = [
           {
             index: true,
             element: <ListeningIntroduction />
+          },
+          {
+            path: 'headphonecheck',
+            element: <div> Listening Test page</div>
           },
           {
             path: 'test',
