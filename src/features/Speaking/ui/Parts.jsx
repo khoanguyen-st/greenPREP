@@ -9,8 +9,12 @@ const Parts = () => {
   useEffect(() => {
     const getData = async () => {
       if (part) {
-        const data = await fetchTopicData(part) // Fetch data for the specific part
-        setPartData(data)
+        try {
+          const data = await fetchTopicData(part) // Fetch data for the specific part
+          setPartData(data)
+        } catch (err) {
+          console.log(err)
+        }
       }
     }
     getData()
