@@ -13,6 +13,7 @@ import { GrammarIntroduction } from '@features/grammar/ui/grammar-introduction'
 import { SpeakingPage } from '@pages/speaking'
 import { ReadingPage } from '@pages/reading'
 import { ReadingIntroduction } from '@features/reading/ui/reading-instroduction'
+import WritingTest from '@features/writing/ui/WritingTest'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 
@@ -33,9 +34,10 @@ const PrivateRoute = [
             index: true,
             element: <WritingIntroduction />
           },
+
           {
             path: 'test',
-            element: <div> Writing Test page</div>
+            element: <WritingTest />
           }
         ]
       },
