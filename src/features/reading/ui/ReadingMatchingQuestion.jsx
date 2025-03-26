@@ -1,3 +1,4 @@
+//eslint-disable-next-line
 import React, { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import axiosInstance from '@shared/config/axios'
@@ -63,14 +64,17 @@ const ReadingMatchingQuestion = ({
 
   const formattedContent = currentQuestion.Content.split('Paragraph ').map((paragraph, index) => {
     if (index === 0) {
-      return paragraph
+      return (
+        <div key={index} className="mb-2">
+          {paragraph}
+        </div>
+      )
     }
+    const [number, text] = paragraph.split(' - ')
     return (
-      <React.Fragment key={index}>
-        {'\n'}
-        <strong>{`Paragraph ${paragraph.split(' - ')[0]}: `}</strong>
-        {paragraph.split(' - ')[1]}
-      </React.Fragment>
+      <div key={index} className="mb-2">
+        <strong>{`Paragraph ${number}`}</strong> - {text}
+      </div>
     )
   })
 
@@ -121,10 +125,9 @@ const ReadingMatchingQuestion = ({
     <div className="flex flex-col p-4 sm:p-8 md:flex-row md:p-12">
       <div className="flex-1">
         <FlagButton onFlag={toggleFlag} initialFlagged={flaggedQuestions.includes(currentQuestion?.ID)} />
-        <h1 className="mb-6 text-xl font-bold sm:text-2xl md:text-3xl">{testData.Name}</h1>
-        <p className="mb-8 space-y-3 whitespace-pre-line px-4 text-base leading-relaxed text-gray-800 sm:text-lg">
-          {formattedContent}
-        </p>
+        <h1 className="mb-6 text-xl font-bold sm:text-2xl md:text-3xl">READING</h1>
+        <p className="mb-4 text-base font-semibold text-gray-800 sm:text-lg">{testData.Parts[0].Content}</p>
+        <div className="mb-6 text-base leading-relaxed text-gray-800 sm:text-lg">{formattedContent}</div>
         <div className="mb-6">
           {formattedQuestion && (
             <MatchingQuestion
