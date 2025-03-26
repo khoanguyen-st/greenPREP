@@ -75,7 +75,6 @@ const TestNavigation = ({
       <Row gutter={[24, 24]}>
         <Col span={4} />
 
-        {/* Main content column */}
         <Col span={14} className="w-full">
           <Space direction="vertical" size="large" className="mt-20 w-full">
             <Text strong className="text-4xl">
@@ -106,7 +105,6 @@ const TestNavigation = ({
           </Space>
         </Col>
 
-        {/* Timer and QuestionNavigator column */}
         <Col span={6}>
           <div className="flex flex-col items-end">
             <TimeRemaining duration={40 * 60} onAutoSubmit={handleAutoSubmit} label="Time Remaining" />

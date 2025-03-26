@@ -13,7 +13,6 @@ const TestPart2 = () => {
   const [userAnswers, setUserAnswers] = useState({})
   const [flaggedQuestions, setFlaggedQuestions] = useState([])
 
-  // Fetch test data using useQuery
   const {
     data: testData,
     isLoading,
@@ -23,7 +22,6 @@ const TestPart2 = () => {
     queryFn: () => fetchListeningTestDetails('matching')
   })
 
-  // Calculate total questions for navigation
   const getTotalQuestions = () => {
     if (!testData || !testData.Parts) {
       return 0
@@ -31,7 +29,6 @@ const TestPart2 = () => {
     return testData.Parts.reduce((acc, part) => acc + part.Questions.length, 0)
   }
 
-  // Get current part and question
   const getCurrentPart = () => testData?.Parts[currentPartIndex] || null
   const getCurrentQuestion = () => {
     const part = getCurrentPart()
@@ -111,7 +108,6 @@ const TestPart2 = () => {
       const answerContent =
         typeof question.AnswerContent === 'string' ? JSON.parse(question.AnswerContent) : question.AnswerContent
 
-      // Validate required fields
       if (
         !answerContent.leftItems ||
         !Array.isArray(answerContent.leftItems) ||

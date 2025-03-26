@@ -13,7 +13,6 @@ const TestPart1 = () => {
   const [userAnswers, setUserAnswers] = useState({})
   const [flaggedQuestions, setFlaggedQuestions] = useState([])
 
-  // Fetch test data using useQuery
   const {
     data: testData,
     isLoading,
@@ -23,7 +22,6 @@ const TestPart1 = () => {
     queryFn: () => fetchListeningTestDetails('multiple-choice')
   })
 
-  // Calculate total questions for navigation
   const getTotalQuestions = () => {
     if (!testData || !testData.Parts) {
       return 0
@@ -31,7 +29,6 @@ const TestPart1 = () => {
     return testData.Parts.reduce((acc, part) => acc + part.Questions.length, 0)
   }
 
-  // Get current part and question
   const getCurrentPart = () => testData?.Parts[currentPartIndex] || null
   const getCurrentQuestion = () => {
     const part = getCurrentPart()
@@ -111,7 +108,6 @@ const TestPart1 = () => {
       const answerContent =
         typeof question.AnswerContent === 'string' ? JSON.parse(question.AnswerContent) : question.AnswerContent
 
-      // Validate required fields
       if (!answerContent.options || !Array.isArray(answerContent.options) || !answerContent.correctAnswer) {
         throw new Error('Invalid question format: missing required fields')
       }
