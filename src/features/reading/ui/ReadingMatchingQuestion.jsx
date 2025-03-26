@@ -105,11 +105,15 @@ const ReadingMatchingQuestion = ({
   }
 
   const formattedQuestion = formatQuestionData(currentQuestion)
+
   const handleAnswerSubmit = answer => {
     if (!currentQuestion) {
       return
     }
-    setUserAnswers({ ...userAnswers, [currentQuestion.ID]: answer })
+    setUserAnswers(prev => ({
+      ...prev,
+      [currentQuestion.ID]: answer
+    }))
   }
 
   const toggleFlag = isFlagged => {
@@ -121,11 +125,28 @@ const ReadingMatchingQuestion = ({
     )
   }
 
+  // Create values array for QuestionNavigator based on answers and flags
+  const navigatorValues = testData.Parts[0].Questions.map(question => {
+    const isFlagged = flaggedQuestions.includes(question.ID)
+    const isAnswered = Boolean(userAnswers[question.ID]) && userAnswers[question.ID].length > 0
+
+    if (isAnswered && isFlagged) {
+      return { type: 'answered-flagged' }
+    }
+    if (isAnswered) {
+      return { type: 'answered' }
+    }
+    if (isFlagged) {
+      return { type: 'flagged' }
+    }
+    return { type: 'unanswered' }
+  })
+
   return (
     <div className="flex flex-col p-4 sm:p-8 md:flex-row md:p-12">
       <div className="flex-1">
         <FlagButton onFlag={toggleFlag} initialFlagged={flaggedQuestions.includes(currentQuestion?.ID)} />
-        <h1 className="mb-6 text-xl font-bold sm:text-2xl md:text-3xl">READING</h1>
+        <h1 className="mb-6 text-xl font-bold sm:text-2xl md:text-3xl">{skillName}</h1>
         <p className="mb-4 text-base font-semibold text-gray-800 sm:text-lg">{testData.Parts[0].Content}</p>
         <div className="mb-6 text-base leading-relaxed text-gray-800 sm:text-lg">{formattedContent}</div>
         <div className="mb-6">
@@ -141,13 +162,7 @@ const ReadingMatchingQuestion = ({
       </div>
       <div className="flex w-full flex-col space-y-6 md:w-1/3 lg:w-1/4">
         <TimeRemaining duration={35 * 60} onAutoSubmit={() => alert('Auto-submit triggered')} />
-        <QuestionNavigator
-          values={Array.from({ length: totalQuestions }, (_, i) => ({
-            type: flaggedQuestions.includes(i) ? 'flagged' : 'unanswered'
-          }))}
-          action={setCurrentQuestionIndex}
-          position={currentQuestionIndex}
-        />
+        <QuestionNavigator values={navigatorValues} action={setCurrentQuestionIndex} position={currentQuestionIndex} />
         <NavigationButtons
           totalQuestions={totalQuestions}
           currentQuestion={currentQuestionIndex}
