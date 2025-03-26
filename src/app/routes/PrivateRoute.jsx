@@ -15,9 +15,9 @@ import { ReadingPage } from '@pages/reading'
 import { ReadingIntroduction } from '@features/reading/ui/reading-instroduction'
 import WritingTest from '@features/writing/ui/writing-test'
 import ReadingMatchingQuestion from '@features/reading/ui/ReadingMatchingQuestion'
+import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
-import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
 
 const PrivateRoute = [
   {
