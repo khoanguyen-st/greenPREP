@@ -1,6 +1,5 @@
 import { AudioMutedOutlined, AudioOutlined } from '@ant-design/icons'
 import { useEffect, useState } from 'react'
-import useAntiCheat from '../../../../shared/utils/antiCheat'
 
 /**
  * Part component expects:
@@ -106,7 +105,6 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }] }) => {
         setPhase('answering')
         const answerTime = parseTime(getTimePair(currentQuestionIndex).answer)
         setCountdown(answerTime)
-        // Recording will be triggered by the above effect.
       } else if (phase === 'answering') {
         // Finished answering this question.
         if (currentQuestionIndex < totalQuestions - 1) {
@@ -143,25 +141,36 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }] }) => {
   // Only display the current question.
   const currentQuestion = questions[currentQuestionIndex]
 
+  // Check if the part requires an image (PART 2, PART 3, or PART 4).
+  const hasImage = data.Content === 'PART 2' || data.Content === 'PART 3' || data.Content === 'PART 4'
+
+  // Get image URL from the question if available.
+  const imageUrl =
+    hasImage && currentQuestion && (currentQuestion.ImageKeys?.[0] || currentQuestion.AnswerContent?.imageKeys?.[0])
+
   return (
     <div className="flex h-screen w-full flex-row rounded-xl bg-white">
-      {/* Left Panel: Display Part Information and Current Question */}
+      {/* Left Panel: Display Part Information, Image (if available), and Current Question */}
       <div className="pl-28 pt-28 sm:w-1/2 lg:w-2/3">
         <h1 className="mb-6 text-4xl font-bold text-[#003087]">{data?.Content || 'Speaking Test'}</h1>
-        <div className="mb-8">
-          {data?.SubContent && <h2 className="mb-9 text-2xl font-bold">{data.SubContent}</h2>}
-          {currentQuestion ? (
-            <>
-              <p className="mb-2 text-2xl font-bold">
-                Question {currentQuestionIndex + 1} of {totalQuestions}
-              </p>
-              <p className="mb-20 text-2xl">{currentQuestion.Content}</p>
-            </>
-          ) : (
-            <p className="mb-20 text-2xl">No questions available.</p>
-          )}
-          <p className="text-2xl">Please answer the above question.</p>
-        </div>
+        {data?.SubContent && <h2 className="mb-9 text-2xl font-bold">{data.SubContent}</h2>}
+        {/* Render image if the part is PART 2, 3, or 4 and an image URL is available */}
+        {hasImage && imageUrl && (
+          <div className="mb-6">
+            <img src={imageUrl} alt="Question visual" className="max-w-full rounded" />
+          </div>
+        )}
+        {currentQuestion ? (
+          <>
+            <p className="mb-2 text-2xl font-bold">
+              Question {currentQuestionIndex + 1} of {totalQuestions}
+            </p>
+            <p className="mb-20 text-2xl">{currentQuestion.Content}</p>
+          </>
+        ) : (
+          <p className="mb-20 text-2xl">No questions available.</p>
+        )}
+        <p className="text-2xl">Please answer the above question.</p>
       </div>
       {/* Right Panel: Timer and Audio Control */}
       <div className="min-h-3/4 mx-8 my-6 rounded-3xl border-2 border-solid border-[#003087] shadow-[10px_10px_4px_rgba(0,48,135,0.25)] sm:w-1/2 lg:w-1/3">
