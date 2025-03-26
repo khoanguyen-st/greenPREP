@@ -6,7 +6,8 @@ export const ReadingIntroduction = () => {
   const navigate = useNavigate()
   const data = useReadingData()
   const onStart = () => {
-    navigate('/reading/test')
+    console.warn('Navigating to Reading Test Page')
+    navigate('/reading/reading-test-page')
   }
 
   return <Introduction data={data} onStart={onStart} />

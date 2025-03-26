@@ -59,6 +59,7 @@ const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className =
 
   const memoizedProcessedData = useMemo(() => processedData, [processedData])
   useEffect(() => {
+    console.warn(userAnswer)
     if (!memoizedProcessedData) {
       return
     }

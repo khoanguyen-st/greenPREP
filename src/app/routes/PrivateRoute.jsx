@@ -14,6 +14,7 @@ import { SpeakingPage } from '@pages/speaking'
 import { ReadingPage } from '@pages/reading'
 import { ReadingIntroduction } from '@features/reading/ui/reading-instroduction'
 import WritingTest from '@features/writing/ui/writing-test'
+import ReadingTestPage from '@features/reading/ui/readingTestPage.jsx'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 
@@ -91,8 +92,8 @@ const PrivateRoute = [
             element: <ReadingIntroduction />
           },
           {
-            path: 'test',
-            element: <div>Reading Test page</div>
+            path: 'reading-test-page',
+            element: <ReadingTestPage />
           }
         ]
       },
