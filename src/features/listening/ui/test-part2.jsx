@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Spin, Alert } from 'antd'
+import { Spin, Alert, Typography } from 'antd'
 import { useQuery } from '@tanstack/react-query'
 import MatchingQuestion from '@shared/ui/questionType/MatchingQuestion'
 import PlayStopButton from '@features/listening/ui/PlayStopButton'
@@ -170,13 +170,16 @@ const TestPart2 = () => {
     >
       <PlayStopButton />
       {formattedQuestion && (
-        <MatchingQuestion
-          leftItems={formattedQuestion.leftItems}
-          rightItems={formattedQuestion.rightItems}
-          userAnswer={userAnswers[currentQuestion?.ID] || []}
-          setUserAnswer={answer => handleAnswerSubmit(answer)}
-          className="mt-6"
-        />
+        <>
+          <Typography.Title level={5}>{currentQuestion.Content}</Typography.Title>
+          <MatchingQuestion
+            leftItems={formattedQuestion.leftItems}
+            rightItems={formattedQuestion.rightItems}
+            userAnswer={userAnswers[currentQuestion?.ID] || []}
+            setUserAnswer={answer => handleAnswerSubmit(answer)}
+            className="mt-6"
+          />
+        </>
       )}
     </TestNavigation>
   )
