@@ -6,7 +6,7 @@ export const ListeningIntroduction = () => {
   const navigate = useNavigate()
   const data = useListeningData()
   const onStart = () => {
-    navigate('/listening/test')
+    navigate('/listening/test-part1')
   }
 
   return <Introduction data={data} onStart={onStart} />
