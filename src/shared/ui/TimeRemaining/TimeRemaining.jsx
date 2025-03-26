@@ -1,6 +1,6 @@
 import { memo, useEffect, useState } from 'react'
 
-import formatTime from '../../utils/formatTime'
+import formatTime from '../../utils/useCountdownTimer'
 
 const TimeRemaining = ({ duration, label = 'Time remaining', onAutoSubmit }) => {
   const [timeLeft, setTimeLeft] = useState(duration)

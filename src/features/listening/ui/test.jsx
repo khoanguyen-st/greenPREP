@@ -246,7 +246,7 @@ const Test = () => {
                   handleAnswerSubmit(answer)
                 }
               }}
-              className="mt-6"
+              className="z-0 mt-6"
             />
           ) : questionType === 'dropdown-list' ? (
             <DropdownQuestion
