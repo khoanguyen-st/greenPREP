@@ -1,6 +1,7 @@
 import { AudioMutedOutlined, AudioOutlined } from '@ant-design/icons'
 import { Modal } from 'antd'
 import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { uploadToCloudinary } from '../../api'
 
@@ -11,6 +12,8 @@ import { uploadToCloudinary } from '../../api'
  *   For example: [{ read: "01:11", answer: "02:00" }]
  */
 const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPart }) => {
+  const navigate = useNavigate()
+
   const parseTime = timeStr => {
     const [min, sec] = timeStr.split(':').map(Number)
     return min * 60 + sec
@@ -42,7 +45,7 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
   const [hasUploaded, setHasUploaded] = useState(false)
   const timerRef = useRef(null)
 
-  // Cleanup effect khi component unmount
+  // Cleanup effect when component unmounts
   useEffect(() => {
     return () => {
       if (timerRef.current) {
@@ -58,7 +61,7 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
     }
   }, [streamRef, mediaRecorderRef])
 
-  // Dừng recording khi chuyển câu hỏi
+  // Stop recording when switching questions
   useEffect(() => {
     if (mediaRecorderRef?.state === 'recording') {
       mediaRecorderRef.stop()
@@ -90,7 +93,7 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
         mediaRecorder.onstop = async () => {
           const blob = new Blob(chunks, { type: 'audio/webm' })
           setRecordedBlob(blob)
-          // Upload khi hết giờ
+          // Upload when time is up
           if (!hasUploaded) {
             try {
               await uploadToCloudinary(blob, data.TopicID, data.Content, currentQuestionIndex)
@@ -118,20 +121,20 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
 
   const handleStoreRecording = () => {
     if (mediaRecorderRef && mediaRecorderRef.state === 'recording') {
-      // Dừng ghi âm
+      // Stop recording
       mediaRecorderRef.stop()
       streamRef?.getTracks().forEach(track => track.stop())
       setIsRecording(false)
       setShowStoreButton(false)
 
-      // Dừng đồng hồ và chuyển phase
+      // Stop timer and change phase
       setPhase('reading')
       setCountdown(0)
       setIsActive(false)
       setIsTimerRunning(false)
       clearInterval(timerRef.current)
 
-      // Chuyển qua câu hỏi tiếp theo
+      // Move to next question
       if (currentQuestionIndex < totalQuestions - 1) {
         const nextIndex = currentQuestionIndex + 1
         setNextQuestionInfo({
@@ -153,15 +156,19 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
     setTimeout(() => {
       setShowModal(false)
       if (currentQuestionIndex < totalQuestions - 1) {
-        resetStates() // Reset các state
+        resetStates() // Reset states
         setCurrentQuestionIndex(prev => prev + 1)
         setPhase('reading')
         setCountdown(parseTime(getTimePair(currentQuestionIndex + 1).read))
         setShowSubmitButton(false)
       } else {
-        // Nếu là câu hỏi cuối cùng, chuyển qua part tiếp theo
-        if (onNextPart) {
-          onNextPart()
+        // If it's the last question, check if the part is PART 4
+        if (data.Content === 'PART 4') {
+          navigate('/listening')
+        } else {
+          if (onNextPart) {
+            onNextPart()
+          }
         }
       }
     }, 2000)
@@ -200,7 +207,7 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
       return
     }
 
-    // Chỉ tạo interval mới nếu chưa có interval nào đang chạy
+    // Only create a new interval if one is not already running
     if (!timerRef.current) {
       timerRef.current = setInterval(() => {
         setCountdown(prev => prev - 1)
@@ -235,7 +242,7 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
   const handleModalOk = () => {
     if (nextQuestionInfo) {
       const nextIndex = nextQuestionInfo.nextQuestion - 1
-      resetStates() // Reset các state
+      resetStates() // Reset states
       setCurrentQuestionIndex(nextIndex)
       setPhase('reading')
       setCountdown(parseTime(getTimePair(nextIndex).read))
@@ -243,6 +250,7 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
       setNextQuestionInfo(null)
     }
   }
+
   if (!data) {
     return <div>Loading...</div>
   }
@@ -284,7 +292,7 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
             <button
               onClick={() => {
                 setIsActive(!isActive)
-                handleMicClick() // Trigger recording if user clicks the mic icon
+                handleMicClick() // Trigger recording when user clicks the mic icon
               }}
               className="flex h-56 w-56 items-center justify-center rounded-full border-2 border-solid border-[#003087] bg-white shadow-[10px_10px_4px_rgba(0,48,135,0.25)] transition-all hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
               aria-label={isActive ? 'Mute sound' : 'Unmute sound'}
@@ -300,7 +308,7 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
               <span className="text-6xl font-bold text-[#003087]">{formatTime(countdown)}</span>
             </div>
           )}
-          {/* Nút lưu recording hiển thị sau 10 giây của giai đoạn trả lời */}
+          {/* Submit Recording button appears during answering phase */}
           {phase === 'answering' && formatTimeSec(countdown) < 20 && (
             <button
               className="mt-4 rounded-lg bg-green-600 px-4 py-2 text-lg font-bold text-white transition hover:bg-green-700"
