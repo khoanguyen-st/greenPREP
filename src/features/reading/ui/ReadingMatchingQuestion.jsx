@@ -124,8 +124,6 @@ const ReadingMatchingQuestion = ({
       isFlagged ? [...prev, currentQuestion.ID] : prev.filter(id => id !== currentQuestion.ID)
     )
   }
-
-  // Create values array for QuestionNavigator based on answers and flags
   const navigatorValues = testData.Parts[0].Questions.map(question => {
     const isFlagged = flaggedQuestions.includes(question.ID)
     const isAnswered = Boolean(userAnswers[question.ID]) && userAnswers[question.ID].length > 0
