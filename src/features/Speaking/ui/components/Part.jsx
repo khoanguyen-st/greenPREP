@@ -1,6 +1,7 @@
 import { AudioMutedOutlined, AudioOutlined } from '@ant-design/icons'
-import { useEffect, useRef, useState } from 'react'
 import { Modal } from 'antd'
+import { useEffect, useRef, useState } from 'react'
+
 import { uploadToCloudinary } from '../../api'
 
 /**
@@ -10,9 +11,6 @@ import { uploadToCloudinary } from '../../api'
  *   For example: [{ read: "01:11", answer: "02:00" }]
  */
 const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPart }) => {
-  if (!data) {
-    return <div>Loading...</div>
-  }
   const parseTime = timeStr => {
     const [min, sec] = timeStr.split(':').map(Number)
     return min * 60 + sec
@@ -22,12 +20,11 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
     const secs = seconds % 60
     return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
   }
-  const formatTimeSec = seconds => seconds % 60;
+  const formatTimeSec = seconds => seconds % 60
 
   const questions = data.Questions || []
   const totalQuestions = questions.length
-  const getTimePair = index =>
-    timePairs[index] || timePairs[timePairs.length - 1] || { read: '00:10', answer: '00:30' }
+  const getTimePair = index => timePairs[index] || timePairs[timePairs.length - 1] || { read: '00:10', answer: '00:30' }
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [phase, setPhase] = useState('reading')
@@ -39,54 +36,54 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
   const [nextQuestionInfo, setNextQuestionInfo] = useState(null)
   const [recordedBlob, setRecordedBlob] = useState(null)
   const [showStoreButton, setShowStoreButton] = useState(false)
-  const [mediaRecorderRef, setMediaRecorderRef] = useState(null);
-  const [streamRef, setStreamRef] = useState(null);
-  const [isTimerRunning, setIsTimerRunning] = useState(true);
-  const [hasUploaded, setHasUploaded] = useState(false);
-  const timerRef = useRef(null);
+  const [mediaRecorderRef, setMediaRecorderRef] = useState(null)
+  const [streamRef, setStreamRef] = useState(null)
+  const [isTimerRunning, setIsTimerRunning] = useState(true)
+  const [hasUploaded, setHasUploaded] = useState(false)
+  const timerRef = useRef(null)
 
   // Cleanup effect khi component unmount
   useEffect(() => {
     return () => {
       if (timerRef.current) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
+        clearInterval(timerRef.current)
+        timerRef.current = null
       }
       if (streamRef) {
-        streamRef.getTracks().forEach(track => track.stop());
+        streamRef.getTracks().forEach(track => track.stop())
       }
       if (mediaRecorderRef?.state === 'recording') {
-        mediaRecorderRef.stop();
+        mediaRecorderRef.stop()
       }
-    };
-  }, [streamRef, mediaRecorderRef]);
+    }
+  }, [streamRef, mediaRecorderRef])
 
   // Dừng recording khi chuyển câu hỏi
   useEffect(() => {
     if (mediaRecorderRef?.state === 'recording') {
-      mediaRecorderRef.stop();
-      streamRef?.getTracks().forEach(track => track.stop());
+      mediaRecorderRef.stop()
+      streamRef?.getTracks().forEach(track => track.stop())
     }
-  }, [currentQuestionIndex]);
+  }, [currentQuestionIndex])
 
   const resetStates = () => {
-    setIsRecording(false);
-    setShowStoreButton(false);
-    setRecordedBlob(null);
-    setMediaRecorderRef(null);
-    setStreamRef(null);
-    setIsTimerRunning(true);
-    setHasUploaded(false);
-  };
+    setIsRecording(false)
+    setShowStoreButton(false)
+    setRecordedBlob(null)
+    setMediaRecorderRef(null)
+    setStreamRef(null)
+    setIsTimerRunning(true)
+    setHasUploaded(false)
+  }
 
   const startRecording = duration => {
     navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then(stream => {
         const mediaRecorder = new MediaRecorder(stream)
-        setMediaRecorderRef(mediaRecorder);
-        setStreamRef(stream);
-        let chunks = []
+        setMediaRecorderRef(mediaRecorder)
+        setStreamRef(stream)
+        const chunks = []
         mediaRecorder.ondataavailable = e => {
           chunks.push(e.data)
         }
@@ -96,10 +93,10 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
           // Upload khi hết giờ
           if (!hasUploaded) {
             try {
-              await uploadToCloudinary(blob, data.TopicID, data.Content, currentQuestionIndex);
-              setHasUploaded(true);
+              await uploadToCloudinary(blob, data.TopicID, data.Content, currentQuestionIndex)
+              setHasUploaded(true)
             } catch (error) {
-              console.error('Failed to upload recording:', error);
+              console.error('Failed to upload recording:', error)
             }
           }
           stream.getTracks().forEach(track => track.stop())
@@ -122,52 +119,52 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
   const handleStoreRecording = () => {
     if (mediaRecorderRef && mediaRecorderRef.state === 'recording') {
       // Dừng ghi âm
-      mediaRecorderRef.stop();
-      streamRef?.getTracks().forEach(track => track.stop());
-      setIsRecording(false);
-      setShowStoreButton(false);
+      mediaRecorderRef.stop()
+      streamRef?.getTracks().forEach(track => track.stop())
+      setIsRecording(false)
+      setShowStoreButton(false)
 
       // Dừng đồng hồ và chuyển phase
-      setPhase('reading');
-      setCountdown(0);
-      setIsActive(false);
-      setIsTimerRunning(false);
-      clearInterval(timerRef.current);
+      setPhase('reading')
+      setCountdown(0)
+      setIsActive(false)
+      setIsTimerRunning(false)
+      clearInterval(timerRef.current)
 
       // Chuyển qua câu hỏi tiếp theo
       if (currentQuestionIndex < totalQuestions - 1) {
-        const nextIndex = currentQuestionIndex + 1;
+        const nextIndex = currentQuestionIndex + 1
         setNextQuestionInfo({
           currentQuestion: currentQuestionIndex + 1,
           nextQuestion: nextIndex + 1,
           readTime: formatTime(parseTime(getTimePair(nextIndex).read))
-        });
-        setShowModal(true);
+        })
+        setShowModal(true)
       } else {
-        setShowSubmitButton(true);
+        setShowSubmitButton(true)
       }
     }
   }
 
   const handleSubmitRecording = () => {
-    setShowModal(true);
-    setNextQuestionInfo(null);
+    setShowModal(true)
+    setNextQuestionInfo(null)
 
     setTimeout(() => {
-      setShowModal(false);
+      setShowModal(false)
       if (currentQuestionIndex < totalQuestions - 1) {
-        resetStates(); // Reset các state
-        setCurrentQuestionIndex(prev => prev + 1);
-        setPhase('reading');
-        setCountdown(parseTime(getTimePair(currentQuestionIndex + 1).read));
-        setShowSubmitButton(false);
+        resetStates() // Reset các state
+        setCurrentQuestionIndex(prev => prev + 1)
+        setPhase('reading')
+        setCountdown(parseTime(getTimePair(currentQuestionIndex + 1).read))
+        setShowSubmitButton(false)
       } else {
         // Nếu là câu hỏi cuối cùng, chuyển qua part tiếp theo
         if (onNextPart) {
-          onNextPart();
+          onNextPart()
         }
       }
-    }, 2000);
+    }, 2000)
   }
 
   useEffect(() => {
@@ -178,7 +175,9 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
   }, [phase, isRecording, currentQuestionIndex])
 
   useEffect(() => {
-    if (currentQuestionIndex >= totalQuestions || !isTimerRunning) return;
+    if (currentQuestionIndex >= totalQuestions || !isTimerRunning) {
+      return
+    }
 
     if (countdown <= 0) {
       if (phase === 'reading') {
@@ -217,7 +216,9 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
   }, [countdown, phase, currentQuestionIndex, totalQuestions, timePairs, showModal, isTimerRunning])
 
   const handleMicClick = () => {
-    if (phase === 'answering' || isRecording) return
+    if (phase === 'answering' || isRecording) {
+      return
+    }
     setPhase('answering')
     const answerDuration = parseTime(getTimePair(currentQuestionIndex).answer)
     setCountdown(answerDuration)
@@ -226,33 +227,30 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
 
   const currentQuestion = questions[currentQuestionIndex]
 
-  const hasImage =
-    data.Content === 'PART 2' || data.Content === 'PART 3' || data.Content === 'PART 4'
+  const hasImage = data.Content === 'PART 2' || data.Content === 'PART 3' || data.Content === 'PART 4'
 
   const imageUrl =
-    hasImage &&
-    currentQuestion &&
-    (currentQuestion.ImageKeys?.[0] || currentQuestion.AnswerContent?.imageKeys?.[0])
+    hasImage && currentQuestion && (currentQuestion.ImageKeys?.[0] || currentQuestion.AnswerContent?.imageKeys?.[0])
 
   const handleModalOk = () => {
     if (nextQuestionInfo) {
-      const nextIndex = nextQuestionInfo.nextQuestion - 1;
-      resetStates(); // Reset các state
-      setCurrentQuestionIndex(nextIndex);
-      setPhase('reading');
-      setCountdown(parseTime(getTimePair(nextIndex).read));
-      setShowModal(false);
-      setNextQuestionInfo(null);
+      const nextIndex = nextQuestionInfo.nextQuestion - 1
+      resetStates() // Reset các state
+      setCurrentQuestionIndex(nextIndex)
+      setPhase('reading')
+      setCountdown(parseTime(getTimePair(nextIndex).read))
+      setShowModal(false)
+      setNextQuestionInfo(null)
     }
   }
-
+  if (!data) {
+    return <div>Loading...</div>
+  }
   return (
     <div className="flex h-screen w-full flex-row rounded-xl bg-white">
       {/* Left Panel: Display Part Information, Image (if available), and Current Question */}
       <div className="pl-28 pt-28 sm:w-1/2 lg:w-2/3">
-        <h1 className="mb-6 text-4xl font-bold text-[#003087]">
-          {data?.Content || 'Speaking Test'}
-        </h1>
+        <h1 className="mb-6 text-4xl font-bold text-[#003087]">{data?.Content || 'Speaking Test'}</h1>
         {data?.SubContent && <h2 className="mb-9 text-2xl font-bold">{data.SubContent}</h2>}
         {/* Render image if the part is PART 2, 3, or 4 and an image URL is available */}
         {hasImage && imageUrl && (
@@ -260,7 +258,7 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
             <img
               src={imageUrl}
               alt="Question visual"
-              className="max-w-full h-[400px] object-contain rounded shadow-lg"
+              className="h-[400px] max-w-full rounded object-contain shadow-lg"
             />
           </div>
         )}
@@ -311,7 +309,6 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
               Submit Recording
             </button>
           )}
-
         </div>
         {showSubmitButton && (
           <div className="mt-8 flex justify-center">
@@ -333,9 +330,7 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
         cancelButtonProps={{ style: { display: 'none' } }}
         centered
       >
-        <p className="text-lg">
-          Question {nextQuestionInfo?.currentQuestion} has ended.
-        </p>
+        <p className="text-lg">Question {nextQuestionInfo?.currentQuestion} has ended.</p>
         <p className="text-lg">
           You have {nextQuestionInfo?.readTime} to read Question {nextQuestionInfo?.nextQuestion}.
         </p>

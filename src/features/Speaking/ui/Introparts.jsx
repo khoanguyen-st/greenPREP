@@ -1,4 +1,5 @@
 import { useParams } from 'react-router-dom'
+
 import introContent from '../data' // Import the static intro content
 import Intropart from './components/Intropart'
 

@@ -36,7 +36,7 @@ const uploadToCloudinary = async (blob, topicId, partContent, questionIndex) => 
     )
 
     const data = await response.json()
-    console.log('Uploaded successfully:', data)
+    console.warn('Uploaded successfully:', data)
     return data
   } catch (error) {
     console.error('Upload error:', error)

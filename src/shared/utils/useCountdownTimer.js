@@ -3,7 +3,9 @@ const useCountdownTimer = (duration, onAutoSubmit) => {
   const [timeLeft, setTimeLeft] = useState(duration)
   useEffect(() => {
     if (timeLeft <= 0) {
-      if (onAutoSubmit) onAutoSubmit()
+      if (onAutoSubmit) {
+        onAutoSubmit()
+      }
       return
     }
     const timer = setInterval(() => {

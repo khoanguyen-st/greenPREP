@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { fetchTopicData } from '@features/speaking/api' // Import the API function
+
 import Part from './components/Part'
 
 const Parts = () => {
@@ -55,7 +56,7 @@ const Parts = () => {
 
   // Separate useEffect to log the latest partData after state updates
   useEffect(() => {
-    console.log('Updated partData:', partData)
+    console.warn('Updated partData:', partData)
   }, [partData])
 
   if (isLoading) {
