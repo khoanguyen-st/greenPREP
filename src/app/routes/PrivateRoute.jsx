@@ -1,10 +1,13 @@
 import { GrammarIntroduction } from '@features/grammar/ui/grammar-introduction'
+import GrammarTest from '@features/grammar/ui/grammar-test'
 import ListeningHeadphoneCheck from '@features/listening/ui/listening-headphonecheck'
 import { ListeningIntroduction } from '@features/listening/ui/listening-introduction'
 import PlayStopButton from '@features/listening/ui/PlayStopButton'
 import { ReadingIntroduction } from '@features/reading/ui/reading-instroduction'
 import ReadingMatchingQuestion from '@features/reading/ui/ReadingMatchingQuestion'
 import ReadingOrderingQuestion from '@features/reading/ui/ReadingOrderingQuestion'
+import Introparts from '@features/speaking/ui/Introparts'
+import Parts from '@features/speaking/ui/Parts'
 import { SpeakingIntroduction } from '@features/speaking/ui/speaking-introduction'
 import { WritingIntroduction } from '@features/writing/ui/writing-introduction'
 import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage'
@@ -18,8 +21,6 @@ import WaitingForApproval from '@pages/WaitingForApproval'
 import { WritingPage } from '@pages/writing'
 import MicrophoneTest from '@shared/ui/MicrophoneTest/MicrophoneTest'
 import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
-import Introparts from '@features/speaking/ui/Introparts'
-import Parts from '@features/speaking/ui/Parts'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 
@@ -74,7 +75,7 @@ const PrivateRoute = [
           },
           {
             path: 'test',
-            element: <div>Grammar Test page</div>
+            element: <GrammarTest />
           }
         ]
       },

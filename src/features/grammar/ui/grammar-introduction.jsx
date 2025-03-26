@@ -6,7 +6,7 @@ export const GrammarIntroduction = () => {
   const navigate = useNavigate()
   const data = useGrammarData()
   const onStart = () => {
-    navigate('/grammar/exercise')
+    navigate('/grammar/test')
   }
 
   return <Introduction data={data} onStart={onStart} />
