@@ -91,8 +91,8 @@ const AudioVisual = ({ waveColor = '#6A9C89', enableAudioOutput = false }) => {
   }, [enableAudioOutput, waveColor])
 
   return (
-    <div className="mx-auto w-2/3 max-w-sm rounded-lg p-3">
-      <canvas ref={canvasRef} className="h-12 w-2/3 rounded-xl" />
+    <div className="mx-auto w-4/5 max-w-md rounded-lg p-3">
+      <canvas ref={canvasRef} className="h-24 w-2/3 rounded-xl" />
       {noAudio && <p className="mt-2 text-sm text-red-600">No record detected!</p>}
     </div>
   )
