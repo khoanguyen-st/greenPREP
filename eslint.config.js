@@ -54,7 +54,6 @@ export default [
       'consistent-return': 'warn',
       'no-duplicate-imports': 'error',
       'prefer-const': 'warn',
-      'no-magic-numbers': ['warn', { ignore: [0, 1] }],
       'no-implicit-coercion': 'warn'
     }
   }

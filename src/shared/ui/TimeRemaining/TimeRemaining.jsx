@@ -23,6 +23,7 @@ const TimeRemaining = ({ duration, label = 'Time remaining', onAutoSubmit }) => 
       setTimeLeft(prev => prev - 1)
     }, 1000)
 
+    // eslint-disable-next-line consistent-return
     return () => clearInterval(timer)
   }, [timeLeft, onAutoSubmit])
 

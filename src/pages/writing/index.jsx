@@ -1,19 +1,12 @@
 import { WritingProvider } from '@shared/context/writing-context'
 import { Outlet } from 'react-router-dom'
 
-export const WritingPage = () => {
-  const data = {
-    testName: 'Aptis General Practice Test',
-    section: 'Writing',
-    questionCount: 4,
-    timeAllowed: '50 mins',
-    assessmentDescription: 'This assessment evaluates your ability to write in English for different purposes.',
-    formDescription: 'You will need to complete various writing tasks including emails, essays, and short responses.'
-  }
+import { WRITING_DATA } from '@/__mock/writing'
 
+export const WritingPage = () => {
   return (
     <>
-      <WritingProvider data={data}>
+      <WritingProvider data={WRITING_DATA}>
         <Outlet />
       </WritingProvider>
     </>

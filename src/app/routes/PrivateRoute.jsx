@@ -1,20 +1,21 @@
 import IntroductionScreen from '@pages/IntroductionScreen'
-import SpeakingPage from '@pages/SpeakingPage'
 import PlayStopButton from '@features/listening/ui/PlayStopButton'
 import HomePage from '@pages/HomePage'
-import GrammarVocabPage from '@pages/GrammarVocabPage'
-import ListeningPage from '@pages/ListeningPage'
 import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage'
-import ReadingTestPage from '@pages/ReadingPage'
 import WaitingForApproval from '@pages/WaitingForApproval'
-import Introduction from '@pages/listening/Introduction'
-import Instruction from '@pages/listening/Instruction'
 import { WritingPage } from '@pages/writing'
-import { InstructionWriting } from '@features/writing/ui/WritingInstruction'
-import { IntroductionWriting } from '@features/writing/ui/WritingIntroduction'
+import { WritingIntroduction } from '@features/writing/ui/writing-introduction'
+import { ListeningPage } from '@pages/listening'
+import { SpeakingIntroduction } from '@features/speaking/ui/speaking-introduction'
+import { ListeningIntroduction } from '@features/listening/ui/listening-introduction'
+import { GrammarPage } from '@pages/grammar'
+import { GrammarIntroduction } from '@features/grammar/ui/grammar-introduction'
+import { SpeakingPage } from '@pages/speaking'
+import { ReadingPage } from '@pages/reading'
+import { ReadingIntroduction } from '@features/reading/ui/reading-instroduction'
+import WritingTest from '@features/writing/ui/WritingTest'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
-import WritingTest from '@features/writing/ui/WritingTest'
 
 const PrivateRoute = [
   {
@@ -31,12 +32,9 @@ const PrivateRoute = [
         children: [
           {
             index: true,
-            element: <IntroductionWriting />
+            element: <WritingIntroduction />
           },
-          {
-            path: 'instruction',
-            element: <InstructionWriting />
-          },
+
           {
             path: 'test',
             element: <WritingTest />
@@ -44,38 +42,69 @@ const PrivateRoute = [
         ]
       },
       {
-        path: 'play-stop-button',
-        element: <PlayStopButton />
-      },
-      {
-        path: 'grammarvocab',
-        element: <GrammarVocabPage />
-      },
-      {
         path: 'listening',
         element: <ListeningPage />,
         children: [
           {
             index: true,
-            element: <Introduction />
-          },
-          {
-            path: 'instruction',
-            element: <Instruction />
+            element: <ListeningIntroduction />
           },
           {
             path: 'test',
-            element: <div>Test page</div>
+            element: <div> Listening Test page</div>
           }
         ]
       },
       {
-        path: 'rejectpage',
-        element: <DesktopRejectRequestPage />
+        path: 'grammar',
+        element: <GrammarPage />,
+        children: [
+          {
+            index: true,
+            element: <GrammarIntroduction />
+          },
+          {
+            path: 'test',
+            element: <div>Grammar Test page</div>
+          }
+        ]
+      },
+      {
+        path: 'speaking',
+        element: <SpeakingPage />,
+        children: [
+          {
+            index: true,
+            element: <SpeakingIntroduction />
+          },
+          {
+            path: 'test',
+            element: <div>Speaking Test page</div>
+          }
+        ]
       },
       {
         path: 'reading',
-        element: <ReadingTestPage />
+        element: <ReadingPage />,
+        children: [
+          {
+            index: true,
+            element: <ReadingIntroduction />
+          },
+          {
+            path: 'test',
+            element: <div>Reading Test page</div>
+          }
+        ]
+      },
+      {
+        path: 'play-stop-button',
+        element: <PlayStopButton />
+      },
+
+      {
+        path: 'rejectpage',
+        element: <DesktopRejectRequestPage />
       },
       {
         path: 'introduction',
@@ -84,8 +113,7 @@ const PrivateRoute = [
       {
         path: 'waiting-for-approval',
         element: <WaitingForApproval />
-      },
-      { path: 'speaking', element: <SpeakingPage /> }
+      }
     ]
   }
 ]
