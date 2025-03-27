@@ -2,12 +2,7 @@ import { GrammarIntroduction } from '@features/grammar/ui/grammar-introduction'
 import GrammarTest from '@features/grammar/ui/grammar-test'
 import ListeningHeadphoneCheck from '@features/listening/ui/listening-headphonecheck'
 import { ListeningIntroduction } from '@features/listening/ui/listening-introduction'
-import PlayStopButton from '@features/listening/ui/PlayStopButton'
 import { ReadingIntroduction } from '@features/reading/ui/reading-instroduction'
-import ReadingMatchingQuestion from '@features/reading/ui/ReadingMatchingQuestion'
-import ReadingOrderingQuestion from '@features/reading/ui/ReadingOrderingQuestion'
-import Introparts from '@features/speaking/ui/Introparts'
-import Parts from '@features/speaking/ui/Parts'
 import { SpeakingIntroduction } from '@features/speaking/ui/speaking-introduction'
 import { WritingIntroduction } from '@features/writing/ui/writing-introduction'
 import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage'
@@ -20,7 +15,12 @@ import { SpeakingPage } from '@pages/speaking'
 import WaitingForApproval from '@pages/WaitingForApproval'
 import { WritingPage } from '@pages/writing'
 import MicrophoneTest from '@shared/ui/MicrophoneTest/MicrophoneTest'
+import ListeningTest from '@features/listening/ui/test'
 import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
+import WritingTest from '@features/writing/ui/writing-test'
+import ReadingTest from '@features/reading/ui/ReadingTest'
+import { Introparts } from '@features/speaking/ui/Introparts'
+import { Parts } from '@features/speaking/ui/Parts'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 
@@ -40,11 +40,11 @@ const PrivateRoute = [
           {
             index: true,
             element: <WritingIntroduction />
+          },
+          {
+            path: 'test',
+            element: <WritingTest />
           }
-          // {
-          //   path: 'test',
-          //   element: <WritingTest />
-          // }
         ]
       },
       {
@@ -61,7 +61,7 @@ const PrivateRoute = [
           },
           {
             path: 'test',
-            element: <div>Listening Test page</div>
+            element: <ListeningTest />
           }
         ]
       },
@@ -111,21 +111,9 @@ const PrivateRoute = [
           },
           {
             path: 'test',
-            element: <ReadingMatchingQuestion />
-          },
-          {
-            path: 'ordering',
-            element: <ReadingOrderingQuestion />
-          },
-          {
-            path: 'part3',
-            element: <div>Reading Part 3</div>
+            element: <ReadingTest />
           }
         ]
-      },
-      {
-        path: 'play-stop-button',
-        element: <PlayStopButton />
       },
       {
         path: 'rejectpage',

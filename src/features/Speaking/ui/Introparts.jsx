@@ -1,16 +1,13 @@
 import { useParams } from 'react-router-dom'
 
-import introContent from '../data' // Import the static intro content
+import introContent from '../data'
 import Intropart from './components/Intropart'
 
-const Introparts = () => {
-  const { part } = useParams() // Get part from URL (e.g., "1", "2", "3")
+export const Introparts = () => {
+  const { part } = useParams()
 
-  // Ensure `part` is a valid number and retrieve the corresponding intro content
-  const partNumber = parseInt(part, 10) // Convert part to number
+  const partNumber = parseInt(part, 10)
   const partData = introContent[partNumber] || { title: 'Unknown Part', description: 'No description available.' }
 
-  return <Intropart data={partData} part={part} /> // Pass the fetched data to Intropart
+  return <Intropart data={partData} part={part} />
 }
-
-export default Introparts

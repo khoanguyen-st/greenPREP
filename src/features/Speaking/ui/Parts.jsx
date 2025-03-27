@@ -4,7 +4,7 @@ import { fetchTopicData } from '@features/speaking/api' // Import the API functi
 
 import Part from './components/Part'
 
-const Parts = () => {
+export const Parts = () => {
   const { part } = useParams() // Get part from URL (e.g., "1", "2", "3")
   const navigate = useNavigate()
   const [partData, setPartData] = useState(null)
@@ -81,5 +81,3 @@ const Parts = () => {
 
   return <Part data={partData} onNextPart={handleNextPart} />
 }
-
-export default Parts
