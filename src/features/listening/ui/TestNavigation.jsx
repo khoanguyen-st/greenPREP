@@ -6,7 +6,7 @@ import QuestionNavigator from '@shared/ui/QuestionNavigatior/QuestionNavigatior'
 import PopupSubmission from '@shared/ui/Submission/PopupSubmission'
 import { useState } from 'react'
 import { MenuOutlined } from '@ant-design/icons'
-import { navigateLogo } from '@assets/images/navigateLogo.png'
+import { navigateLogo } from '@assets/images'
 
 const { Title } = Typography
 
