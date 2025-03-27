@@ -8,7 +8,9 @@ const MultipleChoice = ({ questionData, userAnswer, setUserAnswer, onSubmit, cla
   const [error, setError] = useState(null)
   const { options, isValid } = useMemo(() => {
     try {
-      const parsedContent = JSON.parse(questionData.AnswerContent)[0]
+      const parsedContent = Array.isArray(questionData.AnswerContent)
+        ? questionData.AnswerContent[0]
+        : JSON.parse(questionData.AnswerContent)[0]
       multipleChoiceAnswerSchema.validateSync(parsedContent)
       return { options: parsedContent.options, isValid: true }
     } catch (err) {
@@ -41,7 +43,7 @@ const MultipleChoice = ({ questionData, userAnswer, setUserAnswer, onSubmit, cla
 
   return (
     <div className={`w-full ${className}`}>
-      <Title level={5} className="mb-6">
+      <Title level={3} className="mb-6">
         {questionData.Content}
       </Title>
       <div className="space-y-3">

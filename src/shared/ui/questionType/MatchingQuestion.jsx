@@ -34,7 +34,14 @@ const MatchingQuestion = ({
   const leftItemsRefs = useRef({})
   const rightItemsRefs = useRef({})
 
+  const hasInitialized = useRef(false)
+
   useEffect(() => {
+    if (hasInitialized.current) {
+      return
+    }
+    hasInitialized.current = true
+
     const newMatches = {}
     userAnswer.forEach(answer => {
       const leftId = leftItems.findIndex(item => item.label === answer.left) + 1
