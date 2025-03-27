@@ -11,7 +11,7 @@ import { uploadToCloudinary } from '../../api'
  * - timePairs: an array of objects with "read" and "answer" keys in "mm:ss" format.
  *   For example: [{ read: "01:11", answer: "02:00" }]
  */
-const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPart }) => {
+const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPart }) => {
   const navigate = useNavigate()
 
   const parseTime = timeStr => {
@@ -27,7 +27,7 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
 
   const questions = data.Questions || []
   const totalQuestions = questions.length
-  const getTimePair = index => timePairs[index] || timePairs[timePairs.length - 1] || { read: '00:10', answer: '00:30' }
+  const getTimePair = index => timePairs[index] || timePairs[timePairs.length - 1] || { read: '00:03', answer: '00:15' }
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [phase, setPhase] = useState('reading')
@@ -37,8 +37,6 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
   const [isRecording, setIsRecording] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [nextQuestionInfo, setNextQuestionInfo] = useState(null)
-  const [, setRecordedBlob] = useState(null)
-  const [, setShowStoreButton] = useState(false)
   const [mediaRecorderRef, setMediaRecorderRef] = useState(null)
   const [streamRef, setStreamRef] = useState(null)
   const [isTimerRunning, setIsTimerRunning] = useState(true)
@@ -71,8 +69,6 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
 
   const resetStates = () => {
     setIsRecording(false)
-    setShowStoreButton(false)
-    setRecordedBlob(null)
     setMediaRecorderRef(null)
     setStreamRef(null)
     setIsTimerRunning(true)
@@ -92,7 +88,6 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
         }
         mediaRecorder.onstop = async () => {
           const blob = new Blob(chunks, { type: 'audio/webm' })
-          setRecordedBlob(blob)
           if (!hasUploaded) {
             try {
               await uploadToCloudinary(blob, data.TopicID, data.Content, currentQuestionIndex)
@@ -105,7 +100,6 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
         }
         mediaRecorder.start()
         setIsRecording(true)
-        setShowStoreButton(false)
         setHasUploaded(false)
 
         setTimeout(() => {
@@ -123,7 +117,6 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
       mediaRecorderRef.stop()
       streamRef?.getTracks().forEach(track => track.stop())
       setIsRecording(false)
-      setShowStoreButton(false)
 
       setPhase('reading')
       setCountdown(0)
