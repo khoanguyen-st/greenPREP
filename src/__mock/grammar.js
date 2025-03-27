@@ -1,7 +1,7 @@
 export const GRAMMAR_DATA = {
-  title: 'Reading Practice Test',
+  title: 'Grammar Practice Test',
   testName: 'Aptis General Practice Test',
-  section: 'Reading',
+  section: 'Grammar',
   testStructure: {
     desc: 'This test has 4 parts, you will have 30 minutes to complete the test.',
     parts: [

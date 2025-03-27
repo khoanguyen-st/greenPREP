@@ -3,6 +3,7 @@ import MatchingQuestion from '@shared/ui/question-type/matching-question'
 import MultipleChoice from '@shared/ui/question-type/multiple-choice'
 import { Form } from 'antd'
 
+// eslint-disable-next-line no-unused-vars
 const QuestionForm = ({ currentPart, answers, flaggedQuestions, handleFlagToggle, setUserAnswer, onSubmit }) => {
   const handleAnswerSubmit = answer => {
     if (!currentPart) {
@@ -35,7 +36,7 @@ const QuestionForm = ({ currentPart, answers, flaggedQuestions, handleFlagToggle
                 questionData={currentPart}
                 userAnswer={answers}
                 setUserAnswer={setUserAnswer}
-                onSubmit={onSubmit}
+                onSubmit={undefined} // onSubmit={onSubmit}
               />
             ) : (
               <MatchingQuestion

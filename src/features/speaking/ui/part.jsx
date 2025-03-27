@@ -296,7 +296,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
               <span className="text-6xl font-bold text-[#003087]">{formatTime(countdown)}</span>
             </div>
           )}
-          {phase === 'answering' && formatTimeSec(countdown) < 20 && (
+          {phase === 'answering' && formatTimeSec(countdown) < 13 && (
             <button
               className="mt-4 rounded-lg bg-green-600 px-4 py-2 text-lg font-bold text-white transition hover:bg-green-700"
               onClick={handleStoreRecording}
