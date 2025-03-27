@@ -17,10 +17,10 @@ import { WritingPage } from '@pages/writing'
 import MicrophoneTest from '@shared/ui/MicrophoneTest/MicrophoneTest'
 import ListeningTest from '@features/listening/ui/test'
 import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
-import Parts from '@features/speaking/ui/Parts'
 import ReadingTest from '@features/reading/ui/ReadingTest'
 import WritingTest from '@features/writing/ui/writing-test'
 import { Introparts } from '@features/speaking/ui/Introparts'
+import { Parts } from '@features/speaking/ui/Parts'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 
@@ -117,14 +117,6 @@ const PrivateRoute = [
             path: 'test',
             element: <ReadingTest />
           }
-          // {
-          //   path: 'ordering',
-          //   element: <ReadingOrderingQuestion />
-          // },
-          // {
-          //   path: 'part3',
-          //   element: <div>Reading Part 3</div>
-          // }
         ]
       },
       {
