@@ -1,25 +1,31 @@
 import { useState } from 'react'
-import { Spin, Alert } from 'antd'
+import { Spin, Alert, Typography } from 'antd'
 import { useQuery } from '@tanstack/react-query'
 import MultipleChoice from '@shared/ui/questionType/multipleChoice'
+import MatchingQuestion from '@shared/ui/questionType/MatchingQuestion'
+import DropdownQuestion from '@shared/ui/questionType/DropdownQuestion'
 import PlayStopButton from '@features/listening/ui/PlayStopButton'
 import { fetchListeningTestDetails } from '@features/listening/api/listeningAPI'
+import NextScreen from '@shared/ui/Submission/NextScreen'
+import SubmissionImage from '@assets/images/listening_submit.jpg'
 
 import TestNavigation from './TestNavigation'
 
-const TestPart1 = () => {
+const Test = () => {
   const [currentPartIndex, setCurrentPartIndex] = useState(0)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [userAnswers, setUserAnswers] = useState({})
   const [flaggedQuestions, setFlaggedQuestions] = useState([])
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
 
   const {
     data: testData,
     isLoading,
     error
   } = useQuery({
-    queryKey: ['listeningTestPart1'],
-    queryFn: () => fetchListeningTestDetails('multiple-choice')
+    queryKey: ['listeningTest'],
+    queryFn: () => fetchListeningTestDetails()
   })
 
   const getTotalQuestions = () => {
@@ -48,6 +54,10 @@ const TestPart1 = () => {
   }
 
   const goToNext = () => {
+    if (isAudioPlaying) {
+      return
+    }
+
     const currentPart = getCurrentPart()
     if (currentQuestionIndex < currentPart.Questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1)
@@ -58,6 +68,10 @@ const TestPart1 = () => {
   }
 
   const goToQuestion = flatIndex => {
+    if (isAudioPlaying) {
+      return
+    }
+
     if (!testData?.Parts) {
       return
     }
@@ -86,6 +100,10 @@ const TestPart1 = () => {
     })
   }
 
+  const handleSubmit = () => {
+    setIsSubmitted(true)
+  }
+
   const toggleFlag = isFlagged => {
     const currentQuestion = getCurrentQuestion()
     if (!currentQuestion) {
@@ -108,29 +126,57 @@ const TestPart1 = () => {
       const answerContent =
         typeof question.AnswerContent === 'string' ? JSON.parse(question.AnswerContent) : question.AnswerContent
 
-      if (!answerContent.options || !Array.isArray(answerContent.options) || !answerContent.correctAnswer) {
-        throw new Error('Invalid question format: missing required fields')
+      if (answerContent.options && Array.isArray(answerContent.options) && answerContent.correctAnswer) {
+        const options = answerContent.options.map((option, index) => ({
+          key: String.fromCharCode(65 + index),
+          value: option
+        }))
+
+        return {
+          ...question,
+          AnswerContent: JSON.stringify([
+            {
+              title: question.Content,
+              options,
+              correctAnswer: answerContent.correctAnswer
+            }
+          ])
+        }
+      } else if (
+        answerContent.leftItems &&
+        Array.isArray(answerContent.leftItems) &&
+        answerContent.rightItems &&
+        Array.isArray(answerContent.rightItems) &&
+        answerContent.correctAnswers &&
+        Array.isArray(answerContent.correctAnswers)
+      ) {
+        const leftItems = answerContent.leftItems.map((item, index) => ({
+          id: index + 1,
+          label: item
+        }))
+
+        const rightItems = answerContent.rightItems.map((item, index) => ({
+          id: String.fromCharCode(97 + index),
+          label: item
+        }))
+
+        return {
+          leftItems,
+          rightItems
+        }
+      } else if (answerContent.type === 'dropdown-list') {
+        return question
       }
 
-      const options = answerContent.options.map((option, index) => ({
-        key: String.fromCharCode(65 + index),
-        value: option
-      }))
-
-      return {
-        ...question,
-        AnswerContent: JSON.stringify([
-          {
-            title: question.Content,
-            options,
-            correctAnswer: answerContent.correctAnswer
-          }
-        ])
-      }
+      throw new Error('Invalid question format: missing required fields')
     } catch (error) {
       console.error('Error formatting question data:', error)
       return null
     }
+  }
+
+  if (isSubmitted) {
+    return <NextScreen nextPath="/grammar" skillName="Listening" imageSrc={SubmissionImage} />
   }
 
   if (isLoading) {
@@ -146,6 +192,7 @@ const TestPart1 = () => {
   const flatIndex = getCurrentFlatIndex()
   const totalQuestions = getTotalQuestions()
   const isFlagged = currentQuestion && flaggedQuestions.includes(currentQuestion.ID)
+  const questionType = currentQuestion?.Type || null
 
   return (
     <TestNavigation
@@ -157,23 +204,62 @@ const TestPart1 = () => {
       onFlag={toggleFlag}
       onQuestionChange={goToQuestion}
       onNext={goToNext}
-      onSubmit={handleAnswerSubmit}
+      onSubmit={handleSubmit}
       userAnswers={userAnswers}
       flaggedQuestions={flaggedQuestions}
       skillName={testData.Parts[0].Questions[0].Skill.Name}
     >
-      <PlayStopButton />
+      <Typography.Title level={4} className="mb-4">
+        {getCurrentPart()?.Content}
+      </Typography.Title>
+      <PlayStopButton
+        audioUrl={currentQuestion?.AudioKeys}
+        questionId={currentQuestion?.ID}
+        onPlayingChange={setIsAudioPlaying}
+      />
       {formattedQuestion && (
-        <MultipleChoice
-          questionData={formattedQuestion}
-          userAnswer={userAnswers}
-          setUserAnswer={setUserAnswers}
-          onSubmit={handleAnswerSubmit}
-          className="mt-6"
-        />
+        <>
+          {questionType === 'matching' && (
+            <Typography.Title level={5} className="mb-6">
+              {currentQuestion.Content}
+            </Typography.Title>
+          )}
+          {questionType === 'multiple-choice' ? (
+            <MultipleChoice
+              questionData={formattedQuestion}
+              userAnswer={userAnswers}
+              setUserAnswer={setUserAnswers}
+              onSubmit={handleAnswerSubmit}
+              className="mt-6"
+            />
+          ) : questionType === 'matching' ? (
+            <MatchingQuestion
+              leftItems={formattedQuestion.leftItems}
+              rightItems={formattedQuestion.rightItems}
+              userAnswer={userAnswers[currentQuestion?.ID] || []}
+              setUserAnswer={answer => {
+                if (!answer || answer.length === 0) {
+                  const newAnswers = { ...userAnswers }
+                  delete newAnswers[currentQuestion?.ID]
+                  setUserAnswers(newAnswers)
+                } else {
+                  handleAnswerSubmit(answer)
+                }
+              }}
+              className="z-0 mt-6"
+            />
+          ) : questionType === 'dropdown-list' ? (
+            <DropdownQuestion
+              questionData={currentQuestion}
+              userAnswer={userAnswers}
+              setUserAnswer={setUserAnswers}
+              className="z-0 mt-6"
+            />
+          ) : null}
+        </>
       )}
     </TestNavigation>
   )
 }
 
-export default TestPart1
+export default Test
