@@ -24,6 +24,7 @@ const MatchingQuestion = ({
     }
 
     validateData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [leftItems, rightItems, disabled])
 
   const [selectedLeft, setSelectedLeft] = useState(null)
