@@ -20,6 +20,7 @@ import MicrophoneTest from '@shared/ui/MicrophoneTest/MicrophoneTest'
 import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
 import Introparts from '@features/speaking/ui/Introparts'
 import Parts from '@features/speaking/ui/Parts'
+import ReadingTest from '@features/reading/ui/ReadingTest'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 
@@ -110,16 +111,16 @@ const PrivateRoute = [
           },
           {
             path: 'test',
-            element: <ReadingMatchingQuestion />
-          },
-          {
-            path: 'ordering',
-            element: <ReadingOrderingQuestion />
-          },
-          {
-            path: 'part3',
-            element: <div>Reading Part 3</div>
+            element: <ReadingTest />
           }
+          // {
+          //   path: 'ordering',
+          //   element: <ReadingOrderingQuestion />
+          // },
+          // {
+          //   path: 'part3',
+          //   element: <div>Reading Part 3</div>
+          // }
         ]
       },
       {
