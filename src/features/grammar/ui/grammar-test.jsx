@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { Card, Divider, Spin, Typography } from 'antd'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { fetchGrammarTestDetails } from '../api/grammarAPI'
 import FooterNavigator from './grammar-footer-navigator'
@@ -23,6 +24,8 @@ const GrammarTest = () => {
       return { ...response, Parts: sortedParts }
     }
   })
+
+  const navigate = useNavigate()
 
   const mergedArray = data?.Parts.flatMap(part => part.Questions) || []
 
@@ -47,6 +50,7 @@ const GrammarTest = () => {
     console.table(answers)
     localStorage.removeItem('grammarAnswers')
     localStorage.removeItem('flaggedQuestions')
+    navigate('/reading')
   }
 
   useEffect(() => {
