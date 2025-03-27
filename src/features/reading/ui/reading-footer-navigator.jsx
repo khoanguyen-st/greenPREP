@@ -2,7 +2,8 @@ import { Image } from 'antd'
 import NavigationButtons from '@shared/ui/NavigationButtons/NavigationButtons'
 import { navigateLogo } from '@assets/images'
 
-const FooterNavigator = ({ totalParts, currentPart, setCurrentPart, handleSubmit, isLastPart }) => {
+// eslint-disable-next-line no-unused-vars
+const FooterNavigator = ({ totalParts, currentPart, setCurrentPart, handleSubmit, isLastPart = false }) => {
   return (
     <>
       <div className="fixed bottom-8 left-4 z-20 hidden w-fit mdL:block">

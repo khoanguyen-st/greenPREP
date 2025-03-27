@@ -7,7 +7,7 @@ import DropdownQuestion from '@shared/ui/questionType/DropdownQuestion'
 import PlayStopButton from '@features/listening/ui/PlayStopButton'
 import { fetchListeningTestDetails } from '@features/listening/api/listeningAPI'
 import NextScreen from '@shared/ui/Submission/NextScreen'
-import SubmissionImage from '@assets/images/listening_submit.jpg'
+import { SubmissionImage } from '@assets/images'
 
 import TestNavigation from './TestNavigation'
 

@@ -19,7 +19,9 @@ const TimeRemaining = ({ duration, label = 'Time remaining', onAutoSubmit }) => 
       setTimeLeft(prev => Math.max(prev - 1, 0))
     }, 1000)
 
+    // eslint-disable-next-line consistent-return
     return () => clearInterval(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeLeft])
 
   const percentage = ((timeLeft / duration) * 100).toFixed(2)

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import axios from 'axios'
 
 const fetchTopicData = async partNumber => {
@@ -7,13 +8,11 @@ const fetchTopicData = async partNumber => {
       { params: { skillName: 'SPEAKING' } }
     )
 
-    // Extract "Parts" array from response
     const parts = response.data.Parts || []
 
-    // Find the specific part based on partNumber
     const selectedPart = parts.find(part => part.Content === `PART ${partNumber}`)
 
-    return selectedPart || null // Return found part or null if not found
+    return selectedPart || null
   } catch (error) {
     console.error('Error fetching topic data:', error)
     return null
