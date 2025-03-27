@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom'
 
 export const SpeakingIntroduction = () => {
   const navigate = useNavigate()
-  const part = 1
   const data = useSpeakingData()
   const onStart = () => {
     navigate('/speaking/microphonetest')

@@ -37,15 +37,14 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
   const [isRecording, setIsRecording] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [nextQuestionInfo, setNextQuestionInfo] = useState(null)
-  const [recordedBlob, setRecordedBlob] = useState(null)
-  const [showStoreButton, setShowStoreButton] = useState(false)
+  const [, setRecordedBlob] = useState(null)
+  const [, setShowStoreButton] = useState(false)
   const [mediaRecorderRef, setMediaRecorderRef] = useState(null)
   const [streamRef, setStreamRef] = useState(null)
   const [isTimerRunning, setIsTimerRunning] = useState(true)
   const [hasUploaded, setHasUploaded] = useState(false)
   const timerRef = useRef(null)
 
-  // Cleanup effect when component unmounts
   useEffect(() => {
     return () => {
       if (timerRef.current) {
@@ -67,6 +66,7 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
       mediaRecorderRef.stop()
       streamRef?.getTracks().forEach(track => track.stop())
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentQuestionIndex])
 
   const resetStates = () => {
@@ -93,7 +93,6 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
         mediaRecorder.onstop = async () => {
           const blob = new Blob(chunks, { type: 'audio/webm' })
           setRecordedBlob(blob)
-          // Upload when time is up
           if (!hasUploaded) {
             try {
               await uploadToCloudinary(blob, data.TopicID, data.Content, currentQuestionIndex)
@@ -121,20 +120,17 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
 
   const handleStoreRecording = () => {
     if (mediaRecorderRef && mediaRecorderRef.state === 'recording') {
-      // Stop recording
       mediaRecorderRef.stop()
       streamRef?.getTracks().forEach(track => track.stop())
       setIsRecording(false)
       setShowStoreButton(false)
 
-      // Stop timer and change phase
       setPhase('reading')
       setCountdown(0)
       setIsActive(false)
       setIsTimerRunning(false)
       clearInterval(timerRef.current)
 
-      // Move to next question
       if (currentQuestionIndex < totalQuestions - 1) {
         const nextIndex = currentQuestionIndex + 1
         setNextQuestionInfo({
@@ -156,13 +152,12 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
     setTimeout(() => {
       setShowModal(false)
       if (currentQuestionIndex < totalQuestions - 1) {
-        resetStates() // Reset states
+        resetStates()
         setCurrentQuestionIndex(prev => prev + 1)
         setPhase('reading')
         setCountdown(parseTime(getTimePair(currentQuestionIndex + 1).read))
         setShowSubmitButton(false)
       } else {
-        // If it's the last question, check if the part is PART 4
         if (data.Content === 'PART 4') {
           navigate('/listening')
         } else {
@@ -179,6 +174,7 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
       const answerDuration = parseTime(getTimePair(currentQuestionIndex).answer)
       startRecording(answerDuration)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, isRecording, currentQuestionIndex])
 
   useEffect(() => {
@@ -207,19 +203,20 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
       return
     }
 
-    // Only create a new interval if one is not already running
     if (!timerRef.current) {
       timerRef.current = setInterval(() => {
         setCountdown(prev => prev - 1)
       }, 1000)
     }
 
+    // eslint-disable-next-line consistent-return
     return () => {
       if (timerRef.current) {
         clearInterval(timerRef.current)
         timerRef.current = null
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [countdown, phase, currentQuestionIndex, totalQuestions, timePairs, showModal, isTimerRunning])
 
   const handleMicClick = () => {
@@ -242,7 +239,7 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
   const handleModalOk = () => {
     if (nextQuestionInfo) {
       const nextIndex = nextQuestionInfo.nextQuestion - 1
-      resetStates() // Reset states
+      resetStates()
       setCurrentQuestionIndex(nextIndex)
       setPhase('reading')
       setCountdown(parseTime(getTimePair(nextIndex).read))
@@ -256,11 +253,9 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
   }
   return (
     <div className="flex h-screen w-full flex-row rounded-xl bg-white">
-      {/* Left Panel: Display Part Information, Image (if available), and Current Question */}
       <div className="pl-28 pt-28 sm:w-1/2 lg:w-2/3">
         <h1 className="mb-6 text-4xl font-bold text-[#003087]">{data?.Content || 'Speaking Test'}</h1>
         {data?.SubContent && <h2 className="mb-9 text-2xl font-bold">{data.SubContent}</h2>}
-        {/* Render image if the part is PART 2, 3, or 4 and an image URL is available */}
         {hasImage && imageUrl && (
           <div className="mb-10">
             <img
@@ -292,7 +287,7 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
             <button
               onClick={() => {
                 setIsActive(!isActive)
-                handleMicClick() // Trigger recording when user clicks the mic icon
+                handleMicClick()
               }}
               className="flex h-56 w-56 items-center justify-center rounded-full border-2 border-solid border-[#003087] bg-white shadow-[10px_10px_4px_rgba(0,48,135,0.25)] transition-all hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
               aria-label={isActive ? 'Mute sound' : 'Unmute sound'}
@@ -308,7 +303,6 @@ const Part = ({ data, timePairs = [{ read: '00:10', answer: '00:30' }], onNextPa
               <span className="text-6xl font-bold text-[#003087]">{formatTime(countdown)}</span>
             </div>
           )}
-          {/* Submit Recording button appears during answering phase */}
           {phase === 'answering' && formatTimeSec(countdown) < 20 && (
             <button
               className="mt-4 rounded-lg bg-green-600 px-4 py-2 text-lg font-bold text-white transition hover:bg-green-700"

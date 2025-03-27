@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { v2 as cloudinary } from 'cloudinary'
 import dotenv from 'dotenv'
 

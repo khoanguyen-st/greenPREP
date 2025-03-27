@@ -93,7 +93,6 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
     staleTime: 6000
   })
 
-  // Persist states to localStorage
   useEffect(() => {
     try {
       localStorage.setItem('readingAnswers', JSON.stringify(userAnswers))
@@ -110,7 +109,6 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
     localStorage.setItem('partFlaggedStates', JSON.stringify(partFlaggedStates))
   }, [partFlaggedStates])
 
-  // Update flag state when part changes
   useEffect(() => {
     if (testData?.Parts?.[currentPartIndex]) {
       setIsFlagged(Boolean(partFlaggedStates[currentPartIndex]))
@@ -126,7 +124,6 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
 
     const currentQuestion = testData.Parts[currentPartIndex].Questions[currentQuestionIndex]
 
-    // Handle function-type answer (from DropdownQuestion)
     if (typeof answer === 'function') {
       setUserAnswers(prev => {
         const newAnswers = answer(prev)
@@ -135,7 +132,6 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
       return
     }
 
-    // Format answer based on question type
     const formattedAnswer =
       currentQuestion.Type === 'dropdown-list'
         ? answer
@@ -162,13 +158,11 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
 
     const currentQuestion = testData.Parts[currentPartIndex].Questions[currentQuestionIndex]
 
-    // Update flagged questions array
     setFlaggedQuestions(prev => {
       const newFlags = newIsFlagged ? [...prev, currentQuestion.ID] : prev.filter(id => id !== currentQuestion.ID)
       return newFlags
     })
 
-    // Update part flagged state
     setPartFlaggedStates(prev => ({
       ...prev,
       [currentPartIndex]: newIsFlagged
@@ -200,7 +194,6 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
 
   const currentPart = testData.Parts[currentPartIndex]
   const currentQuestion = currentPart.Questions[currentQuestionIndex]
-  const totalQuestions = currentPart.Questions.length
   const isLastPart = currentPartIndex === testData.Parts.length - 1
 
   const shouldShowContent = () => {

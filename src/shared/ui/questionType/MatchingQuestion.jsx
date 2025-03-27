@@ -24,6 +24,7 @@ const MatchingQuestion = ({
     }
 
     validateData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [leftItems, rightItems, disabled])
 
   const [selectedLeft, setSelectedLeft] = useState(null)
@@ -34,7 +35,14 @@ const MatchingQuestion = ({
   const leftItemsRefs = useRef({})
   const rightItemsRefs = useRef({})
 
+  const hasInitialized = useRef(false)
+
   useEffect(() => {
+    if (hasInitialized.current) {
+      return
+    }
+    hasInitialized.current = true
+
     const newMatches = {}
     userAnswer.forEach(answer => {
       const leftId = leftItems.findIndex(item => item.label === answer.left) + 1
