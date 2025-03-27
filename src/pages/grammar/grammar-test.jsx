@@ -1,12 +1,11 @@
+import { fetchGrammarTestDetails } from '@features/grammar/api/grammarAPI'
+import FooterNavigator from '@features/grammar/ui/grammar-footer-navigator'
+import QuestionForm from '@features/grammar/ui/grammar-question-form'
+import QuestionNavigatorContainer from '@features/grammar/ui/grammar-question-navigator-container'
 import { useQuery } from '@tanstack/react-query'
 import { Card, Divider, Spin, Typography } from 'antd'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
-import FooterNavigator from './grammar-footer-navigator'
-import QuestionForm from './grammar-question-form'
-import QuestionNavigatorContainer from './grammar-question-navigator-container'
-import { fetchGrammarTestDetails } from '../api/grammarAPI'
 
 const { Title } = Typography
 
