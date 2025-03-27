@@ -1,7 +1,7 @@
-import PublicRoute from '@app/routes/PublicRoute'
 import PrivateRoute from '@app/routes/PrivateRoute'
+import PublicRoute from '@app/routes/PublicRoute'
+import NotFound from '@pages/not-found-page'
 import { Outlet, createBrowserRouter, RouterProvider } from 'react-router-dom'
-import NotFound from '@pages/NotFoundPage'
 
 const router = createBrowserRouter(
   [

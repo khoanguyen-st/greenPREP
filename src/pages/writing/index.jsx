@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom'
 
 import { WRITING_DATA } from '@/__mock/writing'
 
-export const WritingPage = () => {
+const WritingPage = () => {
   return (
     <>
       <WritingProvider data={WRITING_DATA}>
@@ -12,3 +12,5 @@ export const WritingPage = () => {
     </>
   )
 }
+
+export default WritingPage
