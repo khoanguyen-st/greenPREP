@@ -1,12 +1,12 @@
 import { GrammarProvider } from '@shared/context/grammar-context'
-import CustomAlert from '@shared/ui/CustomAlert/CustomAlert'
+import CustomAlert from '@shared/ui/custom-alert'
 import useAntiCheat from '@shared/utils/antiCheat'
 import { ConfigProvider } from 'antd'
 import { Outlet } from 'react-router-dom'
 
 import { GRAMMAR_DATA } from '@/__mock/grammar'
 
-export const GrammarPage = () => {
+const GrammarPage = () => {
   const { showAlert, alertMessage, enableFullScreen } = useAntiCheat()
 
   const theme = {
@@ -28,3 +28,5 @@ export const GrammarPage = () => {
     </>
   )
 }
+
+export default GrammarPage

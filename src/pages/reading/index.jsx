@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom'
 
 import { READING_DATA } from '@/__mock/reading'
 
-export const ReadingPage = () => {
+const ReadingPage = () => {
   return (
     <>
       <ReadingProvider data={READING_DATA}>
@@ -12,3 +12,5 @@ export const ReadingPage = () => {
     </>
   )
 }
+
+export default ReadingPage

@@ -1,5 +1,5 @@
+import FlagButton from '@shared/ui/flag-button'
 import { Form, Input, Typography } from 'antd'
-import FlagButton from '@shared/ui/FLagButton/FlagButton'
 
 const { Text } = Typography
 

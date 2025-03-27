@@ -27,6 +27,8 @@
     "cloudinary": "^2.6.0",
     "dayjs": "1.11.13",
     "dotenv": "^16.4.7",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-prettier": "^5.2.5",
     "firebase": "11.0.1",
     "google-auth-library": "9.15.0",
     "google-sheets-mapper": "2.0.0",
@@ -54,6 +56,7 @@
     "eslint-plugin-react": "7.37.4",
     "eslint-plugin-react-hooks": "5.1.0-rc.0",
     "eslint-plugin-react-refresh": "0.4.12",
+    "eslint-plugin-unused-imports": "^4.1.4",
     "globals": "15.9.0",
     "husky": "9.1.7",
     "lint-staged": "15.5.0",
@@ -67,7 +70,7 @@
     "vite": "5.4.9"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,css,scss}": [
+    "src/**/*.{js,jsx,css,scss}": [
       "eslint --fix",
       "prettier --write"
     ]
