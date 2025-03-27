@@ -1,5 +1,5 @@
 import { Image } from 'antd'
-import navigateLogo from '@assets/Images/navigate-logo.png'
+import navigateLogo from '@assets/images/navigate-logo.png'
 import NavigationButtons from '@shared/ui/NavigationButtons/NavigationButtons'
 
 const FooterNavigator = ({ totalQuestions, currentQuestion, setCurrentQuestion, handleSubmit }) => {
