@@ -35,7 +35,7 @@ const QuestionForm = ({ currentPart, answers, flaggedQuestions, handleFlagToggle
                 questionData={currentPart}
                 userAnswer={answers}
                 setUserAnswer={setUserAnswer}
-                onSubmit={onSubmit}
+                onSubmit={undefined} // onSubmit={onSubmit}
               />
             ) : (
               <MatchingQuestion
