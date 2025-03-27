@@ -3,8 +3,6 @@ import ListeningHeadphoneCheck from '@features/listening/ui/listening-headphonec
 import { ListeningIntroduction } from '@features/listening/ui/listening-introduction'
 import PlayStopButton from '@features/listening/ui/PlayStopButton'
 import { ReadingIntroduction } from '@features/reading/ui/reading-instroduction'
-import ReadingMatchingQuestion from '@features/reading/ui/ReadingMatchingQuestion'
-import ReadingOrderingQuestion from '@features/reading/ui/ReadingOrderingQuestion'
 import { SpeakingIntroduction } from '@features/speaking/ui/speaking-introduction'
 import { WritingIntroduction } from '@features/writing/ui/writing-introduction'
 import DesktopRejectRequestPage from '@pages/DesktopRejectRequestPage'
@@ -21,6 +19,7 @@ import ListeningTest from '@features/listening/ui/test'
 import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
 import Introparts from '@features/speaking/ui/Introparts'
 import Parts from '@features/speaking/ui/Parts'
+import ReadingTest from '@features/reading/ui/ReadingTest'
 import WritingTest from '@features/writing/ui/writing-test'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
@@ -41,6 +40,10 @@ const PrivateRoute = [
           {
             index: true,
             element: <WritingIntroduction />
+          },
+          {
+            path: 'test',
+            element: <WritingTest />
           },
           {
             path: 'test',
@@ -112,16 +115,16 @@ const PrivateRoute = [
           },
           {
             path: 'test',
-            element: <ReadingMatchingQuestion />
-          },
-          {
-            path: 'ordering',
-            element: <ReadingOrderingQuestion />
-          },
-          {
-            path: 'part3',
-            element: <div>Reading Part 3</div>
+            element: <ReadingTest />
           }
+          // {
+          //   path: 'ordering',
+          //   element: <ReadingOrderingQuestion />
+          // },
+          // {
+          //   path: 'part3',
+          //   element: <div>Reading Part 3</div>
+          // }
         ]
       },
       {
