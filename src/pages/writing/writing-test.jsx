@@ -1,13 +1,12 @@
+import { fetchWritingTestDetails } from '@features/writing/api/writingAPI'
+import { DEFAULT_MAX_WORDS } from '@features/writing/constance/writing-const'
+import FooterNavigator from '@features/writing/ui/writing-footer-navigator'
+import QuestionForm from '@features/writing/ui/writing-question-form'
+import QuestionNavigatorContainer from '@features/writing/ui/writing-question-navigator-container'
 import { useQuery } from '@tanstack/react-query'
 import { Typography, Spin, Card, Divider } from 'antd'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-
-import FooterNavigator from './writing-footer-navigator'
-import QuestionForm from './writing-question-form'
-import QuestionNavigatorContainer from './writing-question-navigator-container'
-import { fetchWritingTestDetails } from '../api/writingAPI'
-import { DEFAULT_MAX_WORDS } from '../constance/WritingConst'
 
 const { Title, Text } = Typography
 
