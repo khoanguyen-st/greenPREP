@@ -1,10 +1,11 @@
-import { useState, useRef, useEffect } from 'react'
-import { Button, Progress, message } from 'antd'
 import { AudioOutlined, SoundOutlined } from '@ant-design/icons'
-import { useNavigate } from 'react-router-dom'
 import AudioVisual from '@shared/ui/Audio/AudioVisual'
+import { Button, message } from 'antd'
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const MicrophoneTest = () => {
+  const part = 1
   const navigate = useNavigate()
   const [isRecording, setIsRecording] = useState(false)
   const [audioBlob, setAudioBlob] = useState(null)
@@ -212,7 +213,7 @@ const MicrophoneTest = () => {
           />
           <div className="mt-8 flex justify-center gap-4">
             <Button onClick={resetTest}>Try Again</Button>
-            <Button type="primary" onClick={() => navigate('/speaking/test')}>
+            <Button type="primary" onClick={() => navigate(`/speaking/instruction/${part}`)}>
               Start Test
             </Button>
           </div>
