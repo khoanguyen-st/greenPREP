@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom'
 
 import { GRAMMAR_DATA } from '@/__mock/grammar'
 
-export const GrammarPage = () => {
+const GrammarPage = () => {
   const theme = {
     token: {
       colorPrimary: '#003087',
@@ -23,3 +23,5 @@ export const GrammarPage = () => {
     </>
   )
 }
+
+export default GrammarPage

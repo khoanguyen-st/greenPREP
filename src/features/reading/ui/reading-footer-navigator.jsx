@@ -1,6 +1,6 @@
-import { Image } from 'antd'
-import NavigationButtons from '@shared/ui/NavigationButtons/NavigationButtons'
 import { navigateLogo } from '@assets/images'
+import NavigationButtons from '@shared/ui/navigation-button'
+import { Image } from 'antd'
 
 // eslint-disable-next-line no-unused-vars
 const FooterNavigator = ({ totalParts, currentPart, setCurrentPart, handleSubmit, isLastPart = false }) => {
