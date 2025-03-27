@@ -16,10 +16,10 @@ import WaitingForApproval from '@pages/WaitingForApproval'
 import { WritingPage } from '@pages/writing'
 import MicrophoneTest from '@shared/ui/MicrophoneTest/MicrophoneTest'
 import SubmissionScreen from '@shared/ui/Submission/SubmissionScreen'
-import Introparts from '@features/speaking/ui/Introparts'
 import Parts from '@features/speaking/ui/Parts'
 import ReadingTest from '@features/reading/ui/ReadingTest'
 import WritingTest from '@features/writing/ui/writing-test'
+import { Introparts } from '@features/speaking/ui/Introparts'
 
 import { ProtectedRoute } from './ProtectedRoute/ProtectedRoute'
 
