@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Spin, Alert, Typography } from 'antd'
 import { useQuery } from '@tanstack/react-query'
 import MultipleChoice from '@shared/ui/questionType/multipleChoice'
@@ -14,10 +14,24 @@ import TestNavigation from './TestNavigation'
 const Test = () => {
   const [currentPartIndex, setCurrentPartIndex] = useState(0)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-  const [userAnswers, setUserAnswers] = useState({})
-  const [flaggedQuestions, setFlaggedQuestions] = useState([])
+  const [userAnswers, setUserAnswers] = useState(() => {
+    const savedAnswers = localStorage.getItem('listeningTestAnswers')
+    return savedAnswers ? JSON.parse(savedAnswers) : {}
+  })
+  const [flaggedQuestions, setFlaggedQuestions] = useState(() => {
+    const savedFlags = localStorage.getItem('listeningTestFlags')
+    return savedFlags ? JSON.parse(savedFlags) : []
+  })
   const [isAudioPlaying, setIsAudioPlaying] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+
+  useEffect(() => {
+    localStorage.setItem('listeningTestAnswers', JSON.stringify(userAnswers))
+  }, [userAnswers])
+
+  useEffect(() => {
+    localStorage.setItem('listeningTestFlags', JSON.stringify(flaggedQuestions))
+  }, [flaggedQuestions])
 
   const {
     data: testData,
@@ -101,6 +115,8 @@ const Test = () => {
   }
 
   const handleSubmit = () => {
+    localStorage.removeItem('listeningTestAnswers')
+    localStorage.removeItem('listeningTestFlags')
     setIsSubmitted(true)
   }
 
