@@ -1,12 +1,12 @@
 import { ListeningProvider } from '@shared/context/listening-context'
-import CustomAlert from '@shared/ui/CustomAlert/CustomAlert'
+import CustomAlert from '@shared/ui/custom-alert'
 import useAntiCheat from '@shared/utils/antiCheat'
 import { ConfigProvider } from 'antd'
 import { Outlet } from 'react-router-dom'
 
 import { LISTENING_DATA } from '@/__mock/listening'
 
-export const ListeningPage = () => {
+const ListeningPage = () => {
   const { showAlert, alertMessage, enableFullScreen } = useAntiCheat()
 
   const theme = {
@@ -28,3 +28,5 @@ export const ListeningPage = () => {
     </>
   )
 }
+
+export default ListeningPage

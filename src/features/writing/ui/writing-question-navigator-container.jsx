@@ -1,9 +1,9 @@
-import TimeRemaining from '@shared/ui/TimeRemaining/TimeRemaining'
-import QuestionNavigator from '@shared/ui/QuestionNavigatior/QuestionNavigatior'
-import { useState } from 'react'
-import { Button } from 'antd'
 import { MenuOutlined } from '@ant-design/icons'
-import PopupSubmission from '@shared/ui/Submission/PopupSubmission'
+import QuestionNavigator from '@shared/ui/question-navigatior'
+import PopupSubmission from '@shared/ui/submission/popup-submission'
+import TimeRemaining from '@shared/ui/time-remaining'
+import { Button } from 'antd'
+import { useState } from 'react'
 
 const QuestionNavigatorContainer = ({
   data,
