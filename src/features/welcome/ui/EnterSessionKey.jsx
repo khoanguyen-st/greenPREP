@@ -52,8 +52,7 @@ const EnterSessionKey = () => {
             <Form.Item
               name="sessionKey"
               rules={[
-                { required: true, message: "Session key isn't empty!" },
-                { max: 100, message: 'Session key is too long!' },
+                { required: true, message: 'This session key is invalid. Please try again' },
                 () => ({
                   validator(_, value) {
                     if (!value || FAKE_SESSION_KEYS.includes(value.trim())) {
