@@ -15,7 +15,6 @@ const ListeningTest = () => {
   const [currentPartIndex, setCurrentPartIndex] = useState(0)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [userAnswers, setUserAnswers] = useState(() => {
-    // Load saved answers from localStorage on initial render
     const savedAnswers = localStorage.getItem(STORAGE_KEY)
     return savedAnswers ? JSON.parse(savedAnswers) : {}
   })
@@ -23,7 +22,6 @@ const ListeningTest = () => {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
-  // Save answers to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(userAnswers))
   }, [userAnswers])
@@ -37,7 +35,6 @@ const ListeningTest = () => {
     queryFn: () => fetchListeningTestDetails()
   })
 
-  // Group questions by AudioKeys
   const groupedQuestions = useMemo(() => {
     if (!testData?.Parts) {
       return []
@@ -125,14 +122,12 @@ const ListeningTest = () => {
         ...prev,
         [questionId]: answer
       }
-      // Save to localStorage immediately
       localStorage.setItem(STORAGE_KEY, JSON.stringify(newAnswers))
       return newAnswers
     })
   }
 
   const handleSubmit = () => {
-    // Clear saved answers when submitting
     localStorage.removeItem(STORAGE_KEY)
     setIsSubmitted(true)
   }
@@ -200,7 +195,6 @@ const ListeningTest = () => {
     }
   }
 
-  // Create a flattened list of questions for the navigator
   const navigatorQuestions = useMemo(() => {
     if (!testData?.Parts) {
       return []
