@@ -93,7 +93,7 @@ const WritingTest = () => {
   return (
     <div className="relative mx-auto min-h-screen max-w-4xl p-5">
       <Divider orientation="left">
-        <Title level={1}>Writing test</Title>
+        <Title level={1}>Writing</Title>
       </Divider>
 
       <Card className="mb-32">
