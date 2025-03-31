@@ -3,20 +3,28 @@ import { fetchListeningTestDetails } from '@features/listening/api/listeningAPI'
 import PlayStopButton from '@features/listening/ui/play-stop-button'
 import TestNavigation from '@features/listening/ui/test-navigation'
 import DropdownQuestion from '@shared/ui/question-type/dropdown-question'
-import MatchingQuestion from '@shared/ui/question-type/matching-question'
 import MultipleChoice from '@shared/ui/question-type/multiple-choice'
 import NextScreen from '@shared/ui/submission/next-screen'
 import { useQuery } from '@tanstack/react-query'
 import { Spin, Alert, Typography } from 'antd'
-import { useState } from 'react'
+import { useState, useMemo, useEffect } from 'react'
+
+const STORAGE_KEY = 'listening_test_answers'
 
 const ListeningTest = () => {
   const [currentPartIndex, setCurrentPartIndex] = useState(0)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-  const [userAnswers, setUserAnswers] = useState({})
+  const [userAnswers, setUserAnswers] = useState(() => {
+    const savedAnswers = localStorage.getItem(STORAGE_KEY)
+    return savedAnswers ? JSON.parse(savedAnswers) : {}
+  })
   const [flaggedQuestions, setFlaggedQuestions] = useState([])
   const [isAudioPlaying, setIsAudioPlaying] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(userAnswers))
+  }, [userAnswers])
 
   const {
     data: testData,
@@ -27,29 +35,54 @@ const ListeningTest = () => {
     queryFn: () => fetchListeningTestDetails()
   })
 
+  const groupedQuestions = useMemo(() => {
+    if (!testData?.Parts) {
+      return []
+    }
+
+    const groups = {}
+    testData.Parts.forEach(part => {
+      part.Questions.forEach(question => {
+        if (!groups[question.AudioKeys]) {
+          groups[question.AudioKeys] = {
+            audioUrl: question.AudioKeys,
+            questions: [],
+            partIndex: testData.Parts.indexOf(part)
+          }
+        }
+        groups[question.AudioKeys].questions.push(question)
+      })
+    })
+    return Object.values(groups)
+  }, [testData])
+
   const getTotalQuestions = () => {
-    if (!testData || !testData.Parts) {
+    if (!groupedQuestions.length) {
       return 0
     }
-    return testData.Parts.reduce((acc, part) => acc + part.Questions.length, 0)
+    return groupedQuestions.length
   }
 
-  const getCurrentPart = () => testData?.Parts[currentPartIndex] || null
+  const getCurrentGroup = () => {
+    if (!groupedQuestions.length) {
+      return null
+    }
+    return groupedQuestions[currentPartIndex] || null
+  }
+
   const getCurrentQuestion = () => {
-    const part = getCurrentPart()
-    return part?.Questions[currentQuestionIndex] || null
+    const group = getCurrentGroup()
+    if (!group) {
+      return null
+    }
+    return group.questions[currentQuestionIndex] || null
   }
 
   const getCurrentFlatIndex = () => {
-    if (!testData?.Parts) {
+    if (!groupedQuestions.length) {
       return 0
     }
-
-    let count = 0
-    for (let i = 0; i < currentPartIndex; i++) {
-      count += testData.Parts[i].Questions.length
-    }
-    return count + currentQuestionIndex
+    return currentPartIndex
   }
 
   const goToNext = () => {
@@ -57,10 +90,14 @@ const ListeningTest = () => {
       return
     }
 
-    const currentPart = getCurrentPart()
-    if (currentQuestionIndex < currentPart.Questions.length - 1) {
+    const currentGroup = getCurrentGroup()
+    if (!currentGroup) {
+      return
+    }
+
+    if (currentQuestionIndex < currentGroup.questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1)
-    } else if (currentPartIndex < testData.Parts.length - 1) {
+    } else if (currentPartIndex < groupedQuestions.length - 1) {
       setCurrentPartIndex(currentPartIndex + 1)
       setCurrentQuestionIndex(0)
     }
@@ -71,35 +108,27 @@ const ListeningTest = () => {
       return
     }
 
-    if (!testData?.Parts) {
+    if (!groupedQuestions.length) {
       return
     }
 
-    let count = 0
-    for (let partIdx = 0; partIdx < testData.Parts.length; partIdx++) {
-      const partQuestions = testData.Parts[partIdx].Questions.length
-      if (count + partQuestions > flatIndex) {
-        setCurrentPartIndex(partIdx)
-        setCurrentQuestionIndex(flatIndex - count)
-        return
-      }
-      count += partQuestions
-    }
+    setCurrentPartIndex(flatIndex)
+    setCurrentQuestionIndex(0)
   }
 
-  const handleAnswerSubmit = answer => {
-    const currentQuestion = getCurrentQuestion()
-    if (!currentQuestion) {
-      return
-    }
-
-    setUserAnswers({
-      ...userAnswers,
-      [currentQuestion.ID]: answer
+  const handleAnswerSubmit = (questionId, answer) => {
+    setUserAnswers(prev => {
+      const newAnswers = {
+        ...prev,
+        [questionId]: answer
+      }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newAnswers))
+      return newAnswers
     })
   }
 
   const handleSubmit = () => {
+    localStorage.removeItem(STORAGE_KEY)
     setIsSubmitted(true)
   }
 
@@ -145,23 +174,15 @@ const ListeningTest = () => {
         answerContent.leftItems &&
         Array.isArray(answerContent.leftItems) &&
         answerContent.rightItems &&
-        Array.isArray(answerContent.rightItems) &&
-        answerContent.correctAnswers &&
-        Array.isArray(answerContent.correctAnswers)
+        Array.isArray(answerContent.rightItems)
       ) {
-        const leftItems = answerContent.leftItems.map((item, index) => ({
-          id: index + 1,
-          label: item
-        }))
-
-        const rightItems = answerContent.rightItems.map((item, index) => ({
-          id: String.fromCharCode(97 + index),
-          label: item
-        }))
-
         return {
-          leftItems,
-          rightItems
+          ...question,
+          Type: question.Type === 'matching' ? 'dropdown-list' : question.Type,
+          AnswerContent: {
+            ...answerContent,
+            type: question.Type === 'matching' ? 'dropdown-list' : answerContent.type
+          }
         }
       } else if (answerContent.type === 'dropdown-list') {
         return question
@@ -173,6 +194,22 @@ const ListeningTest = () => {
       return null
     }
   }
+
+  const navigatorQuestions = useMemo(() => {
+    if (!testData?.Parts) {
+      return []
+    }
+
+    const questions = []
+    groupedQuestions.forEach(group => {
+      questions.push({
+        partIndex: group.partIndex,
+        questionIndex: 0,
+        question: group.questions[0]
+      })
+    })
+    return questions
+  }, [groupedQuestions, testData?.Parts])
 
   if (isSubmitted) {
     return <NextScreen nextPath="/grammar" skillName="Listening" imageSrc={SubmissionImage} />
@@ -186,17 +223,21 @@ const ListeningTest = () => {
     return <Alert type="error" message="Failed to load test data" description={error.message} />
   }
 
-  const currentQuestion = getCurrentQuestion()
-  const formattedQuestion = formatQuestionData(currentQuestion)
+  const currentGroup = getCurrentGroup()
   const flatIndex = getCurrentFlatIndex()
   const totalQuestions = getTotalQuestions()
-  const isFlagged = currentQuestion && flaggedQuestions.includes(currentQuestion.ID)
-  const questionType = currentQuestion?.Type || null
+  const isFlagged = currentGroup?.questions[0] && flaggedQuestions.includes(currentGroup.questions[0].ID)
 
   return (
     <TestNavigation
-      testData={testData}
-      currentQuestion={currentQuestion}
+      testData={{
+        ...testData,
+        Parts: navigatorQuestions.map(q => ({
+          ...q.question.Part,
+          Questions: [q.question]
+        }))
+      }}
+      currentQuestion={currentGroup?.questions[0]}
       flatIndex={flatIndex}
       totalQuestions={totalQuestions}
       isFlagged={isFlagged}
@@ -209,54 +250,44 @@ const ListeningTest = () => {
       skillName={testData.Parts[0].Questions[0].Skill.Name}
     >
       <Typography.Title level={4} className="mb-4">
-        {getCurrentPart()?.Content}
+        {currentGroup?.questions[0]?.Part?.Content}
       </Typography.Title>
-      <PlayStopButton
-        audioUrl={currentQuestion?.AudioKeys}
-        questionId={currentQuestion?.ID}
-        onPlayingChange={setIsAudioPlaying}
-      />
-      {formattedQuestion && (
-        <>
-          {questionType === 'matching' && (
-            <Typography.Title level={5} className="mb-6">
-              {currentQuestion.Content}
-            </Typography.Title>
-          )}
-          {questionType === 'multiple-choice' ? (
-            <MultipleChoice
-              questionData={formattedQuestion}
-              userAnswer={userAnswers}
-              setUserAnswer={setUserAnswers}
-              onSubmit={handleAnswerSubmit}
-              className="mt-6"
-            />
-          ) : questionType === 'matching' ? (
-            <MatchingQuestion
-              leftItems={formattedQuestion.leftItems}
-              rightItems={formattedQuestion.rightItems}
-              userAnswer={userAnswers[currentQuestion?.ID] || []}
-              setUserAnswer={answer => {
-                if (!answer || answer.length === 0) {
-                  const newAnswers = { ...userAnswers }
-                  delete newAnswers[currentQuestion?.ID]
-                  setUserAnswers(newAnswers)
-                } else {
-                  handleAnswerSubmit(answer)
-                }
-              }}
-              className="z-0 mt-6"
-            />
-          ) : questionType === 'dropdown-list' ? (
-            <DropdownQuestion
-              questionData={currentQuestion}
-              userAnswer={userAnswers}
-              setUserAnswer={setUserAnswers}
-              className="z-0 mt-6"
-            />
-          ) : null}
-        </>
+      {currentGroup && (
+        <PlayStopButton
+          audioUrl={currentGroup.audioUrl}
+          questionId={currentGroup.questions[0]?.ID}
+          onPlayingChange={setIsAudioPlaying}
+        />
       )}
+      {currentGroup?.questions.map(question => {
+        const formattedQ = formatQuestionData(question)
+        const qType = question.Type
+        return (
+          <div key={question.ID} className="mt-6">
+            {(qType === 'matching' || qType === 'dropdown-list') && (
+              <Typography.Title level={5} className="mb-6">
+                {question.Content}
+              </Typography.Title>
+            )}
+            {qType === 'multiple-choice' ? (
+              <MultipleChoice
+                questionData={formattedQ}
+                userAnswer={userAnswers}
+                setUserAnswer={setUserAnswers}
+                onSubmit={answer => handleAnswerSubmit(question.ID, answer)}
+                className="mt-6"
+              />
+            ) : qType === 'matching' || qType === 'dropdown-list' ? (
+              <DropdownQuestion
+                questionData={formattedQ}
+                userAnswer={userAnswers}
+                setUserAnswer={setUserAnswers}
+                className="z-0 mt-6"
+              />
+            ) : null}
+          </div>
+        )
+      })}
     </TestNavigation>
   )
 }
