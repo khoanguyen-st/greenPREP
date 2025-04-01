@@ -4,9 +4,12 @@ import { useQuery } from '@tanstack/react-query'
 import { Card, Avatar, Button, Input, Table, Select, DatePicker } from 'antd'
 import { useState } from 'react'
 
+import ChangePasswordPopup from './change-password-popup'
+
 const { Option } = Select
 
 export const StudentProfile = () => {
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false)
   const [filters, setFilters] = useState({
     search: '',
     date: null,
@@ -115,7 +118,7 @@ export const StudentProfile = () => {
             </div>
           </div>
           <div className="flex gap-4">
-            <Button type="primary" className="bg-blue-900">
+            <Button type="primary" className="bg-blue-900" onClick={() => setIsChangePasswordOpen(true)}>
               Change password
             </Button>
             <Button>Edit</Button>
@@ -141,6 +144,12 @@ export const StudentProfile = () => {
           </div>
         </div>
       </Card>
+
+      <ChangePasswordPopup
+        isOpen={isChangePasswordOpen}
+        onClose={() => setIsChangePasswordOpen(false)}
+        userId={profileData?.id}
+      />
 
       {/* History Section */}
       <div>
