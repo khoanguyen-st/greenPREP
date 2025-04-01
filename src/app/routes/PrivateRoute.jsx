@@ -1,3 +1,4 @@
+import StudentProfile from '@features/profile/ui/student-profile'
 import GrammarPage from '@pages/grammar'
 import GrammarIntroduction from '@pages/grammar/grammar-introduction'
 import GrammarTest from '@pages/grammar/grammar-test'
@@ -7,6 +8,7 @@ import ListeningPage from '@pages/listening'
 import ListeningHeadphoneCheck from '@pages/listening/listening-headphonecheck'
 import ListeningIntroduction from '@pages/listening/listening-introduction'
 import ListeningTest from '@pages/listening/listening-test'
+import ProfilePage from '@pages/profile'
 import ReadingPage from '@pages/reading'
 import ReadingIntroduction from '@pages/reading/reading-instroduction'
 import ReadingTest from '@pages/reading/reading-test'
@@ -130,6 +132,16 @@ const PrivateRoute = [
       {
         path: 'complete-test',
         element: <SubmissionPage />
+      },
+      {
+        path: 'profile',
+        element: <ProfilePage />,
+        children: [
+          {
+            index: true,
+            element: <StudentProfile />
+          }
+        ]
       }
     ]
   }
