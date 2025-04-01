@@ -125,7 +125,7 @@ const OrderingQuestion = ({ options = [], className = '', userAnswer = [], setUs
   return (
     <div className={`ordering-question mx-auto max-w-6xl ${className}`}>
       <div className="flex gap-8">
-        <div className="w-3/5 space-y-4">
+        <div className="w-1/2 space-y-4">
           {slots.map((slot, index) => {
             const placedItem = items.find(item => item.order === index + 1)
 
@@ -135,9 +135,9 @@ const OrderingQuestion = ({ options = [], className = '', userAnswer = [], setUs
                 onDragOver={e => e.preventDefault()}
                 onDragEnter={e => handleDragEnter(e, index)}
                 onDrop={e => handleDrop(e, index)}
-                className="flex h-24 items-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 transition-all duration-300 hover:border-[rgb(0,48,135)]"
+                className="flex h-20 items-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-4 transition-all duration-300 hover:border-[rgb(0,48,135)]"
               >
-                <div className="mr-6 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-[rgb(0,48,135)] text-xl font-bold text-white shadow-lg">
+                <div className="mr-4 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-[rgb(0,48,135)] text-base font-semibold text-white shadow-md">
                   {index + 1}
                 </div>
                 {placedItem ? (
@@ -145,7 +145,7 @@ const OrderingQuestion = ({ options = [], className = '', userAnswer = [], setUs
                     draggable
                     onDragStart={e => handleDragStart(e, items.indexOf(placedItem))}
                     onDragEnd={handleDragEnd}
-                    className="flex-grow cursor-grab text-lg font-medium text-slate-800 active:cursor-grabbing"
+                    className="cursor-grab text-base font-medium text-slate-800 active:cursor-grabbing"
                   >
                     {placedItem.content}
                   </div>
@@ -158,47 +158,47 @@ const OrderingQuestion = ({ options = [], className = '', userAnswer = [], setUs
         </div>
 
         <div
-          className="w-2/5 rounded-xl border-2 border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-lg"
+          className="w-1/2 rounded-xl border-2 border-slate-200 bg-white p-6 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)]"
           onDragOver={e => e.preventDefault()}
           onDragEnter={handleBacklogDragEnter}
           onDrop={handleBacklogDrop}
         >
-          <div className="mb-4 flex items-center justify-between border-b border-slate-200 pb-3">
-            <div className="flex items-center gap-2 text-slate-600">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="h-5 w-5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z"
-                />
-              </svg>
-              <span className="text-sm font-medium">Backlog</span>
-            </div>
-            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-500">
-              {items.filter(item => !item.placed).length}
-            </div>
-          </div>
           <div className="space-y-3">
-            {items
-              .filter(item => !item.placed)
-              .map(item => (
-                <div
-                  key={item.id}
-                  draggable
-                  onDragStart={e => handleDragStart(e, items.indexOf(item))}
-                  onDragEnd={handleDragEnd}
-                  className="group cursor-grab rounded-lg border border-slate-200 bg-white p-4 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[rgb(0,48,135)] hover:shadow-[0_8px_16px_rgba(0,0,0,0.12)] active:cursor-grabbing"
-                >
-                  <div className="text-lg font-medium text-slate-800">{item.content}</div>
+            {items.filter(item => !item.placed).length > 0 ? (
+              items
+                .filter(item => !item.placed)
+                .map(item => (
+                  <div
+                    key={item.id}
+                    draggable
+                    onDragStart={e => handleDragStart(e, items.indexOf(item))}
+                    onDragEnd={handleDragEnd}
+                    className="group cursor-grab rounded-lg border border-slate-200 bg-white p-4 shadow-[0_2px_4px_0_rgba(0,0,0,0.1),0_1px_8px_-1px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[rgb(0,48,135)] hover:shadow-[0_8px_16px_-4px_rgba(0,0,0,0.1),0_4px_24px_-8px_rgba(0,0,0,0.08)] active:cursor-grabbing"
+                  >
+                    <div className="text-base font-medium text-slate-800">{item.content}</div>
+                  </div>
+                ))
+            ) : (
+              <div className="flex h-24 items-center justify-center rounded-lg border-2 border-dashed border-slate-200 bg-slate-50">
+                <div className="flex flex-col items-center gap-2 text-slate-400">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="h-6 w-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"
+                    />
+                  </svg>
+                  <span className="text-sm font-medium">Empty</span>
                 </div>
-              ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
