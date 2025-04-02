@@ -2,6 +2,7 @@ import FlagButton from '@shared/ui/flag-button'
 import MatchingQuestion from '@shared/ui/question-type/matching-question'
 import MultipleChoice from '@shared/ui/question-type/multiple-choice'
 import { Form } from 'antd'
+import { useEffect } from 'react'
 
 // eslint-disable-next-line no-unused-vars
 const QuestionForm = ({ currentPart, answers, flaggedQuestions, handleFlagToggle, setUserAnswer, onSubmit }) => {
@@ -9,11 +10,26 @@ const QuestionForm = ({ currentPart, answers, flaggedQuestions, handleFlagToggle
     if (!currentPart) {
       return
     }
-    setUserAnswer({ ...answers, [currentPart.ID]: answer })
+    const newAnswers = { ...answers, [currentPart.ID]: answer }
+    setUserAnswer(newAnswers)
+    localStorage.setItem('grammarAnswers', JSON.stringify(newAnswers))
   }
 
   const storedAnswers = JSON.parse(localStorage.getItem('grammarAnswers') || '{}')
   const userAnswer = storedAnswers[currentPart.ID] || []
+
+  useEffect(() => {
+    localStorage.setItem('grammarAnswers', JSON.stringify(answers))
+  }, [answers])
+
+  if (!currentPart?.AnswerContent?.[0]) {
+    return null
+  }
+
+  const formatMatchingQuestion = question => ({
+    leftItems: question.AnswerContent[0].leftItems,
+    rightItems: question.AnswerContent[0].rightItems
+  })
 
   return (
     <Form layout="vertical">
@@ -40,14 +56,7 @@ const QuestionForm = ({ currentPart, answers, flaggedQuestions, handleFlagToggle
               />
             ) : (
               <MatchingQuestion
-                leftItems={currentPart.AnswerContent[0].leftItems.map((item, index) => ({
-                  id: index + 1,
-                  label: item
-                }))}
-                rightItems={currentPart.AnswerContent[0].rightItems.map((item, index) => ({
-                  id: String.fromCharCode(97 + index),
-                  label: item
-                }))}
+                {...formatMatchingQuestion(currentPart)}
                 userAnswer={userAnswer}
                 setUserAnswer={handleAnswerSubmit}
               />
