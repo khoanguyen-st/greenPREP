@@ -1,6 +1,6 @@
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons'
+import { useRegister } from '@shared/lib/hooks/useAuthUsers'
 import { Form, Input, Button, Typography, Space, Row, Col, message } from 'antd'
-import axios from 'axios'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
@@ -10,8 +10,8 @@ const { Title, Text } = Typography
 
 const RegisterPage = () => {
   const [form] = Form.useForm()
-  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+  const [confirmTouched, setConfirmTouched] = useState(false)
   const [formValues, setFormValues] = useState({
     firstName: '',
     lastName: '',
@@ -26,6 +26,16 @@ const RegisterPage = () => {
   const phoneNumber = Form.useWatch('phoneNumber', form)
   const showPhoneSuccess = phoneNumber?.length === 10
 
+  const { mutate: registerUser, isPending } = useRegister({
+    onSuccess: response => {
+      message.success(response.data.message)
+      navigate('/login')
+    },
+    onError: error => {
+      message.error(error.response?.data?.message || 'Registration failed. Please try again.')
+    }
+  })
+
   const handleFormChange = changedFields => {
     setFormValues(prevValues => ({
       ...prevValues,
@@ -36,27 +46,21 @@ const RegisterPage = () => {
     form.validateFields([fieldName])
   }
 
-  const onFinish = async () => {
-    try {
-      setLoading(true)
-      const response = await axios.post('https://dev-api-greenprep.onrender.com/api/users/register', {
-        firstName: formValues.firstName,
-        lastName: formValues.lastName,
-        email: formValues.email,
-        className: formValues.className,
-        studentCode: formValues.studentCode,
-        password: formValues.password
-      })
+  const handleConfirmBlur = () => {
+    setConfirmTouched(true)
+  }
 
-      if (response.status === 200) {
-        message.success(response.data.message)
-        navigate('/login')
-      }
-    } catch (error) {
-      message.error(error.response?.data?.message || 'Registration failed. Please try again.')
-    } finally {
-      setLoading(false)
+  const onFinish = () => {
+    const registerData = {
+      firstName: formValues.firstName,
+      lastName: formValues.lastName,
+      email: formValues.email,
+      className: formValues.className,
+      studentCode: formValues.studentCode,
+      password: formValues.password
     }
+    // @ts-ignore - The type is defined in the hook's JSDoc
+    registerUser(registerData)
   }
 
   return (
@@ -387,12 +391,17 @@ const RegisterPage = () => {
                       </Text>
                     }
                     name="confirmPassword"
-                    dependencies={['password']}
                     rules={[
                       { required: true, message: 'Please confirm your password' },
                       ({ getFieldValue }) => ({
                         validator(_, value) {
-                          if (!value || getFieldValue('password') === value) {
+                          if (!confirmTouched) {
+                            return Promise.resolve()
+                          }
+                          if (!value) {
+                            return Promise.resolve()
+                          }
+                          if (getFieldValue('password') === value) {
                             return Promise.resolve()
                           }
                           return Promise.reject(new Error('The two passwords do not match'))
@@ -404,6 +413,7 @@ const RegisterPage = () => {
                   >
                     <Input.Password
                       placeholder="••••••••••"
+                      onBlur={handleConfirmBlur}
                       className="!h-11 !rounded-md !border !bg-gray-50 !px-4 !py-2.5 !text-base"
                       iconRender={visible =>
                         visible ? (
@@ -421,7 +431,7 @@ const RegisterPage = () => {
                 <Button
                   type="primary"
                   htmlType="submit"
-                  loading={loading}
+                  loading={isPending}
                   className="!h-11 !w-full !rounded-md !bg-[#003087] !text-base !font-medium hover:!bg-blue-900"
                 >
                   Sign up

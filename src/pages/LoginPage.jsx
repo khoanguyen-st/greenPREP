@@ -2,20 +2,19 @@
 import { EyeInvisibleOutlined, EyeOutlined, ExclamationCircleOutlined, CheckCircleOutlined } from '@ant-design/icons'
 import { login } from '@app/providers/reducer/auth/authSlice'
 import { ACCESS_TOKEN } from '@shared/lib/constants/auth'
+import { useLogin } from '@shared/lib/hooks/useAuthUsers'
 import { Form, Input, Button, Typography, Space, Row, Col } from 'antd'
-import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 
-import { LoginImg } from '../assets/images/index'
+import { LoginImg } from '../assets/images/'
 
 const { Title, Text } = Typography
 
 const LoginPage = () => {
   const [form] = Form.useForm()
-  const [loading, setLoading] = useState(false)
   const [loginError, setLoginError] = useState('')
   const [loginSuccess, setLoginSuccess] = useState('')
   const [passwordTouched, setPasswordTouched] = useState(false)
@@ -31,20 +30,10 @@ const LoginPage = () => {
     }
   }
 
-  const onFinish = async values => {
-    setLoading(true)
-    setLoginError('')
-    setLoginSuccess('')
-
-    try {
-      const response = await axios.post('https://dev-api-greenprep.onrender.com/api/users/login', {
-        email: values.email,
-        password: values.password
-      })
-
-      if (response.data?.data?.access_token) {
-        const token = response.data.data.access_token
-
+  const { mutate: loginUser, isLoading } = useLogin({
+    onSuccess: response => {
+      const token = response.data?.data?.access_token
+      if (token) {
         localStorage.setItem(ACCESS_TOKEN, token)
         const userData = getUserData(token)
 
@@ -58,12 +47,20 @@ const LoginPage = () => {
       } else {
         setLoginError('Login failed. Please try again.')
       }
-    } catch (error) {
+    },
+    onError: error => {
       console.error('Login error:', error)
       setLoginError('Invalid email or password')
-    } finally {
-      setLoading(false)
     }
+  })
+
+  const onFinish = values => {
+    setLoginError('')
+    setLoginSuccess('')
+    loginUser({
+      email: values.email,
+      password: values.password
+    })
   }
 
   const handlePasswordChange = () => {
@@ -186,7 +183,7 @@ const LoginPage = () => {
                 <Button
                   type="primary"
                   htmlType="submit"
-                  loading={loading}
+                  loading={isLoading}
                   className="!h-11 !w-full !rounded-md !bg-[#003087] !text-base !font-medium hover:!bg-blue-900"
                 >
                   Sign in
