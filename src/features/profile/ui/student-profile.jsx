@@ -1,8 +1,10 @@
 import { SearchOutlined } from '@ant-design/icons'
-import { getProfile, getHistoryList } from '@features/profile/api/profile'
 import ChangePasswordPopup from '@features/profile/ui/change-password-popup'
-import { useQuery } from '@tanstack/react-query'
-import { Card, Avatar, Button, Input, Table, Select, DatePicker } from 'antd'
+import { getProfile, getHistoryList, updateProfile } from '@features/profile/api/profile'
+import UpdateProfile from '@features/profile/ui/update-profile'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { Card, Avatar, Button, Input, Table, Select, DatePicker, message } from 'antd'
+
 import { useState } from 'react'
 
 const { Option } = Select
@@ -15,6 +17,8 @@ export const StudentProfile = () => {
     session: null,
     level: null
   })
+  const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false)
+  const queryClient = useQueryClient()
 
   const { data: profileData } = useQuery({
     queryKey: ['profile'],
@@ -25,6 +29,22 @@ export const StudentProfile = () => {
     queryKey: ['history'],
     queryFn: getHistoryList
   })
+
+  const { mutate: updateProfileMutation } = useMutation({
+    mutationFn: updateProfile,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['profile'] })
+      message.success('Profile updated successfully')
+      setIsUpdateModalVisible(false)
+    },
+    onError: () => {
+      message.error('Failed to update profile')
+    }
+  })
+
+  const handleUpdateProfile = async values => {
+    updateProfileMutation(values)
+  }
 
   const filteredData = historyData.filter(item => {
     if (filters.level && filters.level !== 'all') {
@@ -120,7 +140,7 @@ export const StudentProfile = () => {
             <Button type="primary" className="bg-blue-900" onClick={() => setIsChangePasswordOpen(true)}>
               Change password
             </Button>
-            <Button>Edit</Button>
+            <Button onClick={() => setIsUpdateModalVisible(true)}>Edit</Button>
           </div>
         </div>
 
@@ -216,6 +236,13 @@ export const StudentProfile = () => {
           />
         </Card>
       </div>
+
+      <UpdateProfile
+        visible={isUpdateModalVisible}
+        onCancel={() => setIsUpdateModalVisible(false)}
+        onUpdate={handleUpdateProfile}
+        initialData={profileData}
+      />
     </div>
   )
 }
