@@ -1,10 +1,9 @@
 import { SearchOutlined } from '@ant-design/icons'
 import { getProfile, getHistoryList } from '@features/profile/api/profile'
+import ChangePasswordPopup from '@features/profile/ui/change-password-popup'
 import { useQuery } from '@tanstack/react-query'
 import { Card, Avatar, Button, Input, Table, Select, DatePicker } from 'antd'
 import { useState } from 'react'
-
-import ChangePasswordPopup from './change-password-popup'
 
 const { Option } = Select
 
