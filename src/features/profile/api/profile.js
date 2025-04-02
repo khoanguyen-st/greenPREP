@@ -12,7 +12,16 @@ export const getHistoryList = async () => {
   return mockHistoryData
 }
 
+export const updateProfile = async data => {
+  await delay(500)
+  // In a real app, this would make an API call
+  // For now, we'll just simulate updating the mock data
+  Object.assign(mockProfileData, data)
+  return mockProfileData
+}
+
 export const profileApi = {
   getProfile,
-  getHistoryList
+  getHistoryList,
+  updateProfile
 }
