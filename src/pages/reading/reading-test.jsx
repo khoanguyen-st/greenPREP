@@ -35,14 +35,8 @@ const getDefaultAnswerByType = type => {
 }
 
 const formatMatchingQuestion = question => ({
-  leftItems: question.AnswerContent.leftItems.map((item, index) => ({
-    id: index + 1,
-    label: item
-  })),
-  rightItems: question.AnswerContent.rightItems.map((item, index) => ({
-    id: String.fromCharCode(97 + index),
-    label: item
-  }))
+  leftItems: question.AnswerContent.leftItems,
+  rightItems: question.AnswerContent.rightItems
 })
 
 const formatMultipleChoiceQuestion = question => ({
