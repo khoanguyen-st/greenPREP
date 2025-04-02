@@ -11,22 +11,6 @@ export const useRegister = ({ onSuccess, onError }) => {
   })
 }
 
-/** @param {import('@tanstack/react-query').UseMutationOptions<any, Error, string>} options */
-export const useCheckStudentCode = options => {
-  return useMutation({
-    mutationFn: studentCode => axios.post(`${API_URL}/register`, { studentCode }),
-    ...options
-  })
-}
-
-/** @param {import('@tanstack/react-query').UseMutationOptions<any, Error, string>} options */
-export const useCheckEmail = options => {
-  return useMutation({
-    mutationFn: email => axios.post(`${API_URL}/register`, { email }),
-    ...options
-  })
-}
-
 /** @param {import('@tanstack/react-query').UseMutationOptions<any, Error, { email: string, password: string }>} options */
 export const useLogin = options => {
   return useMutation({
