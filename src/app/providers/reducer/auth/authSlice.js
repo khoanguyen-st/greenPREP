@@ -1,18 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { ACCESS_TOKEN } from '@shared/lib/constants/auth'
-import { getStorageData } from '@shared/lib/storage'
+import { ACCESS_TOKEN_KEY, getStorageData } from '@shared/lib/storage'
 import { jwtDecode } from 'jwt-decode'
-const checkAuth = () => Boolean(getStorageData(ACCESS_TOKEN))
+const checkAuth = () => Boolean(getStorageData(ACCESS_TOKEN_KEY))
 
 const getUserRole = () => {
   try {
-    const token = getStorageData(ACCESS_TOKEN)
+    const token = getStorageData(ACCESS_TOKEN_KEY)
     if (!token) {
       return null
     }
     const decodedToken = jwtDecode(token)
 
-    // @ts-ignore
     return decodedToken.role || null
   } catch (error) {
     console.error('Error decoding token:', error)
@@ -22,7 +20,7 @@ const getUserRole = () => {
 
 const getUserData = () => {
   try {
-    const token = getStorageData(ACCESS_TOKEN)
+    const token = getStorageData(ACCESS_TOKEN_KEY)
     if (!token) {
       return null
     }
