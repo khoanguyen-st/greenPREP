@@ -12,7 +12,14 @@ export const getHistoryList = async () => {
   return mockHistoryData
 }
 
+export const updateProfile = async data => {
+  await delay(500)
+  Object.assign(mockProfileData, data)
+  return mockProfileData
+}
+
 export const profileApi = {
   getProfile,
-  getHistoryList
+  getHistoryList,
+  updateProfile
 }
