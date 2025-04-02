@@ -1,13 +1,16 @@
 import { SearchOutlined } from '@ant-design/icons'
+import ChangePasswordPopup from '@features/profile/ui/change-password-popup'
 import { getProfile, getHistoryList, updateProfile } from '@features/profile/api/profile'
 import UpdateProfile from '@features/profile/ui/update-profile'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Card, Avatar, Button, Input, Table, Select, DatePicker, message } from 'antd'
+
 import { useState } from 'react'
 
 const { Option } = Select
 
 export const StudentProfile = () => {
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false)
   const [filters, setFilters] = useState({
     search: '',
     date: null,
@@ -133,8 +136,8 @@ export const StudentProfile = () => {
               <p className="text-gray-600">{profileData?.email}</p>
             </div>
           </div>
-          <div className="flex gap-4">
-            <Button type="primary" className="bg-blue-900">
+          <div className="flex gap-2">
+            <Button type="primary" className="bg-blue-900" onClick={() => setIsChangePasswordOpen(true)}>
               Change password
             </Button>
             <Button onClick={() => setIsUpdateModalVisible(true)}>Edit</Button>
@@ -160,6 +163,12 @@ export const StudentProfile = () => {
           </div>
         </div>
       </Card>
+
+      <ChangePasswordPopup
+        isOpen={isChangePasswordOpen}
+        onClose={() => setIsChangePasswordOpen(false)}
+        userId={profileData?.id}
+      />
 
       {/* History Section */}
       <div>
