@@ -3,7 +3,30 @@ export const mockProfileData = {
   lastName: 'M Hehe',
   email: 'QWER@gmail.com',
   phoneNumber: '0123456789',
-  role: 'Student'
+  role: 'Student',
+  password: 'Password123!'
+}
+
+export const mockChangePassword = async ({ currentPassword, newPassword }) => {
+  await new Promise(resolve => setTimeout(resolve, 1000))
+
+  if (mockProfileData.password !== currentPassword) {
+    throw new Error('Incorrect current password')
+  }
+
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+  if (!passwordRegex.test(newPassword)) {
+    throw new Error(
+      'Password policy: Password must be at least 8 characters long with one uppercase letter, one lowercase letter, one number, and one special character'
+    )
+  }
+
+  mockProfileData.password = newPassword
+
+  return {
+    success: true,
+    message: 'Password changed successfully'
+  }
 }
 
 export const mockHistoryData = [

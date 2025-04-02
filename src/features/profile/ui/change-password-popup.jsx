@@ -1,3 +1,4 @@
+import { mockChangePassword } from '@features/profile/api/mock-data'
 import { Form, Input, Modal, message } from 'antd'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -20,28 +21,39 @@ const ChangePasswordPopup = ({ isOpen, onClose }) => {
   const handleChangePassword = async ({ currentPassword, newPassword }) => {
     setLoading(true)
     try {
-      // Gọi API đổi mật khẩu ở đây
-      await fakeChangePasswordAPI(currentPassword, newPassword)
-      message.success('Password changed successfully! Please log in again.')
-      onClose()
-      setTimeout(() => {
-        navigate('/login')
-      }, 1500)
+      const response = await mockChangePassword({
+        currentPassword,
+        newPassword
+      })
+
+      if (response.success) {
+        message.success('Password changed successfully! Please log in again.')
+        onClose()
+        setTimeout(() => {
+          navigate('/login')
+        }, 1500)
+      }
     } catch (err) {
-      message.error(err?.message || 'Failed to change password. Please try again.')
+      if (err.message === 'Incorrect current password') {
+        form.setFields([
+          {
+            name: 'currentPassword',
+            errors: ['Current password is incorrect']
+          }
+        ])
+      } else if (err.message.includes('Password policy')) {
+        form.setFields([
+          {
+            name: 'newPassword',
+            errors: [err.message]
+          }
+        ])
+      } else {
+        message.error('Failed to change password. Please try again.')
+      }
     } finally {
       setLoading(false)
     }
-  }
-
-  const fakeChangePasswordAPI = async (currentPassword, newPassword) => {
-    return new Promise((resolve, reject) => {
-      if (currentPassword !== newPassword) {
-        setTimeout(resolve, 1000)
-      } else {
-        reject(new Error('New password cannot be the same as the current password'))
-      }
-    })
   }
 
   const handleCancel = () => {

@@ -117,7 +117,7 @@ export const StudentProfile = () => {
               <p className="text-gray-600">{profileData?.email}</p>
             </div>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-2">
             <Button type="primary" className="bg-blue-900" onClick={() => setIsChangePasswordOpen(true)}>
               Change password
             </Button>
