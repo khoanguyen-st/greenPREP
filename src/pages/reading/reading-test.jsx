@@ -1,6 +1,6 @@
+import { fetchReadingTestDetails } from '@features/reading/api/readingAPI'
 import FooterNavigator from '@features/reading/ui/reading-footer-navigator'
 import QuestionNavigatorContainer from '@features/reading/ui/reading-question-navigator'
-import axiosInstance from '@shared/config/axios'
 import FlagButton from '@shared/ui/flag-button'
 import MatchingQuestion from '@shared/ui/question-type/matching-question'
 import MultipleChoice from '@shared/ui/question-type/multiple-choice'
@@ -12,15 +12,6 @@ import { useNavigate } from 'react-router-dom'
 
 const { Option } = Select
 const { Title, Text } = Typography
-
-const fetchTestData = async topicId => {
-  const baseUrl = 'https://greenprep-api.onrender.com/api/topics'
-  const url = `${baseUrl}/${topicId}`
-  const response = await axiosInstance.get(url, {
-    params: { skillName: 'READING' }
-  })
-  return response.data
-}
 
 const getDefaultAnswerByType = type => {
   switch (type) {
@@ -45,7 +36,7 @@ const formatMultipleChoiceQuestion = question => ({
     typeof question.AnswerContent === 'string' ? question.AnswerContent : JSON.stringify(question.AnswerContent)
 })
 
-const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
+const ReadingTest = () => {
   const navigate = useNavigate()
   const [userAnswers, setUserAnswers] = useState(() => {
     try {
@@ -81,8 +72,8 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
     isLoading,
     isError
   } = useQuery({
-    queryKey: ['fetchTestData', topicId],
-    queryFn: () => fetchTestData(topicId),
+    queryKey: ['fetchReadingTestDetails'],
+    queryFn: fetchReadingTestDetails,
     staleTime: 6000
   })
 
@@ -125,7 +116,6 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
       return
     }
 
-    // Handle ordering question type specially to prevent conflicts between parts
     if (currentQuestion.Type === 'ordering' && typeof answer === 'object' && 'partIndex' in answer) {
       setUserAnswers(prev => ({
         ...prev,
@@ -346,12 +336,10 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
       return null
     }
 
-    // Extract and validate the answer for the current question
     const answer = (() => {
       const savedAnswer = userAnswers[currentQuestion.ID]
 
       if (currentQuestion.Type === 'ordering') {
-        // Only use answer if it belongs to current part and has valid format
         if (
           savedAnswer &&
           typeof savedAnswer === 'object' &&
