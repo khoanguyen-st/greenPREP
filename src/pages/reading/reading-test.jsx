@@ -125,6 +125,18 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
       return
     }
 
+    // Handle ordering question type specially to prevent conflicts between parts
+    if (currentQuestion.Type === 'ordering' && typeof answer === 'object' && 'partIndex' in answer) {
+      setUserAnswers(prev => ({
+        ...prev,
+        [answer.questionId]: {
+          partIndex: answer.partIndex,
+          answer: answer.answer
+        }
+      }))
+      return
+    }
+
     const formattedAnswer =
       currentQuestion.Type === 'dropdown-list'
         ? answer
@@ -334,22 +346,71 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
       return null
     }
 
-    const answer = userAnswers[currentQuestion.ID] || getDefaultAnswerByType(currentQuestion.Type)
+    // Extract and validate the answer for the current question
+    const answer = (() => {
+      const savedAnswer = userAnswers[currentQuestion.ID]
+
+      if (currentQuestion.Type === 'ordering') {
+        // Only use answer if it belongs to current part and has valid format
+        if (
+          savedAnswer &&
+          typeof savedAnswer === 'object' &&
+          'partIndex' in savedAnswer &&
+          savedAnswer.partIndex === currentPartIndex &&
+          Array.isArray(savedAnswer.answer)
+        ) {
+          return savedAnswer.answer
+        }
+        return []
+      }
+
+      return savedAnswer || getDefaultAnswerByType(currentQuestion.Type)
+    })()
 
     switch (currentQuestion.Type) {
-      case 'dropdown-list':
+      case 'dropdown-list': {
         return renderDropdownQuestion()
-      case 'ordering':
+      }
+      case 'ordering': {
+        const options = (() => {
+          try {
+            if (Array.isArray(currentQuestion.AnswerContent)) {
+              return currentQuestion.AnswerContent
+            }
+            if (typeof currentQuestion.AnswerContent === 'string') {
+              const parsed = JSON.parse(currentQuestion.AnswerContent)
+              return Array.isArray(parsed) ? parsed : parsed.options || []
+            }
+            return currentQuestion.AnswerContent.options || []
+          } catch (e) {
+            console.error('Error parsing ordering question options:', e)
+            return []
+          }
+        })()
         return (
           <div className="mx-auto w-full max-w-4xl">
             <OrderingQuestion
-              options={currentQuestion.AnswerContent.options}
+              key={`ordering-${currentPartIndex}-${currentQuestion.ID}`}
+              options={options}
               userAnswer={answer}
-              setUserAnswer={handleAnswerSubmit}
+              setUserAnswer={newAnswer => {
+                if (!Array.isArray(newAnswer)) {
+                  console.error('Invalid answer format received from OrderingQuestion')
+                  return
+                }
+
+                handleAnswerSubmit({
+                  partIndex: currentPartIndex,
+                  questionId: currentQuestion.ID,
+                  answer: newAnswer
+                })
+              }}
             />
           </div>
         )
-      case 'matching':
+      }
+
+      case 'matching': {
         return (
           <div className="mx-auto w-full max-w-4xl">
             <MatchingQuestion
@@ -359,7 +420,8 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
             />
           </div>
         )
-      case 'multiple-choice':
+      }
+      case 'multiple-choice': {
         return (
           <div className="mx-auto w-full max-w-4xl">
             <MultipleChoice
@@ -370,6 +432,7 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
             />
           </div>
         )
+      }
       default:
         return <div>Unsupported question type: {currentQuestion.Type}</div>
     }
