@@ -28,6 +28,7 @@ const OrderingQuestion = ({ options = [], className = '', userAnswer = [], setUs
 
   const [items, setItems] = useState(initialItems)
   const [error, setError] = useState(null)
+  const [selectedItem, setSelectedItem] = useState(null)
 
   const dragItem = useRef(null)
   const dragOverItem = useRef(null)
@@ -120,6 +121,40 @@ const OrderingQuestion = ({ options = [], className = '', userAnswer = [], setUs
     dragOverItem.current = null
   }
 
+  const handleClick = async (item, slotIndex) => {
+    const updatedItems = items.map(existingItem => {
+      if (existingItem.id === item.id) {
+        return { ...existingItem, order: slotIndex + 1, placed: true }
+      }
+
+      if (existingItem.order === slotIndex + 1) {
+        return { ...existingItem, order: null, placed: false }
+      }
+      return existingItem
+    })
+
+    setItems(updatedItems)
+    setSelectedItem(null)
+
+    try {
+      await validationSchema.validate({
+        items: updatedItems.filter(item => item.placed)
+      })
+      setError(null)
+
+      const formattedAnswer = updatedItems
+        .filter(item => item.placed)
+        .map(item => ({
+          key: item.content,
+          value: item.order
+        }))
+
+      setUserAnswer?.(formattedAnswer)
+    } catch (validationError) {
+      setError(validationError.message)
+    }
+  }
+
   const slots = Array.from({ length: items.length }, (_, index) => index)
 
   return (
@@ -150,7 +185,18 @@ const OrderingQuestion = ({ options = [], className = '', userAnswer = [], setUs
                     {placedItem.content}
                   </div>
                 ) : (
-                  <div className="flex-grow text-base text-slate-400">Drop item here</div>
+                  <div
+                    className={`flex-grow text-base ${
+                      selectedItem ? 'cursor-pointer text-slate-600 hover:bg-slate-100' : 'text-slate-400'
+                    } flex h-full items-center`}
+                    onClick={() => {
+                      if (selectedItem) {
+                        handleClick(selectedItem, index)
+                      }
+                    }}
+                  >
+                    {selectedItem ? 'Click to place item here' : 'Drop item here'}
+                  </div>
                 )}
               </div>
             )
@@ -173,7 +219,10 @@ const OrderingQuestion = ({ options = [], className = '', userAnswer = [], setUs
                     draggable
                     onDragStart={e => handleDragStart(e, items.indexOf(item))}
                     onDragEnd={handleDragEnd}
-                    className="group cursor-grab rounded-lg border border-slate-200 bg-white p-4 shadow-[0_2px_4px_0_rgba(0,0,0,0.1),0_1px_8px_-1px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[rgb(0,48,135)] hover:shadow-[0_8px_16px_-4px_rgba(0,0,0,0.1),0_4px_24px_-8px_rgba(0,0,0,0.08)] active:cursor-grabbing"
+                    onClick={() => setSelectedItem(item)}
+                    className={`group cursor-pointer rounded-lg border ${
+                      selectedItem?.id === item.id ? 'border-[rgb(0,48,135)] bg-blue-50' : 'border-slate-200 bg-white'
+                    } p-4 shadow-[0_2px_4px_0_rgba(0,0,0,0.1),0_1px_8px_-1px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[rgb(0,48,135)] hover:shadow-[0_8px_16px_-4px_rgba(0,0,0,0.1),0_4px_24px_-8px_rgba(0,0,0,0.08)] active:cursor-grabbing`}
                   >
                     <div className="text-base font-medium text-slate-800">{item.content}</div>
                   </div>
