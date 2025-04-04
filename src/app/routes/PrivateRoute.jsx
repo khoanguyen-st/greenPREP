@@ -16,7 +16,6 @@ import DesktopRejectRequestPage from '@pages/reject-page'
 import SpeakingPage from '@pages/speaking'
 import MicrophoneCheck from '@pages/speaking/micro-check'
 import SpeakingIntroduction from '@pages/speaking/speaking-introduction'
-import SpeakingIntroparts from '@pages/speaking/speaking-introparts'
 import SpeakingParts from '@pages/speaking/speaking-parts'
 import SubmissionPage from '@pages/submission-page'
 import WaitingForApproval from '@pages/waiting-for-approval'
@@ -88,10 +87,6 @@ const PrivateRoute = [
           {
             index: true,
             element: <SpeakingIntroduction />
-          },
-          {
-            path: 'instruction/:part',
-            element: <SpeakingIntroparts />
           },
           {
             path: 'test/:part',
