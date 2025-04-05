@@ -59,7 +59,7 @@ const GrammarTest = () => {
   }, [answers])
 
   if (isSubmitted) {
-    return <NextScreen nextPath="/reading" skillName="Grammar" imageSrc={SubmissionImage} />
+    return <NextScreen nextPath="/reading" skillName="Grammar and Vocabulary" imageSrc={SubmissionImage} />
   }
   if (isLoading) {
     return <Spin className="flex h-screen items-center justify-center" />
@@ -75,7 +75,7 @@ const GrammarTest = () => {
   return (
     <div className="relative mx-auto min-h-screen max-w-3xl pb-24">
       <Divider orientation="left">
-        <Typography.Title level={1}>Grammar test</Typography.Title>
+        <Typography.Title level={1}>Grammar and Vocabulary</Typography.Title>
       </Divider>
 
       <Card className="mb-6">
