@@ -1,7 +1,7 @@
-import { ACCESS_TOKEN } from '@shared/lib/constants/auth'
 import { createSlice } from '@reduxjs/toolkit'
-import { jwtDecode } from 'jwt-decode'
+import { ACCESS_TOKEN } from '@shared/lib/constants/auth'
 import { getStorageData } from '@shared/lib/storage'
+import { jwtDecode } from 'jwt-decode'
 const checkAuth = () => Boolean(getStorageData(ACCESS_TOKEN))
 
 const getUserRole = () => {
@@ -12,6 +12,7 @@ const getUserRole = () => {
     }
     const decodedToken = jwtDecode(token)
 
+    // @ts-ignore
     return decodedToken.role || null
   } catch (error) {
     console.error('Error decoding token:', error)

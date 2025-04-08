@@ -1,65 +1,71 @@
-import { Form, Input, Typography } from 'antd'
-import FlagButton from '@shared/ui/FLagButton/FlagButton'
+import { FlagOutlined, FlagFilled } from '@ant-design/icons'
+import { Form, Input, Typography, Button } from 'antd'
 
-const { Text } = Typography
+const { Text, Title } = Typography
 
 const QuestionForm = ({
   currentPart,
   partNumber,
   answers,
-  flaggedQuestions,
+  flaggedParts,
   handleFlagToggle,
   handleTextChange,
   countWords,
   wordCounts,
   DEFAULT_MAX_WORDS
 }) => {
+  const handleTextAreaChange = (fieldName, value, maxWords) => {
+    const wordCount = countWords(value || '')
+    if (maxWords && wordCount <= maxWords) {
+      handleTextChange(fieldName, value)
+    }
+  }
+
+  const handleKeyDown = (e, fieldName, maxWords) => {
+    if (maxWords && wordCounts[fieldName] >= maxWords) {
+      if (e.key === ' ' || e.keyCode === 32) {
+        e.preventDefault()
+      }
+    }
+  }
   return (
     <Form layout="vertical">
+      <div className="mb-4 flex items-center justify-between">
+        <Title level={4} className="font-semibold">
+          {currentPart.Content}
+        </Title>
+        <Button
+          icon={flaggedParts[currentPart.ID] ? <FlagFilled className="text-red-600" /> : <FlagOutlined />}
+          className={`mx-auto flex h-10 items-center justify-center gap-2 rounded-md border px-4 transition-colors ${
+            flaggedParts[currentPart.ID]
+              ? 'border-red-300 bg-red-50 hover:border-red-400'
+              : 'border-gray-300 hover:border-gray-400'
+          }`}
+          onClick={() => handleFlagToggle(currentPart.ID)}
+        >
+          <span className={`text-base font-normal ${flaggedParts[currentPart.ID] ? 'text-red-600' : ''}`}>Flag</span>
+        </Button>
+      </div>
+
       {currentPart.Questions.map((question, index) => {
         const fieldName = `answer-${currentPart.ID}-${index}`
         const maxWords = partNumber === 1 ? null : question.maxWords || DEFAULT_MAX_WORDS[partNumber]
+
         return (
-          <Form.Item
-            key={fieldName}
-            label={
-              <div className="flex w-[9000px] items-center justify-between gap-2">
-                <div className="flex-1 pl-2 md:pl-0">{question.Content}</div>
-                <div className="smL:mr-[-12px]">
-                  <FlagButton
-                    initialFlagged={flaggedQuestions[fieldName] || false}
-                    onFlag={() => handleFlagToggle(fieldName)}
-                  />
-                </div>
-              </div>
-            }
-            name={fieldName}
-            initialValue={answers[fieldName] || ''}
-            rules={[
-              { required: false },
-              ...(maxWords
-                ? [
-                    {
-                      validator: (_, value) =>
-                        countWords(value || '') > maxWords
-                          ? Promise.reject(`Maximum ${maxWords} words!`)
-                          : Promise.resolve()
-                    }
-                  ]
-                : [])
-            ]}
-          >
+          <Form.Item key={index} label={<Text strong>{question.Content}</Text>}>
             <Input.TextArea
               rows={5}
               autoSize={{ minRows: 5, maxRows: 10 }}
               className="w-full"
               placeholder="Enter your answer here"
               value={answers[fieldName] || ''}
-              onChange={e => handleTextChange(fieldName, e.target.value)}
+              onChange={e => handleTextAreaChange(fieldName, e.target.value, maxWords)}
+              onKeyDown={e => handleKeyDown(e, fieldName, maxWords)}
+              disabled={maxWords && wordCounts[fieldName] > maxWords}
             />
             {maxWords && (
               <Text
-                className={`mt-1 block text-sm ${wordCounts[fieldName] > maxWords ? 'text-red-500' : 'text-gray-500'}`}
+                className={`mt-1 block text-sm ${wordCounts[fieldName] === maxWords ? 'text-red-500' : 'text-gray-500'}`}
               >
                 {`Word count: ${wordCounts[fieldName] || 0} / ${maxWords}`}
               </Text>
