@@ -11,8 +11,8 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
   const timerRef = useRef(null)
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-  const [phase, setPhase] = useState('reading')
-  const [countdown, setCountdown] = useState(0)
+  const [phase, setPhase] = useState('preparation')
+  const [countdown, setCountdown] = useState(5)
   const [isActive, setIsActive] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
   const [mediaRecorderRef, setMediaRecorderRef] = useState(null)
@@ -47,8 +47,8 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
     setShowIntro(true)
     setIsActive(false)
     setIsTimerRunning(false)
-    setPhase('reading')
-    setCountdown(parseTime(getTimePair(0).read))
+    setPhase('preparation')
+    setCountdown(5)
     if (timerRef.current) {
       clearInterval(timerRef.current)
       timerRef.current = null
@@ -67,7 +67,10 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
         setCountdown(prev => {
           if (prev <= 1) {
             clearInterval(timerRef.current)
-            if (phase === 'reading') {
+            if (phase === 'preparation') {
+              setPhase('reading')
+              setCountdown(parseTime(currentTimePair.read))
+            } else if (phase === 'reading') {
               setPhase('answering')
               setCountdown(parseTime(currentTimePair.answer))
               setIsRecording(true)
@@ -98,8 +101,8 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
     setShowIntro(false)
     setIsActive(true)
     setIsTimerRunning(true)
-    setPhase('reading')
-    setCountdown(parseTime(getTimePair(0).read))
+    setPhase('preparation')
+    setCountdown(5)
   }
 
   if (showIntro) {
@@ -168,18 +171,52 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
         isPart4={data.Content === 'PART 4'}
       />
       <div className="flex h-screen w-1/3 flex-col items-center justify-center bg-gradient-to-br from-[#003087] via-[#002b6c] to-[#001f4d]">
-        <h2 className="mb-4 text-4xl font-bold text-white">
-          {phase === 'reading' ? 'Reading Time' : 'Recording Time'}
-        </h2>
-        <p className="mb-12 text-lg text-white/80">
-          {phase === 'reading' ? 'Please read the question carefully' : 'Please speak clearly into your microphone'}
-        </p>
-        <TimerDisplay countdown={countdown} phase={phase} />
-        {data.Content !== 'PART 4' && (
-          <div className="mt-8 flex gap-2">
-            <div className={`h-2 w-2 rounded-full ${currentQuestionIndex === 0 ? 'bg-white' : 'bg-white/30'}`} />
-            <div className={`h-2 w-2 rounded-full ${currentQuestionIndex === 1 ? 'bg-white' : 'bg-white/30'}`} />
-            <div className={`h-2 w-2 rounded-full ${currentQuestionIndex === 2 ? 'bg-white' : 'bg-white/30'}`} />
+        <div className="flex-1 flex flex-col items-center justify-center">
+          <h2 className="mb-4 text-4xl font-bold text-white">
+            {phase === 'preparation' ? 'Preparation Time' : phase === 'reading' ? 'Reading Time' : 'Recording...'}
+          </h2>
+          <p className="mb-12 text-lg text-white/80">
+            {phase === 'preparation' 
+              ? 'Get ready to start' 
+              : phase === 'reading' 
+              ? 'Please read the question carefully' 
+              : 'Please speak clearly into your microphone'}
+          </p>
+          <TimerDisplay countdown={countdown} phase={phase} />
+          {data.Content !== 'PART 4' && (
+            <div className="mt-8 flex gap-2">
+              <div className={`h-2 w-2 rounded-full ${currentQuestionIndex === 0 ? 'bg-white' : 'bg-white/30'}`} />
+              <div className={`h-2 w-2 rounded-full ${currentQuestionIndex === 1 ? 'bg-white' : 'bg-white/30'}`} />
+              <div className={`h-2 w-2 rounded-full ${currentQuestionIndex === 2 ? 'bg-white' : 'bg-white/30'}`} />
+            </div>
+          )}
+        </div>
+
+        {!isRecording && countdown === 0 && phase === 'answering' && (
+          <div className="w-full px-8 pb-8 flex flex-col gap-3">
+            {data.Content === 'PART 4' ? (
+              <button
+                onClick={async () => {
+                  if (mediaRecorderRef?.state === 'recording') {
+                    mediaRecorderRef.stop()
+                  }
+                  setIsRecording(false)
+                  setIsActive(false)
+                  setIsTimerRunning(false)
+                  handleNextPart()
+                }}
+                className="w-full rounded-xl bg-green-500 px-8 py-4 text-xl font-medium text-white transition-all hover:bg-green-600 shadow-lg hover:shadow-xl"
+              >
+                Submit Recording
+              </button>
+            ) : (
+              <button
+                onClick={currentQuestionIndex === totalQuestions - 1 ? handleNextPart : handleNextQuestion}
+                className="w-full rounded-xl bg-white px-8 py-4 text-xl font-medium text-[#003087] transition-all hover:bg-gray-100 shadow-lg hover:shadow-xl"
+              >
+                {currentQuestionIndex === totalQuestions - 1 ? 'Next Part' : 'Next Question'}
+              </button>
+            )}
           </div>
         )}
       </div>

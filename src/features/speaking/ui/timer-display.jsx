@@ -7,6 +7,16 @@ const TimerDisplay = ({ countdown, phase }) => {
 
   const getPhaseColor = () => {
     switch (phase) {
+      case 'preparation':
+        return {
+          bg: 'bg-white',
+          text: 'text-green-600',
+          border: 'border-green-600',
+          glow: 'shadow-[0_0_30px_rgba(22,163,74,0.1)]',
+          progress: 'stroke-green-600',
+          progressBg: 'stroke-gray-100',
+          label: 'text-green-600'
+        }
       case 'reading':
         return {
           bg: 'bg-white',
@@ -54,7 +64,7 @@ const TimerDisplay = ({ countdown, phase }) => {
             <span className={`text-6xl font-bold ${colors.text}`}>{formatTime(countdown)}</span>
           </div>
           <p className={`mt-4 text-lg font-medium ${colors.label}`}>
-            {phase === 'reading' ? 'Reading Time' : 'Recording Time'}
+            {phase === 'preparation' ? 'Preparation Time' : phase === 'reading' ? 'Reading Time' : 'Recording Time'}
           </p>
         </div>
 
@@ -63,7 +73,7 @@ const TimerDisplay = ({ countdown, phase }) => {
           <circle
             className={`fill-none ${colors.progress} transition-all duration-1000 ease-in-out`}
             strokeWidth="3"
-            strokeDasharray={`${(countdown / (phase === 'reading' ? 5 : 60)) * 100} 100`}
+            strokeDasharray={`${(countdown / (phase === 'preparation' ? 5 : phase === 'reading' ? 5 : 60)) * 100} 100`}
             strokeLinecap="round"
             cx="50%"
             cy="50%"
