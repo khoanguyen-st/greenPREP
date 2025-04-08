@@ -83,7 +83,7 @@ const QuestionDisplay = ({
         <div className="mt-6 flex justify-end">
           <button
             onClick={isLastQuestion || isPart4 ? onNextPart : onNextQuestion}
-            className="rounded-full bg-[#003087] px-8 py-4 text-xl font-medium text-white transition-all hover:bg-[#002b6c]"
+            className="[8px] rounded bg-[#003087] px-8 py-4 text-xl font-medium text-white transition-all hover:bg-[#002b6c]"
           >
             {isPart4 ? 'Submit' : isLastQuestion ? 'Next Part' : 'Next Question'}
           </button>

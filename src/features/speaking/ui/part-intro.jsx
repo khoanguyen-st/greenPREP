@@ -113,7 +113,7 @@ const PartIntro = ({ data, onStartPart }) => {
         <div className="text-center">
           <button
             onClick={onStartPart}
-            className="rounded-full bg-[#003087] px-8 py-3 text-lg font-semibold text-white transition-all hover:bg-[#002b6c] hover:shadow-[0_4px_12px_rgb(0,0,0,0.15)]"
+            className="rounded-[8px] bg-[#003087] px-8 py-3 text-lg font-semibold text-white transition-all hover:bg-[#002b6c] hover:shadow-[0_4px_12px_rgb(0,0,0,0.15)]"
           >
             Start Part
           </button>
