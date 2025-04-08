@@ -1,7 +1,5 @@
 import LoadingOutlined from '@ant-design/icons/lib/icons/LoadingOutlined'
 import { fetchTopicData } from '@features/speaking/api'
-import { CompletionDialog } from '@features/speaking/ui/completion-dialog'
-import { ErrorDisplay } from '@features/speaking/ui/error-display'
 import Part from '@features/speaking/ui/part'
 import { Spin } from 'antd'
 import { useEffect, useState, useCallback, useMemo } from 'react'
@@ -13,7 +11,6 @@ const SpeakingParts = () => {
   const [partData, setPartData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const partNumber = useMemo(() => parseInt(part, 10), [part])
 
@@ -41,28 +38,15 @@ const SpeakingParts = () => {
 
   const handleNextPart = async () => {
     const nextPart = partNumber + 1
-
     try {
       const nextPartData = await fetchTopicData(nextPart)
-
       if (nextPartData) {
         navigate(`/speaking/test/${nextPart}`)
-      } else {
-        setIsDialogOpen(true)
       }
     } catch (err) {
       console.error('Error fetching next part:', err)
       setError('Unable to load the next part. Please try again.')
     }
-  }
-
-  const handleConfirmHome = () => {
-    setIsDialogOpen(false)
-    navigate('/')
-  }
-
-  const handleCloseDialog = () => {
-    setIsDialogOpen(false)
   }
 
   useEffect(() => {
@@ -80,16 +64,22 @@ const SpeakingParts = () => {
   }
 
   if (error) {
-    return <ErrorDisplay message={error} onRetry={() => fetchData(partNumber)} />
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-center">
+          <p className="mb-4 text-xl text-red-500">{error}</p>
+          <button
+            onClick={() => fetchData(partNumber)}
+            className="rounded-lg bg-[#003087] px-6 py-3 text-white hover:bg-[#002670]"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    )
   }
 
-  return (
-    <>
-      {partData ? <Part data={partData} onNextPart={handleNextPart} /> : null}
-
-      <CompletionDialog isOpen={isDialogOpen} onClose={handleCloseDialog} onConfirm={handleConfirmHome} />
-    </>
-  )
+  return partData ? <Part data={partData} onNextPart={handleNextPart} /> : null
 }
 
 export default SpeakingParts

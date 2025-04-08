@@ -1,15 +1,42 @@
 import PrivateRoute from '@app/routes/PrivateRoute'
 import PublicRoute from '@app/routes/PublicRoute'
+import LoginPage from '@pages/LoginPage'
 import NotFound from '@pages/not-found-page'
-import { Outlet, createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { Layout } from 'antd'
+import { useSelector } from 'react-redux'
+import { Outlet, createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
+
+const ProtectedRoute = ({ children }) => {
+  const isAuth = useSelector(state => state.auth.isAuth)
+  return isAuth ? children : <Navigate to="/login" replace />
+}
 
 const router = createBrowserRouter(
   [
     {
+      path: '/login',
+      element: <LoginPage />
+    },
+    {
       path: '/',
-      element: <Outlet />,
+      element: (
+        <Layout>
+          <Outlet />
+        </Layout>
+      ),
       errorElement: <NotFound />,
-      children: [...PublicRoute, ...PrivateRoute]
+      children: [
+        ...PublicRoute,
+        {
+          path: '/',
+          element: (
+            <ProtectedRoute>
+              <Outlet />
+            </ProtectedRoute>
+          ),
+          children: [...PrivateRoute]
+        }
+      ]
     }
   ],
   {

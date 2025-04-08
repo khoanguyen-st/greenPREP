@@ -129,6 +129,7 @@ const ListeningTest = () => {
 
   const handleSubmit = () => {
     localStorage.removeItem(STORAGE_KEY)
+    localStorage.removeItem('listening_test_answers')
     setIsSubmitted(true)
   }
 
