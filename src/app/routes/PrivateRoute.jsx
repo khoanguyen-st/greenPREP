@@ -1,3 +1,4 @@
+import StudentProfile from '@features/profile/ui/student-profile'
 import GrammarPage from '@pages/grammar'
 import GrammarIntroduction from '@pages/grammar/grammar-introduction'
 import GrammarTest from '@pages/grammar/grammar-test'
@@ -7,6 +8,7 @@ import ListeningPage from '@pages/listening'
 import ListeningHeadphoneCheck from '@pages/listening/listening-headphonecheck'
 import ListeningIntroduction from '@pages/listening/listening-introduction'
 import ListeningTest from '@pages/listening/listening-test'
+import ProfilePage from '@pages/profile'
 import ReadingPage from '@pages/reading'
 import ReadingIntroduction from '@pages/reading/reading-instroduction'
 import ReadingTest from '@pages/reading/reading-test'
@@ -14,7 +16,6 @@ import DesktopRejectRequestPage from '@pages/reject-page'
 import SpeakingPage from '@pages/speaking'
 import MicrophoneCheck from '@pages/speaking/micro-check'
 import SpeakingIntroduction from '@pages/speaking/speaking-introduction'
-import SpeakingIntroparts from '@pages/speaking/speaking-introparts'
 import SpeakingParts from '@pages/speaking/speaking-parts'
 import SubmissionPage from '@pages/submission-page'
 import WaitingForApproval from '@pages/waiting-for-approval'
@@ -88,10 +89,6 @@ const PrivateRoute = [
             element: <SpeakingIntroduction />
           },
           {
-            path: 'instruction/:part',
-            element: <SpeakingIntroparts />
-          },
-          {
             path: 'test/:part',
             element: <SpeakingParts />
           },
@@ -130,6 +127,16 @@ const PrivateRoute = [
       {
         path: 'complete-test',
         element: <SubmissionPage />
+      },
+      {
+        path: 'profile',
+        element: <ProfilePage />,
+        children: [
+          {
+            index: true,
+            element: <StudentProfile />
+          }
+        ]
       }
     ]
   }

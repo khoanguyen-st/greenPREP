@@ -1,15 +1,17 @@
+import { SubmissionImage } from '@assets/images'
 import { fetchGrammarTestDetails } from '@features/grammar/api/grammarAPI'
 import FooterNavigator from '@features/grammar/ui/grammar-footer-navigator'
 import QuestionForm from '@features/grammar/ui/grammar-question-form'
 import QuestionNavigatorContainer from '@features/grammar/ui/grammar-question-navigator-container'
+import NextScreen from '@shared/ui/submission/next-screen'
 import { useQuery } from '@tanstack/react-query'
 import { Card, Divider, Spin, Typography } from 'antd'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 const { Title } = Typography
 
 const GrammarTest = () => {
+  const [isSubmitted, setIsSubmitted] = useState(false)
   const { data, isLoading, isError } = useQuery({
     queryKey: ['grammarQuestions'],
     queryFn: async () => {
@@ -23,8 +25,6 @@ const GrammarTest = () => {
       return { ...response, Parts: sortedParts }
     }
   })
-
-  const navigate = useNavigate()
 
   const mergedArray = data?.Parts.flatMap(part => part.Questions) || []
 
@@ -49,7 +49,7 @@ const GrammarTest = () => {
     console.table(answers)
     localStorage.removeItem('grammarAnswers')
     localStorage.removeItem('flaggedQuestions')
-    navigate('/reading')
+    setIsSubmitted(true)
   }
 
   useEffect(() => {
@@ -58,6 +58,9 @@ const GrammarTest = () => {
     }
   }, [answers])
 
+  if (isSubmitted) {
+    return <NextScreen nextPath="/reading" skillName="Grammar" imageSrc={SubmissionImage} />
+  }
   if (isLoading) {
     return <Spin className="flex h-screen items-center justify-center" />
   }
