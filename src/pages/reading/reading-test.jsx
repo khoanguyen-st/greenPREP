@@ -6,7 +6,7 @@ import MatchingQuestion from '@shared/ui/question-type/matching-question'
 import MultipleChoice from '@shared/ui/question-type/multiple-choice'
 import OrderingQuestion from '@shared/ui/question-type/ordering-question'
 import { useQuery } from '@tanstack/react-query'
-import { Spin, Alert, Typography, Card, Select } from 'antd'
+import { Spin, Alert, Typography, Card, Select, Divider } from 'antd'
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -428,6 +428,9 @@ const ReadingTest = () => {
 
   return (
     <div className="relative mx-auto min-h-screen max-w-4xl p-5 pb-32">
+      <Divider orientation="left">
+        <Title level={1}>Reading</Title>
+      </Divider>
       <Card className="mb-32">
         <div className="absolute right-4 top-4">
           <FlagButton key={`flag-button-${currentPartIndex}`} onFlag={handleFlagToggle} initialFlagged={isFlagged} />
