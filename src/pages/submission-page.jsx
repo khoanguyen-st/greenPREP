@@ -1,8 +1,10 @@
 import { SubmissionImage } from '@assets/images'
-import { Button, message } from 'antd'
+import { Button, message, Typography } from 'antd'
 import { useState } from 'react'
 import { AiOutlineCheckCircle } from 'react-icons/ai'
 import { useNavigate } from 'react-router-dom'
+
+const { Title } = Typography
 
 const SubmissionPage = () => {
   const navigate = useNavigate()
@@ -18,12 +20,14 @@ const SubmissionPage = () => {
   }
 
   return (
-    <div className="flex h-screen w-full flex-col items-center justify-center">
-      <div className="flex flex-row pb-10 text-black">
-        <AiOutlineCheckCircle className="mx-auto text-7xl text-green-500" />
-        <div className="items-center justify-center">
-          <div className="text-3xl font-bold">You Finished Your Exam</div>
-          <p className="text-md mt-2 text-gray-700">
+    <div className="flex h-screen w-full flex-col items-center justify-center bg-white">
+      <div className="flex flex-col pb-10 text-black sm:flex-row">
+        <AiOutlineCheckCircle className="mx-auto text-8xl text-green-500" />
+        <div className="items-center justify-center text-center sm:text-left">
+          <Title level={2} className="text-3xl font-bold" style={{ marginBottom: 0, marginTop: 12 }}>
+            You Finished Your Exam
+          </Title>
+          <p className="text-xs text-gray-700 sm:text-xl">
             Your teacher will release your results shortly. All the best <span className="text-red-500">❤️</span>!
           </p>
         </div>
@@ -46,7 +50,7 @@ const SubmissionPage = () => {
         </p>
       )}
 
-      {<img src={SubmissionImage} alt="submission" className="mt-6 w-24 md:w-64 lg:w-64" />}
+      {<img src={SubmissionImage} alt="submission" className="mt-6 w-full sm:w-1/2 md:w-2/5" />}
     </div>
   )
 }

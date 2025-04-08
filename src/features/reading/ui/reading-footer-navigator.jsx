@@ -10,7 +10,7 @@ const FooterNavigator = ({ totalParts, currentPart, setCurrentPart, handleSubmit
         <Image src={navigateLogo} alt="Logo" preview={false} className="h-[100px] w-auto" />
       </div>
 
-      <div className="fixed bottom-0 left-0 z-[48] w-full bg-white shadow-lg">
+      <div className="fixed bottom-0 left-0 w-full shadow-md">
         <NavigationButtons
           totalQuestions={totalParts}
           currentQuestion={currentPart}
