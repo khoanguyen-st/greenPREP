@@ -74,7 +74,12 @@ const MicrophoneCheck = () => {
             disabled={true}
           />
           <div className="mt-12">
-            <Button type="primary" onClick={startCheck} className="h-10 min-w-[120px] bg-blue-800 hover:bg-blue-900">
+            <Button
+              type="primary"
+              size="large"
+              onClick={startCheck}
+              className="h-10 min-w-[120px] bg-[#003087] hover:bg-[#002b6c]"
+            >
               Start check
             </Button>
           </div>
@@ -105,8 +110,15 @@ const MicrophoneCheck = () => {
           <div className="flex flex-col items-center">
             <CircleButton icon={playButtonIcon} onClick={playRecording} />
             <div className="mt-8 flex justify-center gap-4">
-              <Button onClick={resetTest}>Try Again</Button>
-              <Button type="primary" onClick={() => navigate('/speaking/test/1')}>
+              <Button size="large" onClick={resetTest}>
+                Try Again
+              </Button>
+              <Button
+                type="primary"
+                size="large"
+                onClick={() => navigate('/speaking/test/1')}
+                className="bg-[#003087] hover:bg-[#002b6c]"
+              >
                 Start Test
               </Button>
             </div>
