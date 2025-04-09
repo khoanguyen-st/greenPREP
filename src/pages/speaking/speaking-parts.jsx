@@ -1,7 +1,7 @@
 import LoadingOutlined from '@ant-design/icons/lib/icons/LoadingOutlined'
 import { fetchTopicData } from '@features/speaking/api'
 import Part from '@features/speaking/ui/part'
-import { Spin } from 'antd'
+import { Button, Spin } from 'antd'
 import { useEffect, useState, useCallback, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 
@@ -68,12 +68,9 @@ const SpeakingParts = () => {
       <div className="flex h-screen items-center justify-center">
         <div className="text-center">
           <p className="mb-4 text-xl text-red-500">{error}</p>
-          <button
-            onClick={() => fetchData(partNumber)}
-            className="rounded-lg bg-[#003087] px-6 py-3 text-white hover:bg-[#002670]"
-          >
+          <Button onClick={() => fetchData(partNumber)} className="bg-[#003087] hover:bg-[#002b6c]">
             Try Again
-          </button>
+          </Button>
         </div>
       </div>
     )

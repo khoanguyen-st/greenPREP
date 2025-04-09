@@ -47,7 +47,7 @@ const QuestionDisplay = ({
         {currentQuestion ? (
           <>
             <div className="mb-6 flex items-center justify-between">
-              <span className="rounded-full bg-[#003087] px-6 py-2 text-xl font-semibold text-white">
+              <span className="rounded-xl bg-[#003087] px-6 py-2 text-xl font-semibold text-white">
                 {isPart4 ? 'Part 4 Questions' : `Question ${currentQuestionIndex + 1} of ${totalQuestions}`}
               </span>
             </div>
@@ -83,7 +83,7 @@ const QuestionDisplay = ({
         <div className="mt-6 flex justify-end">
           <button
             onClick={isLastQuestion || isPart4 ? onNextPart : onNextQuestion}
-            className="rounded-full bg-[#003087] px-8 py-4 text-xl font-medium text-white transition-all hover:bg-[#002b6c]"
+            className="rounded-xl bg-[#003087] px-8 py-4 text-xl font-medium text-white transition-all hover:bg-[#002b6c]"
           >
             {isPart4 ? 'Submit' : isLastQuestion ? 'Next Part' : 'Next Question'}
           </button>
