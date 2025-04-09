@@ -1,43 +1,50 @@
 import { DownOutlined } from '@ant-design/icons'
-import { Logo } from '@assets/images'
-import { Layout, Menu, Dropdown, Typography } from 'antd'
+import { Avatar, Dropdown, Layout, Menu } from 'antd'
+import { useState } from 'react'
+import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
+
+import LogoutModal from '../../pages/LogoutModal'
 
 const { Header } = Layout
-const { Title } = Typography
-
-const menu = (
-  <Menu>
-    <Menu.Item key="0">
-      <a href="/profile">Profile</a>
-    </Menu.Item>
-    <Menu.Item key="1">
-      <a href="/signout">Sign Out</a>
-    </Menu.Item>
-  </Menu>
-)
 
 const SharedHeader = () => {
+  const { user } = useSelector(state => state.auth)
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
+  const menu = (
+    <Menu>
+      <Menu.Item key="0">
+        <Link to={`/profile/${user?.userId}`}>Profile</Link>
+      </Menu.Item>
+      <Menu.Item key="1" onClick={() => setIsLogoutModalOpen(true)}>
+        Sign Out
+      </Menu.Item>
+    </Menu>
+  )
+
   return (
-    <Header className="flex h-[80px] items-center justify-between bg-[#003087] p-5 md:h-[107px] md:p-10">
-      <Title level={2} className="ml-2 mt-2 md:mt-4">
-        <img className="h-[50px] w-[120px] md:h-[75px] md:w-[156px]" src={Logo} alt="Logo" />
-      </Title>
-      <Dropdown overlay={menu} trigger={['click']}>
-        <a
-          className="ant-dropdown-link flex h-[40px] w-auto min-w-[140px] max-w-[200px] cursor-pointer items-center justify-between gap-2.5 rounded-[5px] bg-[#3758F96B] px-2 text-white md:h-[50px] md:min-w-[180px] md:max-w-[234px]"
-          onClick={e => e.preventDefault()}
-        >
-          <span className="flex items-center space-x-1">
-            <span>Hi,</span>
-            <span className="">Student name</span>
-          </span>
-          <span className="flex h-8 w-8 items-center justify-center rounded-full border border-black bg-white font-bold text-black md:h-10 md:w-10 md:rounded-[50%]">
-            Y
-          </span>
-          <DownOutlined className="text-xs text-white md:text-sm" />
-        </a>
-      </Dropdown>
-    </Header>
+    <>
+      <Header className="bg-primary-color flex h-[80px] items-center justify-between border-0 border-l border-solid border-neutral-400 p-4">
+        <div className="flex items-center">
+          <Dropdown overlay={menu} trigger={['click']}>
+            <a
+              className="ant-dropdown-link flex h-10 w-auto min-w-[150px] max-w-[220px] cursor-pointer items-center justify-between gap-3 rounded-md bg-[#3758F9] px-3 text-white shadow-md transition hover:bg-[#2F4CC9] md:h-12 md:min-w-[180px] md:max-w-[240px]"
+              onClick={e => e.preventDefault()}
+            >
+              <span className="flex items-center space-x-1 text-sm md:text-base">
+                <span>Hi,</span>
+                <span className="font-medium">{user?.lastName}</span>
+              </span>
+              <Avatar className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-gray-500 text-sm font-semibold text-white md:h-10 md:w-10">
+                {user?.lastName?.charAt(0)}
+              </Avatar>
+              <DownOutlined className="text-sm text-white md:text-base" />
+            </a>
+          </Dropdown>
+        </div>
+      </Header>
+      <LogoutModal isOpen={isLogoutModalOpen} onClose={() => setIsLogoutModalOpen(false)} />
+    </>
   )
 }
 
