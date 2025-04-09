@@ -103,12 +103,12 @@ const QuestionDisplay = ({
         </div>
       )}
 
-      <div className="flex-1 rounded-2xl bg-gray-50 p-8 shadow-lg">
+      <div className="flex-1 overflow-y-auto rounded-2xl bg-gray-50 p-8 shadow-lg">
         {currentQuestion ? (
           <>
             <div className="mb-6 flex items-center justify-between">
               <span className="rounded-xl bg-[#003087] px-6 py-2 text-xl font-semibold text-white">
-                {isPart4 ? 'Part 4 Questions' : `Question ${currentQuestionIndex + 1} of ${totalQuestions}`}
+                {isPart4 ? 'Part 4' : `Question ${currentQuestionIndex + 1} of ${totalQuestions}`}
               </span>
             </div>
             {isPart4 ? (

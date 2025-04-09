@@ -24,7 +24,7 @@ const PartIntro = ({ data, onStartPart }) => {
           description: 'You will be shown a picture and asked to describe it in detail.',
           readingTime: '05 seconds',
           answeringTime: '45 seconds',
-          totalQuestions: 1,
+          totalQuestions: 3,
           instructions: [
             'You will be shown a picture',
             'You have 5 seconds to look at the picture',

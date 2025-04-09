@@ -7,6 +7,8 @@ import {
 import PartIntro from '@features/speaking/ui/part-intro'
 import QuestionDisplay from '@features/speaking/ui/question-display'
 import TimerDisplay from '@features/speaking/ui/timer-display'
+import { useMutation } from '@tanstack/react-query'
+import { message } from 'antd'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -47,6 +49,21 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
 
   const currentQuestion = questions[currentQuestionIndex]
   const currentTimePair = getTimePair(currentQuestionIndex)
+
+  const submitMutation = useMutation({
+    mutationFn: submitSpeakingAnswer,
+    onSuccess: () => {
+      if (data.Content === 'PART 4') {
+        navigate('/listening')
+      } else if (onNextPart) {
+        onNextPart()
+      }
+    },
+    onError: error => {
+      message.error('Failed to submit speaking answer:')
+      console.error('Error details:', error)
+    }
+  })
 
   useEffect(() => {
     setShowIntro(true)
@@ -176,14 +193,12 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
         await new Promise(resolve => setTimeout(resolve, 100))
       }
     }
-    await submitSpeakingAnswer()
-    if (data.Content === 'PART 4') {
-      navigate('/listening')
-    } else if (onNextPart) {
-      onNextPart()
-    }
 
-    setIsButtonLoading(false)
+    try {
+      await submitMutation.mutateAsync()
+    } finally {
+      setIsButtonLoading(false)
+    }
   }
 
   return (
@@ -199,7 +214,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
         showNavigation={!isRecording && countdown === 0 && phase === 'answering'}
         isPart4={data.Content === 'PART 4'}
         isUploading={isUploading}
-        isButtonLoading={isButtonLoading}
+        isButtonLoading={isButtonLoading || submitMutation.isPending}
       />
       <div className="flex h-screen w-1/3 flex-col items-center justify-center bg-gradient-to-br from-[#003087] via-[#002b6c] to-[#001f4d]">
         <h2 className="mb-4 text-4xl font-bold text-white">
