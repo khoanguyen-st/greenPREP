@@ -3,7 +3,15 @@ import { Typography } from 'antd'
 import { multipleChoiceAnswerSchema } from '@shared/model/questionType/multipleQuestion.schemas'
 const { Title, Text } = Typography
 
-const MultipleChoice = ({ questionData, userAnswer, setUserAnswer, onSubmit, className = '' }) => {
+const MultipleChoice = ({
+  questionData,
+  userAnswer,
+  setUserAnswer,
+  onSubmit,
+  className = '',
+  userAnswerSubmit = {},
+  setUserAnswerSubmit
+}) => {
   const [selectedOption, setSelectedOption] = useState(null)
   const [error, setError] = useState(null)
   const { options, isValid } = useMemo(() => {
@@ -16,20 +24,26 @@ const MultipleChoice = ({ questionData, userAnswer, setUserAnswer, onSubmit, cla
       return { options: [], isValid: false }
     }
   }, [questionData.AnswerContent])
-
   useMemo(() => {
-    if (userAnswer && userAnswer.questionId === questionData.ID) {
-      setSelectedOption(userAnswer.answerText)
+    if (userAnswer && userAnswer[questionData.ID]) {
+      setSelectedOption(userAnswer[questionData.ID])
     }
   }, [userAnswer, questionData.ID])
 
   const handleClick = optionValue => {
     setSelectedOption(optionValue)
-    setUserAnswer({
+    setUserAnswer(prev => ({
+      ...prev,
+      [questionData.ID]: optionValue
+    }))
+
+    const newAnswerSubmit = {
       questionId: questionData.ID,
       answerText: optionValue,
       answerAudio: null
-    })
+    }
+    setUserAnswerSubmit(newAnswerSubmit)
+
     onSubmit?.(optionValue)
   }
 
