@@ -4,7 +4,6 @@ import { Layout, Input, Button, Typography, Form, Image } from 'antd'
 import { useNavigate } from 'react-router-dom'
 
 import { FAKE_SESSION_KEYS } from '../constance/fake-session-key'
-
 const { Content } = Layout
 const { Title, Text } = Typography
 
