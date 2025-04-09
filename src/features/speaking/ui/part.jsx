@@ -129,7 +129,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
           }
           stream.getTracks().forEach(track => track.stop())
         }
-        mediaRecorder.start()
+        mediaRecorder.start(1000)
         setIsRecording(true)
         setHasUploaded(false)
       })
@@ -143,6 +143,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
       setCountdown(parseTime(getTimePair(currentQuestionIndex + 1).read))
       setIsActive(true)
       setIsTimerRunning(true)
+      setHasUploaded(false)
     }
   }
 
