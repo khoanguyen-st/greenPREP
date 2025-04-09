@@ -4,9 +4,9 @@ import FooterNavigator from '@features/writing/ui/writing-footer-navigator'
 import QuestionForm from '@features/writing/ui/writing-question-form'
 import QuestionNavigatorContainer from '@features/writing/ui/writing-question-navigator-container'
 import { useQuery } from '@tanstack/react-query'
-import { Typography, Spin, Card, Divider } from 'antd'
+import { Typography, Spin, Card, Divider, message } from 'antd'
 import { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+// import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 const { Title } = Typography
@@ -14,8 +14,8 @@ const { Title } = Typography
 const WritingTest = () => {
   const navigate = useNavigate()
   // @ts-ignore
-  const user = useSelector(state => state.auth.user)
-  const userId = user?.id
+  // const user = useSelector(state => state.auth.user)
+  // const userId = user?.id
   const { data, isLoading, isError } = useQuery({
     queryKey: ['writingQuestions'],
     queryFn: fetchWritingTestDetails
@@ -78,33 +78,32 @@ const WritingTest = () => {
       }
 
       const payload = {
-        studentId: userId,
+        // studentId: userId,
+        studentId: '7a5cb071-5ba0-4ecf-a4cf-b1b62e5f9798',
         topicId: 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc',
         skillName: 'WRITING',
         sessionParticipantId: 'a8e2b9e8-bb60-44f0-bd61-6bd524cdc87d',
         questions: []
       }
-
       data.Parts.forEach(part => {
         part.Questions.forEach(question => {
-          const answerText = answers[question.ID] || ''
-
           payload.questions.push({
             questionId: question.ID,
-            answerText,
+            answerText: answers[question.ID] ?? '',
             answerAudio: null
           })
         })
       })
       await submitWritingAnswers(payload)
-
       localStorage.removeItem('writingAnswers')
       localStorage.removeItem('flaggedParts')
 
       navigate('/complete-test')
-    } catch (error) {
-      console.error('❌ Submit failed:', error)
-      alert('Cannot submit answers. Please contact technical support.')
+    } catch {
+      message.error({
+        content: 'Cannot submit answers. Please contact technical support.',
+        duration: 5
+      })
     }
   }
 
