@@ -9,7 +9,7 @@ export const Introduction = ({ data, onStart }) => {
       <List
         header={
           <div className="flex flex-col">
-            <h5 className="text-lg font-semibold">Test Structure</h5>
+            <h5 className="text-lg font-semibold"></h5>
             <p className="text-sm">{data.testStructure.desc}</p>
           </div>
         }
@@ -18,7 +18,7 @@ export const Introduction = ({ data, onStart }) => {
         dataSource={data.testStructure.parts}
         renderItem={item => (
           <List.Item>
-            <Typography.Text mark>[ {item.name} ]</Typography.Text> {item.desc}
+            <Typography.Text>{item.name}</Typography.Text> {item.desc}
           </List.Item>
         )}
       />
@@ -41,7 +41,6 @@ export const Introduction = ({ data, onStart }) => {
                 width: 20
               }}
             >
-              ●
             </Typography.Text>{' '}
             {item}
           </List.Item>
