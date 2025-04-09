@@ -1,137 +1,125 @@
-import axios from 'axios';
+import axios from 'axios'
 
-const API_BASE_URL = 'https://dev-api-greenprep.onrender.com';
-const MAX_RETRIES = 3;
-const RETRY_DELAY = 1000;
-const API_TIMEOUT = 5000;
+const API_BASE_URL = 'https://dev-api-greenprep.onrender.com'
+const MAX_RETRIES = 3
+const RETRY_DELAY = 1000
+const API_TIMEOUT = 5000
 
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-export const validateEmail = (email) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-};
-
+export const validateEmail = email => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return emailRegex.test(email)
+}
 
 export const sendTestSubmissionEmail = async (userId, testData, retryCount = 0) => {
   try {
     if (!userId || !testData?.submissionId) {
-      throw new Error('User ID and submission ID are required');
+      throw new Error('User ID and submission ID are required')
     }
 
-    const accessToken = localStorage.getItem('access_token');
+    const accessToken = localStorage.getItem('access_token')
     if (!accessToken) {
-      throw new Error('Authentication required');
+      throw new Error('Authentication required')
     }
-
-    // Log exact data being sent
-    console.log('Request:', {
-      url: `${API_BASE_URL}/api/send-email/${userId}`,
-      data: testData
-    });
 
     const response = await axios({
       method: 'POST',
       url: `${API_BASE_URL}/api/send-email/${userId}`,
       headers: {
-        'Authorization': `Bearer ${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
       },
       data: testData,
       timeout: API_TIMEOUT
-    });
+    })
 
-    console.log('Response:', response.data);
-    return response.data;
+    return response.data
   } catch (error) {
-    // Log complete error details
     console.error('Email request failed:', {
       status: error.response?.status,
       data: error.response?.data,
       message: error.message
-    });
+    })
 
     if (error.response?.status === 500 && retryCount < MAX_RETRIES) {
-      const delay = RETRY_DELAY * Math.pow(2, retryCount);
-      console.log(`Server error, retrying in ${delay}ms (${retryCount + 1}/${MAX_RETRIES})`);
-      await sleep(delay);
-      return sendTestSubmissionEmail(userId, testData, retryCount + 1);
+      const delay = RETRY_DELAY * Math.pow(2, retryCount)
+      await sleep(delay)
+      return sendTestSubmissionEmail(userId, testData, retryCount + 1)
     }
 
     // Store minimal failed attempt data
     try {
-      const failedAttempts = JSON.parse(localStorage.getItem('failedEmails') || '[]');
+      const failedAttempts = JSON.parse(localStorage.getItem('failedEmails') || '[]')
       failedAttempts.push({
         userId,
         submissionId: testData.submissionId,
         timestamp: testData.timestamp
-      });
-      if (failedAttempts.length > 50) failedAttempts.shift();
-      localStorage.setItem('failedEmails', JSON.stringify(failedAttempts));
+      })
+      if (failedAttempts.length > 50) {
+        failedAttempts.shift()
+      }
+      localStorage.setItem('failedEmails', JSON.stringify(failedAttempts))
     } catch (e) {
-      console.error('Failed to store retry data:', e);
+      console.error('Failed to store retry data:', e)
     }
 
     throw new Error(
       error.response?.status === 500
         ? 'Server temporarily unavailable. Your test has been saved.'
         : 'Failed to send confirmation email.'
-    );
+    )
   }
-};
+}
 
 // Background retry mechanism
 export const retryFailedEmails = async () => {
   try {
-    const failedAttempts = JSON.parse(localStorage.getItem('failedEmails') || '[]');
-    if (failedAttempts.length === 0) return;
-
-    console.log(`Retrying ${failedAttempts.length} failed emails...`);
+    const failedAttempts = JSON.parse(localStorage.getItem('failedEmails') || '[]')
+    if (failedAttempts.length === 0) {
+      return
+    }
 
     const results = await Promise.allSettled(
-      failedAttempts.map(async (attempt) => {
+      failedAttempts.map(async attempt => {
         try {
-          await sendTestSubmissionEmail(attempt.userId, attempt.testData);
-          return { success: true, timestamp: attempt.timestamp };
+          await sendTestSubmissionEmail(attempt.userId, attempt.testData)
+          return { success: true, timestamp: attempt.timestamp }
         } catch (error) {
-          return { success: false, timestamp: attempt.timestamp, error: error.message };
+          return { success: false, timestamp: attempt.timestamp, error: error.message }
         }
       })
-    );
+    )
 
     // Remove successful attempts
-    const remainingAttempts = failedAttempts.filter((attempt) => {
-      const result = results.find((r) => 
-        r.status === 'fulfilled' && r.value?.timestamp === attempt.timestamp
-      );
-      return !(result?.status === 'fulfilled' && result.value?.success);
-    });
+    const remainingAttempts = failedAttempts.filter(attempt => {
+      const result = results.find(r => r.status === 'fulfilled' && r.value?.timestamp === attempt.timestamp)
+      return !(result?.status === 'fulfilled' && result.value?.success)
+    })
 
-    localStorage.setItem('failedEmails', JSON.stringify(remainingAttempts));
-    console.log(`Retry complete. ${failedAttempts.length - remainingAttempts.length} emails sent successfully.`);
+    localStorage.setItem('failedEmails', JSON.stringify(remainingAttempts))
   } catch (error) {
-    console.error('Failed to process retry queue:', error);
+    console.error('Failed to process retry queue:', error)
   }
-};
+}
 
-export const handleEmailError = async (error, testData) => {
-  console.error('Email sending failed:', error);
-  
+export const handleEmailError = async error => {
+  console.error('Email sending failed:', error)
+
   // Handle specific error cases
   if (error.response?.status === 401) {
-    throw new Error('Authentication failed. Please log in again.');
+    throw new Error('Authentication failed. Please log in again.')
   } else if (error.response?.status === 403) {
-    throw new Error('You do not have permission to send emails.');
+    throw new Error('You do not have permission to send emails.')
   } else if (error.response?.status === 429) {
-    throw new Error('Too many email requests. Please try again later.');
+    throw new Error('Too many email requests. Please try again later.')
   } else if (error.response?.status === 500) {
-    const errorMessage = error.response.data?.message || 'Server error occurred';
+    const errorMessage = error.response.data?.message || 'Server error occurred'
     if (errorMessage.includes('Invalid login') || errorMessage.includes('WebLoginRequired')) {
-      throw new Error('Email service authentication failed. Please contact support.');
+      throw new Error('Email service authentication failed. Please contact support.')
     }
   } else if (error.code === 'ECONNABORTED') {
-    throw new Error('Request timed out. Please check your connection and try again.');
+    throw new Error('Request timed out. Please check your connection and try again.')
   }
-  
-  throw new Error(error.message || 'Failed to send confirmation email');
-}; 
+  throw new Error(error.message || 'Failed to send confirmation email')
+}

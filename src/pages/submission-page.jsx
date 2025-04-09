@@ -1,38 +1,33 @@
 import { SubmissionImage } from '@assets/images'
-import { Button, message, Spin } from 'antd'
-import { useEffect, useState, useRef } from 'react'
-import { AiOutlineCheckCircle } from 'react-icons/ai'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { useTestSubmissionEmail } from '@shared/hooks/useTestSubmissionEmail'
-import { useSelector } from 'react-redux'
 import { createSelector } from '@reduxjs/toolkit'
+import { useTestSubmissionEmail } from '@shared/hooks/useTestSubmissionEmail'
+import { Button, message, Spin } from 'antd'
+import { useEffect, useState } from 'react'
+import { AiOutlineCheckCircle } from 'react-icons/ai'
+import { useSelector } from 'react-redux'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 // Create memoized selector
-const selectUser = createSelector(
-  [(state) => state.auth?.user],
-  (user) => ({
-    id: user?.id,
-    email: user?.email,
-    name: user?.name,
-    fullUser: user
-  })
-);
+const selectUser = createSelector([state => state.auth?.user], user => ({
+  id: user?.id,
+  email: user?.email,
+  name: user?.name,
+  fullUser: user
+}))
 
 const SubmissionPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const [error, setError] = useState('')
-  const { sendConfirmationEmail, isSending, error: emailError, success, retryCount } = useTestSubmissionEmail()
+  const { sendConfirmationEmail, isSending, error: emailError } = useTestSubmissionEmail()
   const user = useSelector(selectUser)
   const [emailSent, setEmailSent] = useState(false)
-  const emailSentRef = useRef(false)
 
   useEffect(() => {
     const sendEmail = async () => {
       try {
         if (!user?.email || !user?.fullUser?.userId) {
-          console.log('Waiting for user data...');
-          return;
+          return
         }
 
         // ... existing code ...
@@ -42,56 +37,53 @@ const SubmissionPage = () => {
           Score: ${location.state?.score || 0}/100<br>
           Confirmation message: Your test has been successfully submitted and recorded in our system.`,
           nextSteps: 'Please wait for the final results. You will be notified once they are available.',
-          contactInfo: 'support@greenprep.edu.vn',
-        };
-        
+          contactInfo: 'support@greenprep.edu.vn'
+        }
 
         // Store submission data in localStorage for retry
         const submissionData = {
           userId: user.fullUser.userId,
           testData,
           timestamp: new Date().toISOString()
-        };
-        localStorage.setItem('pendingEmailSubmission', JSON.stringify(submissionData));
+        }
+        localStorage.setItem('pendingEmailSubmission', JSON.stringify(submissionData))
 
         try {
-          await sendConfirmationEmail(user.fullUser.userId, testData);
-          setEmailSent(true);
-          message.success('Test submitted and confirmation email sent successfully!');
-          localStorage.removeItem('pendingEmailSubmission');
+          await sendConfirmationEmail(user.fullUser.userId, testData)
+          setEmailSent(true)
+          message.success('Test submitted and confirmation email sent successfully!')
+          localStorage.removeItem('pendingEmailSubmission')
         } catch (error) {
-          console.error('Failed to send email:', error);
-          
+          console.error('Failed to send email:', error)
           // Show a more user-friendly message
           message.info({
             content: (
               <div>
                 <p>Your test has been submitted successfully!</p>
-                <p className="text-sm text-gray-500 mt-1">
-                  We'll send you a confirmation email when our system is available.
-                  Your submission is saved and secure.
+                <p className="mt-1 text-sm text-gray-500">
+                  We will send you a confirmation email when our system is available. Your submission is saved and
+                  secure.
                 </p>
               </div>
             ),
             duration: 6
-          });
-          
+          })
           // Still mark as sent to avoid retry attempts in this session
-          setEmailSent(true);
+          setEmailSent(true)
         }
       } catch (error) {
-        console.error('Error in submission process:', error);
-        setError(error.message);
-        
-        message.error({
-          content: 'Your test was submitted but we could not send the confirmation email. Please contact support if needed.',
-          duration: 5
-        });
-      }
-    };
+        console.error('Error in submission process:', error)
+        setError(error.message)
 
-    sendEmail();
-  }, [user, location.state, sendConfirmationEmail]);
+        message.error({
+          content:
+            'Your test was submitted but we could not send the confirmation email. Please contact support if needed.',
+          duration: 5
+        })
+      }
+    }
+    sendEmail()
+  }, [user, location.state, sendConfirmationEmail])
 
   const handleNavigation = async () => {
     try {
@@ -111,7 +103,7 @@ const SubmissionPage = () => {
           <p className="text-md mt-2 text-gray-700">
             Your teacher will release your results shortly. All the best <span className="text-red-500">❤️</span>!
           </p>
-          <div className="flex items-center gap-2 mt-2">
+          <div className="mt-2 flex items-center gap-2">
             {isSending ? (
               <>
                 <Spin size="small" />
@@ -137,7 +129,6 @@ const SubmissionPage = () => {
       >
         Home <span>&rarr;</span>
       </Button>
-
       {error && (
         <p className="mt-4 text-sm text-red-600">
           {error} <br />
