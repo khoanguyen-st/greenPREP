@@ -6,16 +6,12 @@ import QuestionNavigatorContainer from '@features/writing/ui/writing-question-na
 import { useQuery } from '@tanstack/react-query'
 import { Typography, Spin, Card, Divider, message } from 'antd'
 import { useState, useEffect } from 'react'
-// import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 const { Title } = Typography
 
 const WritingTest = () => {
   const navigate = useNavigate()
-  // @ts-ignore
-  // const user = useSelector(state => state.auth.user)
-  // const userId = user?.id
   const { data, isLoading, isError } = useQuery({
     queryKey: ['writingQuestions'],
     queryFn: async () => {
@@ -81,7 +77,6 @@ const WritingTest = () => {
       }
 
       const payload = {
-        // studentId: userId,
         studentId: '7a5cb071-5ba0-4ecf-a4cf-b1b62e5f9798',
         topicId: 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc',
         skillName: 'WRITING',
