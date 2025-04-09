@@ -9,7 +9,7 @@ export const Introduction = ({ data, onStart }) => {
       <List
         header={
           <div className="flex flex-col">
-            <h5 className="text-lg font-semibold"></h5>
+            <h5 className="text-lg font-semibold">Test Structure</h5>
             <p className="text-sm">{data.testStructure.desc}</p>
           </div>
         }
