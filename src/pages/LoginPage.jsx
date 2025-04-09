@@ -1,20 +1,20 @@
 // @ts-nocheck
-import { EyeInvisibleOutlined, EyeOutlined, ExclamationCircleOutlined, CheckCircleOutlined } from '@ant-design/icons'
+import { CheckCircleOutlined, ExclamationCircleOutlined, EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons'
 import { login } from '@app/providers/reducer/auth/authSlice'
+import { LoginImg } from '@assets/images'
+import axiosInstance from '@shared/config/axios'
 import { ACCESS_TOKEN } from '@shared/lib/constants/auth'
-import { useLogin } from '@shared/lib/hooks/useAuthUsers'
-import { Form, Input, Button, Typography, Space, Row, Col } from 'antd'
+import { Button, Col, Form, Input, Row, Space, Typography } from 'antd'
 import { jwtDecode } from 'jwt-decode'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 
-import { LoginImg } from '../assets/images/'
-
 const { Title, Text } = Typography
 
 const LoginPage = () => {
   const [form] = Form.useForm()
+  const [loading, setLoading] = useState(false)
   const [loginError, setLoginError] = useState('')
   const [loginSuccess, setLoginSuccess] = useState('')
   const [passwordTouched, setPasswordTouched] = useState(false)
@@ -30,10 +30,20 @@ const LoginPage = () => {
     }
   }
 
-  const { mutate: loginUser, isLoading } = useLogin({
-    onSuccess: response => {
-      const token = response.data?.data?.access_token
-      if (token) {
+  const onFinish = async values => {
+    setLoading(true)
+    setLoginError('')
+    setLoginSuccess('')
+
+    try {
+      const response = await axiosInstance.post('/users/login', {
+        email: values.email,
+        password: values.password
+      })
+
+      if (response.data?.data?.access_token) {
+        const token = response.data.data.access_token
+
         localStorage.setItem(ACCESS_TOKEN, token)
         const userData = getUserData(token)
 
@@ -47,20 +57,12 @@ const LoginPage = () => {
       } else {
         setLoginError('Login failed. Please try again.')
       }
-    },
-    onError: error => {
+    } catch (error) {
       console.error('Login error:', error)
       setLoginError('Invalid email or password')
+    } finally {
+      setLoading(false)
     }
-  })
-
-  const onFinish = values => {
-    setLoginError('')
-    setLoginSuccess('')
-    loginUser({
-      email: values.email,
-      password: values.password
-    })
   }
 
   const handlePasswordChange = () => {
@@ -183,21 +185,12 @@ const LoginPage = () => {
                 <Button
                   type="primary"
                   htmlType="submit"
-                  loading={isLoading}
+                  loading={loading}
                   className="!h-11 !w-full !rounded-md !bg-[#003087] !text-base !font-medium hover:!bg-blue-900"
                 >
                   Sign in
                 </Button>
               </Form.Item>
-
-              <div className="text-left">
-                <Text className="!text-sm !text-gray-500">
-                  Don&apos;t have an account?{' '}
-                  <Link to="/register" className="!text-[#003087] hover:underline">
-                    Sign up
-                  </Link>
-                </Text>
-              </div>
             </Form>
           </Space>
         </div>

@@ -16,7 +16,7 @@ const QuestionForm = ({
 }) => {
   const handleTextAreaChange = (fieldName, value, maxWords) => {
     const wordCount = countWords(value || '')
-    if (maxWords && wordCount <= maxWords) {
+    if (!maxWords || wordCount <= maxWords) {
       handleTextChange(fieldName, value)
     }
   }

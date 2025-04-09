@@ -1,10 +1,10 @@
-import { fetchWritingTestDetails } from '@features/writing/api/writingAPI'
-import { DEFAULT_MAX_WORDS } from '@features/writing/constance/writing-const'
+import { fetchWritingTestDetails, submitWritingAnswers } from '@features/writing/api'
+import { DEFAULT_MAX_WORDS } from '@features/writing/constance'
 import FooterNavigator from '@features/writing/ui/writing-footer-navigator'
 import QuestionForm from '@features/writing/ui/writing-question-form'
 import QuestionNavigatorContainer from '@features/writing/ui/writing-question-navigator-container'
 import { useQuery } from '@tanstack/react-query'
-import { Typography, Spin, Card, Divider } from 'antd'
+import { Typography, Spin, Card, Divider, message } from 'antd'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -31,6 +31,7 @@ const WritingTest = () => {
       setAnswers(storedAnswers)
       updateWordCounts(storedAnswers)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, currentPartIndex])
 
   const countWords = text => text.trim().split(/\s+/).filter(Boolean).length
@@ -69,12 +70,39 @@ const WritingTest = () => {
     }))
   }
 
-  const handleSubmit = () => {
-    // eslint-disable-next-line no-console
-    console.table(answers)
-    localStorage.removeItem('writingAnswers')
-    localStorage.removeItem('flaggedParts')
-    navigate('/complete-test')
+  const handleSubmit = async () => {
+    try {
+      if (!data?.Parts) {
+        return
+      }
+
+      const payload = {
+        studentId: '7a5cb071-5ba0-4ecf-a4cf-b1b62e5f9798',
+        topicId: 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc',
+        skillName: 'WRITING',
+        sessionParticipantId: 'a8e2b9e8-bb60-44f0-bd61-6bd524cdc87d',
+        questions: []
+      }
+      data.Parts.forEach(part => {
+        part.Questions.forEach(question => {
+          payload.questions.push({
+            questionId: question.ID,
+            answerText: answers[question.ID] ?? '',
+            answerAudio: null
+          })
+        })
+      })
+      await submitWritingAnswers(payload)
+      localStorage.removeItem('writingAnswers')
+      localStorage.removeItem('flaggedParts')
+
+      navigate('/complete-test')
+    } catch {
+      message.error({
+        content: 'Cannot submit answers. Please contact technical support.',
+        duration: 5
+      })
+    }
   }
 
   if (isLoading) {
