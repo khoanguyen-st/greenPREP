@@ -2,7 +2,7 @@ import { Typography, Divider, List, Button } from 'antd'
 
 export const Introduction = ({ data, onStart }) => {
   return (
-    <div className="mx-auto mt-10 max-w-3xl space-y-4">
+    <div className="mx-auto mt-10 max-w-3xl space-y-2">
       <Divider orientation="left">
         <Typography.Title level={2}>{data.title}</Typography.Title>
       </Divider>
@@ -18,7 +18,7 @@ export const Introduction = ({ data, onStart }) => {
         dataSource={data.testStructure.parts}
         renderItem={item => (
           <List.Item>
-            <Typography.Text mark>[ {item.name} ]</Typography.Text> {item.desc}
+            <Typography.Text>{item.name}</Typography.Text> {item.desc}
           </List.Item>
         )}
       />
@@ -40,15 +40,13 @@ export const Introduction = ({ data, onStart }) => {
                 display: 'inline-block',
                 width: 20
               }}
-            >
-              ●
-            </Typography.Text>{' '}
+            ></Typography.Text>{' '}
             {item}
           </List.Item>
         )}
       />
       <div className="flex justify-end">
-        <Button onClick={onStart} size="large" type="primary">
+        <Button onClick={onStart} size="large" type="primary" className="bg-[#003087] hover:bg-[#002b6c]">
           Start Test
         </Button>
       </div>

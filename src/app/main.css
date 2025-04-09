@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .ant-layout {
-  background: #f3f4f6 !important;
+  background: white !important;
 }
 body {
   margin: 0;
@@ -15,7 +15,7 @@ html {
 * {
   margin: 0;
   padding: 0;
-  font-family: 'Poppins', sans-serif !important;
+  font-family: 'Outfit', sans-serif !important;
 }
 *,
 *:before,
