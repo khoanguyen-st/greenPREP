@@ -19,7 +19,6 @@ const WaitingForApproval = () => {
       const sessionPaticipantId = data?.data?.sessionParticipant?.ID
       const status = sessionRequest?.status
 
-      // Save to localStorage
       localStorage.setItem('sessionPaticipantId', JSON.stringify(sessionPaticipantId))
 
       if (status === 'approved') {

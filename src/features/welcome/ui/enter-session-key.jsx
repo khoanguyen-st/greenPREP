@@ -1,9 +1,7 @@
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { sessionKey } from '@assets/images'
-import { Layout, Input, Button, Typography, Form, Image } from 'antd'
+import { Button, Form, Image, Input, Layout, Typography } from 'antd'
 import { useNavigate } from 'react-router-dom'
-
-import { FAKE_SESSION_KEYS } from '../constance/fake-session-key'
 const { Content } = Layout
 const { Title, Text } = Typography
 
@@ -42,17 +40,7 @@ const EnterSessionKey = () => {
           <Form form={form} onFinish={handleStart} className="w-full max-w-[300px]">
             <Form.Item
               name="sessionKey"
-              rules={[
-                { required: true, message: 'This session key is invalid. Please try again' },
-                () => ({
-                  validator(_, value) {
-                    if (!value || FAKE_SESSION_KEYS.includes(value.trim())) {
-                      return Promise.resolve()
-                    }
-                    return Promise.reject(new Error('This session key is invalid. Please try again'))
-                  }
-                })
-              ]}
+              rules={[{ required: true, message: 'This session key is invalid. Please try again' }]}
               hasFeedback
             >
               <Input

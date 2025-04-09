@@ -7,7 +7,6 @@ export const useJoinSession = () => {
   return useMutation({
     mutationFn: joinSession,
     onSuccess: () => {
-      // Invalidate or refetch any relevant queries if needed
       queryClient.invalidateQueries({ queryKey: ['sessions'] })
     },
     onError: error => {
@@ -19,6 +18,6 @@ export const useGetStudentSessionRequest = ({ sessionId, userId, requestId }) =>
   return useQuery({
     queryKey: ['student-session-request', sessionId, userId, requestId],
     queryFn: () => getStudentSessionRequest({ sessionId, userId, requestId }),
-    refetchInterval: 3000 // auto refetch every 3 seconds
+    refetchInterval: 3000
   })
 }
