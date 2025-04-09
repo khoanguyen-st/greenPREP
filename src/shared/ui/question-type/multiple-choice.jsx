@@ -3,14 +3,12 @@ import { Typography } from 'antd'
 import { useState, useMemo } from 'react'
 const { Title, Text } = Typography
 
-const MultipleChoice = ({ questionData, userAnswer, setUserAnswer, onSubmit, className = '' }) => {
+const MultipleChoice = ({ questionData, userAnswer, setUserAnswer, onSubmit, className = '', setUserAnswerSubmit }) => {
   const [selectedOption, setSelectedOption] = useState(null)
   const [error, setError] = useState(null)
   const { options, isValid } = useMemo(() => {
     try {
-      const parsedContent = Array.isArray(questionData.AnswerContent)
-        ? questionData.AnswerContent[0]
-        : JSON.parse(questionData.AnswerContent)[0]
+      const parsedContent = JSON.parse(questionData.AnswerContent)[0]
       multipleChoiceAnswerSchema.validateSync(parsedContent)
       return { options: parsedContent.options, isValid: true }
     } catch (err) {
@@ -30,6 +28,17 @@ const MultipleChoice = ({ questionData, userAnswer, setUserAnswer, onSubmit, cla
       ...prev,
       [questionData.ID]: optionValue
     }))
+
+    const newAnswerSubmit = {
+      questionId: questionData.ID,
+      answerText: optionValue,
+      answerAudio: null
+    }
+    setUserAnswerSubmit(prev => ({
+      ...prev,
+      [questionData.ID]: newAnswerSubmit
+    }))
+
     onSubmit?.(optionValue)
   }
 
@@ -43,7 +52,7 @@ const MultipleChoice = ({ questionData, userAnswer, setUserAnswer, onSubmit, cla
 
   return (
     <div className={`w-full ${className}`}>
-      <Title level={3} className="mb-6">
+      <Title level={5} className="mb-6">
         {questionData.Content}
       </Title>
       <div className="space-y-3">
