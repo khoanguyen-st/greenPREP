@@ -5,7 +5,6 @@ import { AiOutlineCheckCircle } from 'react-icons/ai'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useTestSubmissionEmail } from '@shared/hooks/useTestSubmissionEmail'
 import { useSelector } from 'react-redux'
-import { validateEmail, validateToken } from '@shared/services/emailService'
 import { createSelector } from '@reduxjs/toolkit'
 
 // Create memoized selector
@@ -36,12 +35,16 @@ const SubmissionPage = () => {
           return;
         }
 
+        // ... existing code ...
         const testData = {
-          candidateName: `${user.fullUser.firstName || ''} ${user.fullUser.lastName || ''}`.trim() || 'Student',
-          sessionName: location.state?.sessionName || 'Test Session',
-          email: user.email,
-          score: location.state?.score || 0
+          sessionName: location.state?.sessionName || 'Math Test Session',
+          testDetails: `Submission date and time: ${new Date().toLocaleString()}<br>
+          Score: ${location.state?.score || 0}/100<br>
+          Confirmation message: Your test has been successfully submitted and recorded in our system.`,
+          nextSteps: 'Please wait for the final results. You will be notified once they are available.',
+          contactInfo: 'support@greenprep.edu.vn',
         };
+        
 
         // Store submission data in localStorage for retry
         const submissionData = {

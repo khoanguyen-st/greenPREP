@@ -12,30 +12,6 @@ export const validateEmail = (email) => {
   return emailRegex.test(email);
 };
 
-export const validateToken = (token) => {
-  try {
-    if (!token) return null;
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(atob(base64).split('').map((c) => {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-    return JSON.parse(jsonPayload);
-  } catch (error) {
-    console.error('Token validation error:', error);
-    return null;
-  }
-};
-
-// Helper function to prepare email data according to API specification
-const prepareEmailData = (testData = {}) => {
-  return {
-    sessionName: testData.sessionName || 'Test Session',
-    testDetails: testData.submissionId || '',
-    nextSteps: 'Your results will be available in your dashboard',
-    contactInfo: 'support@greenprep.edu.vn'
-  };
-};
 
 export const sendTestSubmissionEmail = async (userId, testData, retryCount = 0) => {
   try {
@@ -48,13 +24,10 @@ export const sendTestSubmissionEmail = async (userId, testData, retryCount = 0) 
       throw new Error('Authentication required');
     }
 
-    // Use helper function to prepare email data according to API spec
-    const emailData = prepareEmailData(testData);
-
     // Log exact data being sent
     console.log('Request:', {
       url: `${API_BASE_URL}/api/send-email/${userId}`,
-      data: emailData
+      data: testData
     });
 
     const response = await axios({
@@ -64,7 +37,7 @@ export const sendTestSubmissionEmail = async (userId, testData, retryCount = 0) 
         'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
       },
-      data: emailData,
+      data: testData,
       timeout: API_TIMEOUT
     });
 
