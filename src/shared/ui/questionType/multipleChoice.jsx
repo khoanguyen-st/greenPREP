@@ -3,42 +3,35 @@ import { Typography } from 'antd'
 import { multipleChoiceAnswerSchema } from '@shared/model/questionType/multipleQuestion.schemas'
 const { Title, Text } = Typography
 
-
-const MultipleChoice = ({ 
-  questionData,
-  userAnswer,
-  setUserAnswer,
-  onSubmit,
-  className = '',
-}) => {
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [error, setError] = useState(null);
+const MultipleChoice = ({ questionData, userAnswer, setUserAnswer, onSubmit, className = '' }) => {
+  const [selectedOption, setSelectedOption] = useState(null)
+  const [error, setError] = useState(null)
   const { options, isValid } = useMemo(() => {
     try {
-      const parsedContent = JSON.parse(questionData.AnswerContent)[0];
-      multipleChoiceAnswerSchema.validateSync(parsedContent);
-      return { options: parsedContent.options, isValid: true };
+      const parsedContent = JSON.parse(questionData.AnswerContent)[0]
+      multipleChoiceAnswerSchema.validateSync(parsedContent)
+      return { options: parsedContent.options, isValid: true }
     } catch (err) {
       setError(err.message)
       return { options: [], isValid: false }
     }
-  }, [questionData.AnswerContent]);
+  }, [questionData.AnswerContent])
+
   useMemo(() => {
-    if (userAnswer && userAnswer[questionData.ID]) {
-      setSelectedOption(userAnswer[questionData.ID]);
+    if (userAnswer && userAnswer.questionId === questionData.ID) {
+      setSelectedOption(userAnswer.answerText)
     }
-  }, [userAnswer, questionData.ID]);
+  }, [userAnswer, questionData.ID])
 
-  const handleClick = (optionValue) => {
-    setSelectedOption(optionValue);
-    setUserAnswer(prev => ({
-      ...prev,
-      [questionData.ID]: optionValue
-    }));
-    onSubmit?.(optionValue);
-  };
-
-
+  const handleClick = optionValue => {
+    setSelectedOption(optionValue)
+    setUserAnswer({
+      questionId: questionData.ID,
+      answerText: optionValue,
+      answerAudio: null
+    })
+    onSubmit?.(optionValue)
+  }
 
   if (!isValid) {
     return (
