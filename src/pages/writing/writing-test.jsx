@@ -18,7 +18,10 @@ const WritingTest = () => {
   // const userId = user?.id
   const { data, isLoading, isError } = useQuery({
     queryKey: ['writingQuestions'],
-    queryFn: fetchWritingTestDetails
+    queryFn: async () => {
+      const response = await fetchWritingTestDetails()
+      return { ...response }
+    }
   })
 
   const [currentPartIndex, setCurrentPartIndex] = useState(0)
@@ -27,7 +30,7 @@ const WritingTest = () => {
   const [flaggedParts, setFlaggedParts] = useState(() => JSON.parse(localStorage.getItem('flaggedParts')) || {})
 
   useEffect(() => {
-    if (data?.Parts) {
+    if (data) {
       const storedAnswers = JSON.parse(localStorage.getItem('writingAnswers')) || {}
       setAnswers(storedAnswers)
       updateWordCounts(storedAnswers)
@@ -41,8 +44,8 @@ const WritingTest = () => {
     const newWordCounts = {}
     if (data?.Parts) {
       data.Parts.forEach(part => {
-        part.Questions.forEach(question => {
-          const fieldName = question.ID
+        part.Questions.forEach((_, index) => {
+          const fieldName = `answer-${part.ID}-${index}`
           newWordCounts[fieldName] = countWords(updatedAnswers[fieldName] || '')
         })
       })
@@ -61,13 +64,13 @@ const WritingTest = () => {
     })
   }
 
-  const handleTextChange = (questionId, text) => {
-    const newAnswers = { ...answers, [questionId]: text }
+  const handleTextChange = (field, text) => {
+    const newAnswers = { ...answers, [field]: text }
     setAnswers(newAnswers)
     localStorage.setItem('writingAnswers', JSON.stringify(newAnswers))
     setWordCounts(prev => ({
       ...prev,
-      [questionId]: countWords(text)
+      [field]: countWords(text)
     }))
   }
 
@@ -110,12 +113,10 @@ const WritingTest = () => {
   if (isLoading) {
     return <Spin className="flex h-screen items-center justify-center" />
   }
-
   if (isError) {
     return <div className="text-center text-red-500">Error fetching data</div>
   }
-
-  if (!data?.Parts?.length) {
+  if (!data || !data.Parts || data.Parts.length === 0) {
     return <div className="text-center text-gray-500">No test data available</div>
   }
 
@@ -132,7 +133,6 @@ const WritingTest = () => {
         <Title level={3} className="text-l mb-5 font-semibold">
           Question {currentPartIndex + 1} of {data.Parts.length}
         </Title>
-
         <QuestionForm
           currentPart={currentPart}
           partNumber={partNumber}
@@ -154,7 +154,6 @@ const WritingTest = () => {
         currentPartIndex={currentPartIndex}
         handleSubmit={handleSubmit}
       />
-
       <FooterNavigator
         totalQuestions={data.Parts.length}
         currentQuestion={currentPartIndex}
