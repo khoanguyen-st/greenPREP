@@ -40,8 +40,7 @@ export const Introduction = ({ data, onStart }) => {
                 display: 'inline-block',
                 width: 20
               }}
-            >
-            </Typography.Text>{' '}
+            ></Typography.Text>{' '}
             {item}
           </List.Item>
         )}
