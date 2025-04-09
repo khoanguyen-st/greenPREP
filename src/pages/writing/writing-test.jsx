@@ -1,23 +1,24 @@
-import { fetchWritingTestDetails } from '@features/writing/api/writingAPI'
-import { DEFAULT_MAX_WORDS } from '@features/writing/constance/writing-const'
+import { fetchWritingTestDetails, submitWritingAnswers } from '@features/writing/api'
+import { DEFAULT_MAX_WORDS } from '@features/writing/constance'
 import FooterNavigator from '@features/writing/ui/writing-footer-navigator'
 import QuestionForm from '@features/writing/ui/writing-question-form'
 import QuestionNavigatorContainer from '@features/writing/ui/writing-question-navigator-container'
 import { useQuery } from '@tanstack/react-query'
 import { Typography, Spin, Card, Divider } from 'antd'
 import { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 const { Title } = Typography
 
 const WritingTest = () => {
   const navigate = useNavigate()
+  // @ts-ignore
+  const user = useSelector(state => state.auth.user)
+  const userId = user?.id
   const { data, isLoading, isError } = useQuery({
     queryKey: ['writingQuestions'],
-    queryFn: async () => {
-      const response = await fetchWritingTestDetails()
-      return { ...response }
-    }
+    queryFn: fetchWritingTestDetails
   })
 
   const [currentPartIndex, setCurrentPartIndex] = useState(0)
@@ -26,11 +27,12 @@ const WritingTest = () => {
   const [flaggedParts, setFlaggedParts] = useState(() => JSON.parse(localStorage.getItem('flaggedParts')) || {})
 
   useEffect(() => {
-    if (data) {
+    if (data?.Parts) {
       const storedAnswers = JSON.parse(localStorage.getItem('writingAnswers')) || {}
       setAnswers(storedAnswers)
       updateWordCounts(storedAnswers)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, currentPartIndex])
 
   const countWords = text => text.trim().split(/\s+/).filter(Boolean).length
@@ -39,8 +41,8 @@ const WritingTest = () => {
     const newWordCounts = {}
     if (data?.Parts) {
       data.Parts.forEach(part => {
-        part.Questions.forEach((_, index) => {
-          const fieldName = `answer-${part.ID}-${index}`
+        part.Questions.forEach(question => {
+          const fieldName = question.ID
           newWordCounts[fieldName] = countWords(updatedAnswers[fieldName] || '')
         })
       })
@@ -59,31 +61,62 @@ const WritingTest = () => {
     })
   }
 
-  const handleTextChange = (field, text) => {
-    const newAnswers = { ...answers, [field]: text }
+  const handleTextChange = (questionId, text) => {
+    const newAnswers = { ...answers, [questionId]: text }
     setAnswers(newAnswers)
     localStorage.setItem('writingAnswers', JSON.stringify(newAnswers))
     setWordCounts(prev => ({
       ...prev,
-      [field]: countWords(text)
+      [questionId]: countWords(text)
     }))
   }
 
-  const handleSubmit = () => {
-    // eslint-disable-next-line no-console
-    console.table(answers)
-    localStorage.removeItem('writingAnswers')
-    localStorage.removeItem('flaggedParts')
-    navigate('/complete-test')
+  const handleSubmit = async () => {
+    try {
+      if (!data?.Parts) {
+        return
+      }
+
+      const payload = {
+        studentId: userId,
+        topicId: 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc',
+        skillName: 'WRITING',
+        sessionParticipantId: 'a8e2b9e8-bb60-44f0-bd61-6bd524cdc87d',
+        questions: []
+      }
+
+      data.Parts.forEach(part => {
+        part.Questions.forEach(question => {
+          const answerText = answers[question.ID] || ''
+
+          payload.questions.push({
+            questionId: question.ID,
+            answerText,
+            answerAudio: null
+          })
+        })
+      })
+      await submitWritingAnswers(payload)
+
+      localStorage.removeItem('writingAnswers')
+      localStorage.removeItem('flaggedParts')
+
+      navigate('/complete-test')
+    } catch (error) {
+      console.error('❌ Submit failed:', error)
+      alert('Cannot submit answers. Please contact technical support.')
+    }
   }
 
   if (isLoading) {
     return <Spin className="flex h-screen items-center justify-center" />
   }
+
   if (isError) {
     return <div className="text-center text-red-500">Error fetching data</div>
   }
-  if (!data || !data.Parts || data.Parts.length === 0) {
+
+  if (!data?.Parts?.length) {
     return <div className="text-center text-gray-500">No test data available</div>
   }
 
@@ -100,6 +133,7 @@ const WritingTest = () => {
         <Title level={3} className="text-l mb-5 font-semibold">
           Question {currentPartIndex + 1} of {data.Parts.length}
         </Title>
+
         <QuestionForm
           currentPart={currentPart}
           partNumber={partNumber}
@@ -121,6 +155,7 @@ const WritingTest = () => {
         currentPartIndex={currentPartIndex}
         handleSubmit={handleSubmit}
       />
+
       <FooterNavigator
         totalQuestions={data.Parts.length}
         currentQuestion={currentPartIndex}

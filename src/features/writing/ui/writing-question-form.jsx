@@ -16,7 +16,10 @@ const QuestionForm = ({
 }) => {
   const handleTextAreaChange = (fieldName, value, maxWords) => {
     const wordCount = countWords(value || '')
-    if (maxWords && wordCount <= maxWords) {
+    // if (maxWords && wordCount <= maxWords) {
+    //   handleTextChange(fieldName, value)
+    // }
+    if (!maxWords || wordCount <= maxWords) {
       handleTextChange(fieldName, value)
     }
   }
@@ -48,7 +51,8 @@ const QuestionForm = ({
       </div>
 
       {currentPart.Questions.map((question, index) => {
-        const fieldName = `answer-${currentPart.ID}-${index}`
+        // const fieldName = `answer-${currentPart.ID}-${index}`
+        const fieldName = question.ID
         const maxWords = partNumber === 1 ? null : question.maxWords || DEFAULT_MAX_WORDS[partNumber]
 
         return (
