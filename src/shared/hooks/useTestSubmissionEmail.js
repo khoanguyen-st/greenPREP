@@ -44,7 +44,7 @@ export const useTestSubmissionEmail = () => {
       setError(error.message)
       setRetryCount(prev => prev + 1)
       setStatusMessage(`Error: ${error.message}`)
-      await handleEmailError(error, testData)
+      await handleEmailError(error)
     } finally {
       setIsSending(false)
     }
