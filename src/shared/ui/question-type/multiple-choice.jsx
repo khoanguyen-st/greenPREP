@@ -8,7 +8,10 @@ const MultipleChoice = ({ questionData, userAnswer, setUserAnswer, onSubmit, cla
   const [error, setError] = useState(null)
   const { options, isValid } = useMemo(() => {
     try {
-      const parsedContent = JSON.parse(questionData.AnswerContent)[0]
+      const parsedContent = Array.isArray(questionData.AnswerContent)
+        ? questionData.AnswerContent[0]
+        : JSON.parse(questionData.AnswerContent)[0]
+
       multipleChoiceAnswerSchema.validateSync(parsedContent)
       return { options: parsedContent.options, isValid: true }
     } catch (err) {
