@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 const QuestionDisplay = ({
   data,
@@ -9,9 +9,15 @@ const QuestionDisplay = ({
   onNextPart,
   isLastQuestion,
   showNavigation,
-  isPart4
+  isPart4,
+  isUploading,
+  isButtonLoading
 }) => {
   const [imageUrl, setImageUrl] = useState(null)
+  const [audioUrl, setAudioUrl] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [buttonClicked, setButtonClicked] = useState(false)
+  const pendingActionRef = useRef(null)
 
   useEffect(() => {
     if (currentQuestion?.ImageKeys?.[0]) {
@@ -21,7 +27,61 @@ const QuestionDisplay = ({
     } else {
       setImageUrl(null)
     }
+
+    const speakingAnswerStr = localStorage.getItem('speaking_answer')
+    if (speakingAnswerStr && currentQuestion) {
+      const speakingAnswer = JSON.parse(speakingAnswerStr)
+      const questionAnswer = speakingAnswer.questions.find(q => q.questionId === currentQuestion.ID)
+      if (questionAnswer && questionAnswer.answerAudio) {
+        setAudioUrl(questionAnswer.answerAudio)
+      } else {
+        setAudioUrl(null)
+      }
+    } else {
+      setAudioUrl(null)
+    }
   }, [currentQuestion])
+
+  useEffect(() => {
+    setButtonClicked(false)
+    pendingActionRef.current = null
+  }, [currentQuestionIndex])
+
+  useEffect(() => {
+    if (pendingActionRef.current && !isUploading && buttonClicked) {
+      executeAction(pendingActionRef.current)
+      pendingActionRef.current = null
+    }
+  }, [isUploading])
+
+  const executeAction = async action => {
+    setIsLoading(true)
+
+    try {
+      if (action === 'nextQuestion') {
+        await onNextQuestion()
+      } else if (action === 'nextPart') {
+        await onNextPart()
+      }
+    } catch (error) {
+      console.error('Error during navigation:', error)
+    } finally {
+      setIsLoading(false)
+      setButtonClicked(false)
+    }
+  }
+
+  const handleButtonClick = action => {
+    setButtonClicked(true)
+
+    if (isUploading) {
+      pendingActionRef.current = action
+    } else {
+      executeAction(action)
+    }
+  }
+
+  const showLoading = buttonClicked && (isUploading || isLoading || isButtonLoading)
 
   return (
     <div className="relative flex h-screen w-2/3 flex-col bg-white p-12">
@@ -43,12 +103,12 @@ const QuestionDisplay = ({
         </div>
       )}
 
-      <div className="flex-1 rounded-2xl bg-gray-50 p-8 shadow-lg">
+      <div className="flex-1 overflow-y-auto rounded-2xl bg-gray-50 p-8 shadow-lg">
         {currentQuestion ? (
           <>
             <div className="mb-6 flex items-center justify-between">
               <span className="rounded-xl bg-[#003087] px-6 py-2 text-xl font-semibold text-white">
-                {isPart4 ? 'Part 4 Questions' : `Question ${currentQuestionIndex + 1} of ${totalQuestions}`}
+                {isPart4 ? 'Part 4' : `Question ${currentQuestionIndex + 1} of ${totalQuestions}`}
               </span>
             </div>
             {isPart4 ? (
@@ -71,7 +131,18 @@ const QuestionDisplay = ({
                 ))}
               </div>
             ) : (
-              <p className="text-2xl leading-relaxed text-gray-800">{currentQuestion.Content}</p>
+              <div>
+                <p className="text-2xl leading-relaxed text-gray-800">{currentQuestion.Content}</p>
+
+                {audioUrl && (
+                  <div className="mt-6 rounded-lg bg-green-50 p-4">
+                    <audio controls className="w-full">
+                      <source src={audioUrl} type="audio/webm" />
+                      Your browser does not support the audio element.
+                    </audio>
+                  </div>
+                )}
+              </div>
             )}
           </>
         ) : (
@@ -82,10 +153,36 @@ const QuestionDisplay = ({
       {showNavigation && (
         <div className="mt-6 flex justify-end">
           <button
-            onClick={isLastQuestion || isPart4 ? onNextPart : onNextQuestion}
-            className="rounded-xl bg-[#003087] px-8 py-4 text-xl font-medium text-white transition-all hover:bg-[#002b6c]"
+            onClick={() => handleButtonClick(isLastQuestion || isPart4 ? 'nextPart' : 'nextQuestion')}
+            disabled={showLoading}
+            className={`rounded-full bg-[#003087] px-8 py-4 text-xl font-medium text-white transition-all hover:bg-[#002b6c] ${
+              showLoading ? 'cursor-not-allowed opacity-70' : ''
+            }`}
           >
-            {isPart4 ? 'Submit' : isLastQuestion ? 'Next Part' : 'Next Question'}
+            {showLoading ? (
+              <span className="flex items-center">
+                <svg
+                  className="mr-2 h-5 w-5 animate-spin text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Loading...
+              </span>
+            ) : isPart4 ? (
+              'Submit'
+            ) : isLastQuestion ? (
+              'Next Part'
+            ) : (
+              'Next Question'
+            )}
           </button>
         </div>
       )}

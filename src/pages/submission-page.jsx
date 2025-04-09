@@ -3,8 +3,6 @@ import { createSelector } from '@reduxjs/toolkit'
 import { useTestSubmissionEmail } from '@shared/hooks/useTestSubmissionEmail'
 import { Button, message, Spin, Typography } from 'antd'
 import { useEffect, useState } from 'react'
-
-
 import { AiOutlineCheckCircle } from 'react-icons/ai'
 import { useSelector } from 'react-redux'
 import { useNavigate, useLocation } from 'react-router-dom'
