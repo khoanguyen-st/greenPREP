@@ -663,16 +663,66 @@ const ListeningTest = () => {
         answerContent.rightItems &&
         Array.isArray(answerContent.rightItems)
       ) {
+        let formattedCorrectAnswer = []
+        if (answerContent.correctAnswer && Array.isArray(answerContent.correctAnswer)) {
+          formattedCorrectAnswer = answerContent.correctAnswer.map(item => {
+            if (item.left && item.right) {
+              return {
+                key: item.left,
+                value: item.right
+              }
+            }
+            return item
+          })
+        } else if (answerContent.correctAnswer && typeof answerContent.correctAnswer === 'object') {
+          formattedCorrectAnswer = Object.entries(answerContent.correctAnswer).map(([key, value]) => ({
+            key,
+            value
+          }))
+        } else {
+          formattedCorrectAnswer = answerContent.leftItems.map((leftItem, index) => ({
+            key: leftItem,
+            value: answerContent.rightItems[index] || ''
+          }))
+        }
+
         return {
           ...question,
           Type: question.Type === 'matching' ? 'dropdown-list' : question.Type,
           AnswerContent: {
             ...answerContent,
+            correctAnswer: formattedCorrectAnswer,
             type: question.Type === 'matching' ? 'dropdown-list' : answerContent.type
           }
         }
       } else if (answerContent.type === 'dropdown-list') {
-        return question
+        let formattedCorrectAnswer = []
+        if (answerContent.correctAnswer && Array.isArray(answerContent.correctAnswer)) {
+          formattedCorrectAnswer = answerContent.correctAnswer.map(item => {
+            if (item.key && item.value) {
+              return item
+            } else if (item.left && item.right) {
+              return {
+                key: item.left,
+                value: item.right
+              }
+            }
+            return item
+          })
+        } else if (answerContent.correctAnswer && typeof answerContent.correctAnswer === 'object') {
+          formattedCorrectAnswer = Object.entries(answerContent.correctAnswer).map(([key, value]) => ({
+            key,
+            value
+          }))
+        }
+
+        return {
+          ...question,
+          AnswerContent: {
+            ...answerContent,
+            correctAnswer: formattedCorrectAnswer
+          }
+        }
       }
 
       throw new Error('Invalid question format: missing required fields')
