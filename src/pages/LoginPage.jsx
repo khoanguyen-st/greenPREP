@@ -30,6 +30,11 @@ const LoginPage = () => {
     }
   }
 
+  const isRoleAllowed = (roles = []) => {
+    const disallowedRoles = ['teacher', 'admin']
+    return !roles.some(role => disallowedRoles.includes(role.toLowerCase()))
+  }
+
   const onFinish = async values => {
     setLoading(true)
     setLoginError('')
@@ -48,9 +53,16 @@ const LoginPage = () => {
         const userData = getUserData(token)
 
         if (userData) {
+          const userRoles = userData?.role || []
+
+          if (!isRoleAllowed(userRoles)) {
+            setLoginError('Access denied: Your account is not permitted to login.')
+            localStorage.removeItem(ACCESS_TOKEN)
+            return
+          }
           dispatch(login(userData))
           setLoginSuccess('Login successful!')
-          navigate('/')
+          navigate('/dashboard')
         } else {
           setLoginError('Invalid token received')
         }
