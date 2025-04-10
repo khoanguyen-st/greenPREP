@@ -50,10 +50,8 @@ const TestNavigation = ({
   const questionNavigatorValues = getAllQuestions().map((q, idx) => {
     const isQuestionFlagged = flaggedQuestions.includes(q.question.ID)
 
-    // Check if the question is a listening-questions-group
     let isQuestionAnswered = false
     if (q.question.Type === 'listening-questions-group' && q.question.GroupContent?.listContent) {
-      // Check if all sub-questions are answered
       isQuestionAnswered = q.question.GroupContent.listContent.every(subQuestion => {
         const subQuestionId = `${q.question.ID}-${subQuestion.ID}`
         return userAnswers[subQuestionId] !== undefined
