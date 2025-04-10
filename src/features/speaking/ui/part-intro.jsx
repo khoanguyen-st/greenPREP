@@ -1,3 +1,5 @@
+import { Button } from 'antd'
+
 const PartIntro = ({ data, onStartPart }) => {
   const getPartInfo = content => {
     switch (content) {
@@ -22,7 +24,7 @@ const PartIntro = ({ data, onStartPart }) => {
           description: 'You will be shown a picture and asked to describe it in detail.',
           readingTime: '05 seconds',
           answeringTime: '45 seconds',
-          totalQuestions: 1,
+          totalQuestions: 3,
           instructions: [
             'You will be shown a picture',
             'You have 5 seconds to look at the picture',
@@ -111,12 +113,9 @@ const PartIntro = ({ data, onStartPart }) => {
         </div>
 
         <div className="text-center">
-          <button
-            onClick={onStartPart}
-            className="rounded-full bg-[#003087] px-8 py-3 text-lg font-semibold text-white transition-all hover:bg-[#002b6c] hover:shadow-[0_4px_12px_rgb(0,0,0,0.15)]"
-          >
+          <Button type="primary" size="large" onClick={onStartPart} className="bg-[#003087] hover:bg-[#002b6c]">
             Start Part
-          </button>
+          </Button>
         </div>
       </div>
     </div>

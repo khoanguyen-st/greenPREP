@@ -1,4 +1,5 @@
-import StudentProfile from '@features/profile/ui/student-profile'
+import Profile from '@features/profile/ui/profile'
+import WaitingForApproval from '@features/welcome/ui/waiting-for-approval'
 import GrammarPage from '@pages/grammar'
 import GrammarIntroduction from '@pages/grammar/grammar-introduction'
 import GrammarTest from '@pages/grammar/grammar-test'
@@ -8,7 +9,6 @@ import ListeningPage from '@pages/listening'
 import ListeningHeadphoneCheck from '@pages/listening/listening-headphonecheck'
 import ListeningIntroduction from '@pages/listening/listening-introduction'
 import ListeningTest from '@pages/listening/listening-test'
-import ProfilePage from '@pages/profile'
 import ReadingPage from '@pages/reading'
 import ReadingIntroduction from '@pages/reading/reading-instroduction'
 import ReadingTest from '@pages/reading/reading-test'
@@ -18,7 +18,6 @@ import MicrophoneCheck from '@pages/speaking/micro-check'
 import SpeakingIntroduction from '@pages/speaking/speaking-introduction'
 import SpeakingParts from '@pages/speaking/speaking-parts'
 import SubmissionPage from '@pages/submission-page'
-import WaitingForApproval from '@pages/waiting-for-approval'
 import WritingPage from '@pages/writing'
 import WritingIntroduction from '@pages/writing/writing-introduction'
 import WritingTest from '@pages/writing/writing-test'
@@ -121,7 +120,7 @@ const PrivateRoute = [
         element: <IntroductionPage />
       },
       {
-        path: 'waiting-for-approval',
+        path: 'waiting-for-approval/:userId/:sessionId/:requestId',
         element: <WaitingForApproval />
       },
       {
@@ -129,14 +128,8 @@ const PrivateRoute = [
         element: <SubmissionPage />
       },
       {
-        path: 'profile',
-        element: <ProfilePage />,
-        children: [
-          {
-            index: true,
-            element: <StudentProfile />
-          }
-        ]
+        path: 'profile/:userId',
+        element: <Profile />
       }
     ]
   }

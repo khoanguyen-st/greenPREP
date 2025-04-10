@@ -1,10 +1,16 @@
+import {
+  uploadToCloudinary,
+  initializeSpeakingAnswer,
+  addQuestionAnswer,
+  submitSpeakingAnswer
+} from '@features/speaking/api'
+import PartIntro from '@features/speaking/ui/part-intro'
+import QuestionDisplay from '@features/speaking/ui/question-display'
+import TimerDisplay from '@features/speaking/ui/timer-display'
+import { useMutation } from '@tanstack/react-query'
+import { message } from 'antd'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
-import { uploadToCloudinary } from '../api'
-import PartIntro from './part-intro'
-import QuestionDisplay from './question-display'
-import TimerDisplay from './timer-display'
 
 const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPart }) => {
   const navigate = useNavigate()
@@ -20,6 +26,8 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
   const [isTimerRunning, setIsTimerRunning] = useState(false)
   const [hasUploaded, setHasUploaded] = useState(false)
   const [showIntro, setShowIntro] = useState(true)
+  const [isUploading, setIsUploading] = useState(false)
+  const [isButtonLoading, setIsButtonLoading] = useState(false)
 
   const parseTime = timeStr => {
     const [min, sec] = timeStr.split(':').map(Number)
@@ -42,8 +50,22 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
   const currentQuestion = questions[currentQuestionIndex]
   const currentTimePair = getTimePair(currentQuestionIndex)
 
+  const submitMutation = useMutation({
+    mutationFn: submitSpeakingAnswer,
+    onSuccess: () => {
+      if (data.Content === 'PART 4') {
+        navigate('/listening')
+      } else if (onNextPart) {
+        onNextPart()
+      }
+    },
+    onError: error => {
+      message.error('Failed to submit speaking answer:')
+      console.error('Error details:', error)
+    }
+  })
+
   useEffect(() => {
-    // Reset all states when part changes
     setShowIntro(true)
     setIsActive(false)
     setIsTimerRunning(false)
@@ -59,7 +81,9 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
     if (mediaRecorderRef?.state === 'recording') {
       mediaRecorderRef.stop()
     }
-  }, [data.Content])
+
+    initializeSpeakingAnswer(data.TopicID)
+  }, [data.Content, data.TopicID])
 
   useEffect(() => {
     if (isActive && isTimerRunning) {
@@ -121,36 +145,59 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
           const blob = new Blob(chunks, { type: 'audio/webm' })
           if (!hasUploaded) {
             try {
-              await uploadToCloudinary(blob, data.TopicID, data.Content, currentQuestionIndex)
+              setIsUploading(true)
+              const result = await uploadToCloudinary(blob, data.TopicID, data.Content, currentQuestionIndex)
               setHasUploaded(true)
+
+              if (currentQuestion && result.secure_url) {
+                addQuestionAnswer(currentQuestion.ID, result.secure_url)
+              }
             } catch (error) {
               console.error('Failed to upload recording:', error)
+            } finally {
+              setIsUploading(false)
             }
           }
           stream.getTracks().forEach(track => track.stop())
         }
-        mediaRecorder.start()
+        mediaRecorder.start(1000)
         setIsRecording(true)
         setHasUploaded(false)
       })
       .catch(err => console.error('Error accessing microphone:', err))
   }
 
-  const handleNextQuestion = () => {
+  const handleNextQuestion = async () => {
     if (currentQuestionIndex < totalQuestions - 1) {
+      setIsButtonLoading(true)
+      if (isUploading) {
+        while (isUploading) {
+          await new Promise(resolve => setTimeout(resolve, 100))
+        }
+      }
+
       setCurrentQuestionIndex(prev => prev + 1)
       setPhase('reading')
       setCountdown(parseTime(getTimePair(currentQuestionIndex + 1).read))
       setIsActive(true)
       setIsTimerRunning(true)
+      setHasUploaded(false)
+      setIsButtonLoading(false)
     }
   }
 
-  const handleNextPart = () => {
-    if (data.Content === 'PART 4') {
-      navigate('/listening')
-    } else if (onNextPart) {
-      onNextPart()
+  const handleNextPart = async () => {
+    setIsButtonLoading(true)
+    if (isUploading) {
+      while (isUploading) {
+        await new Promise(resolve => setTimeout(resolve, 100))
+      }
+    }
+
+    try {
+      await submitMutation.mutateAsync()
+    } finally {
+      setIsButtonLoading(false)
     }
   }
 
@@ -166,6 +213,8 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
         isLastQuestion={currentQuestionIndex === totalQuestions - 1}
         showNavigation={!isRecording && countdown === 0 && phase === 'answering'}
         isPart4={data.Content === 'PART 4'}
+        isUploading={isUploading}
+        isButtonLoading={isButtonLoading || submitMutation.isPending}
       />
       <div className="flex h-screen w-1/3 flex-col items-center justify-center bg-gradient-to-br from-[#003087] via-[#002b6c] to-[#001f4d]">
         <h2 className="mb-4 text-4xl font-bold text-white">
