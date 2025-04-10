@@ -24,7 +24,7 @@ const SharedHeader = () => {
 
   return (
     <>
-      <Header className="bg-primary-color flex h-[80px] items-center justify-between border-0 border-l border-solid border-neutral-400 p-4">
+      <Header className="bg-primary-color flex h-[80px] items-center justify-end border-0 border-l border-solid border-neutral-400 p-4">
         <div className="flex items-center">
           <Dropdown overlay={menu} trigger={['click']}>
             <a
