@@ -1,7 +1,8 @@
 import axios from '@shared/config/axios'
 
-const API_BASE_URL = 'https://greenprep-api.onrender.com/api'
-const API_SAVE_ANSWERS = 'https://dev-api-greenprep.onrender.com/api'
+const API_BASE_URL = import.meta.env.VITE_TEST_BASE_URL
+const API_SAVE_ANSWERS = import.meta.env.VITE_BASE_URL
+
 export const fetchListeningTestDetails = async () => {
   const response = await axios.get(`${API_BASE_URL}/topics/ef6b69aa-2ec2-4c65-bf48-294fd12e13fc`, {
     params: {
