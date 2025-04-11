@@ -1,4 +1,4 @@
-import RegisterPage from '@pages/Register'
+import RegisterPage from '@pages/register-page'
 
 const PublicRoute = [
   {

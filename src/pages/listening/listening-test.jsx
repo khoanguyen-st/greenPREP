@@ -1,5 +1,5 @@
 import { SubmissionImage } from '@assets/images'
-import { fetchListeningTestDetails } from '@features/listening/api/listeningAPI'
+import { fetchListeningTestDetails, saveListeningAnswers } from '@features/listening/api/listeningAPI'
 import PlayStopButton from '@features/listening/ui/play-stop-button'
 import TestNavigation from '@features/listening/ui/test-navigation'
 import DropdownQuestion from '@shared/ui/question-type/dropdown-question'
@@ -22,9 +22,26 @@ const ListeningTest = () => {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
+  const [formattedAnswers, setFormattedAnswers] = useState(() => {
+    const savedFormattedAnswers = localStorage.getItem('listening_formatted_answers')
+    return savedFormattedAnswers
+      ? JSON.parse(savedFormattedAnswers)
+      : {
+          studentId: '661abc8e-55a0-4d95-89e4-784acd81227d',
+          topicId: 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc',
+          skillName: 'LISTENING',
+          sessionParticipantId: 'a8e2b9e8-bb60-44f0-bd61-6bd524cdc87d',
+          questions: []
+        }
+  })
+
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(userAnswers))
   }, [userAnswers])
+
+  useEffect(() => {
+    localStorage.setItem('listening_formatted_answers', JSON.stringify(formattedAnswers))
+  }, [formattedAnswers])
 
   const {
     data: testData,
@@ -34,6 +51,211 @@ const ListeningTest = () => {
     queryKey: ['listeningTest'],
     queryFn: () => fetchListeningTestDetails()
   })
+
+  useEffect(() => {
+    const dropdownListQuestions = Object.entries(userAnswers).filter(([id, answer]) => {
+      const isDropdownList = typeof answer === 'object' && !Array.isArray(answer) && Object.keys(answer).length > 0
+      const isInFormattedAnswers = formattedAnswers.questions.some(q => q.questionId === id)
+      return isDropdownList && !isInFormattedAnswers
+    })
+
+    if (dropdownListQuestions.length > 0) {
+      setFormattedAnswers(prev => {
+        const newQuestions = [...prev.questions]
+
+        dropdownListQuestions.forEach(([id, answer]) => {
+          let questionContent = null
+          if (testData?.Parts) {
+            for (const part of testData.Parts) {
+              for (const q of part.Questions) {
+                if (q.ID === id) {
+                  questionContent = q.Content
+                  break
+                }
+              }
+              if (questionContent) {
+                break
+              }
+            }
+          }
+
+          const formattedAnswer = Object.entries(answer)
+            .filter(([key]) => key !== questionContent)
+            .map(([key, value]) => ({
+              key,
+              value
+            }))
+
+          newQuestions.push({
+            questionId: id,
+            answerAudio: null,
+            answerText: formattedAnswer
+          })
+        })
+
+        return {
+          ...prev,
+          questions: newQuestions
+        }
+      })
+    }
+
+    const existingDropdownListQuestions = formattedAnswers.questions.filter(q => {
+      const userAnswer = userAnswers[q.questionId]
+      return userAnswer && typeof userAnswer === 'object' && !Array.isArray(userAnswer)
+    })
+
+    if (existingDropdownListQuestions.length > 0) {
+      setFormattedAnswers(prev => {
+        const newQuestions = [...prev.questions]
+
+        existingDropdownListQuestions.forEach(q => {
+          const userAnswer = userAnswers[q.questionId]
+
+          const questionIndex = newQuestions.findIndex(nq => nq.questionId === q.questionId)
+
+          if (questionIndex >= 0) {
+            const existingAnswerText = newQuestions[questionIndex].answerText || []
+
+            const existingAnswersMap = {}
+            if (Array.isArray(existingAnswerText)) {
+              existingAnswerText.forEach(item => {
+                if (item.key) {
+                  existingAnswersMap[item.key] = item.value
+                }
+              })
+            }
+
+            let questionContent = null
+            if (testData?.Parts) {
+              for (const part of testData.Parts) {
+                for (const q of part.Questions) {
+                  if (q.ID === q.questionId) {
+                    questionContent = q.Content
+                    break
+                  }
+                }
+                if (questionContent) {
+                  break
+                }
+              }
+            }
+
+            const mergedAnswers = { ...existingAnswersMap }
+            Object.entries(userAnswer).forEach(([key, value]) => {
+              if (key !== questionContent) {
+                mergedAnswers[key] = value
+              }
+            })
+
+            const formattedAnswer = Object.entries(mergedAnswers).map(([key, value]) => ({
+              key,
+              value
+            }))
+
+            newQuestions[questionIndex] = {
+              ...newQuestions[questionIndex],
+              answerText: formattedAnswer
+            }
+          }
+        })
+
+        return {
+          ...prev,
+          questions: newQuestions
+        }
+      })
+    }
+  }, [userAnswers, formattedAnswers.questions, testData])
+
+  useEffect(() => {
+    if (!testData?.Parts) {
+      return
+    }
+
+    const listeningGroupQuestions = []
+
+    testData.Parts.forEach(part => {
+      part.Questions.forEach(question => {
+        if (question.Type === 'listening-questions-group' && question.GroupContent?.listContent) {
+          const parentId = question.ID
+
+          const allSubQuestionsAnswered = question.GroupContent.listContent.every(subQuestion => {
+            const subQuestionId = `${parentId}-${subQuestion.ID}`
+            return userAnswers[subQuestionId] !== undefined
+          })
+
+          if (allSubQuestionsAnswered) {
+            listeningGroupQuestions.push({
+              parentId,
+              subQuestions: question.GroupContent.listContent.map(subQuestion => ({
+                id: subQuestion.ID,
+                answer: userAnswers[`${parentId}-${subQuestion.ID}`]
+              }))
+            })
+          }
+        }
+      })
+    })
+
+    if (listeningGroupQuestions.length > 0) {
+      setFormattedAnswers(prev => {
+        const newQuestions = [...prev.questions]
+
+        listeningGroupQuestions.forEach(group => {
+          const existingQuestionIndex = newQuestions.findIndex(q => q.questionId === group.parentId)
+
+          if (existingQuestionIndex >= 0) {
+            const existingAnswer = newQuestions[existingQuestionIndex].answerText || []
+
+            if (!Array.isArray(existingAnswer)) {
+              newQuestions[existingQuestionIndex].answerText = group.subQuestions.map(q => ({
+                ID: q.id,
+                answer: q.answer
+              }))
+            } else {
+              const validSubQuestionIds = group.subQuestions.map(q => q.id)
+
+              const filteredAnswers = existingAnswer.filter(a => validSubQuestionIds.includes(a.ID))
+
+              const mergedAnswers = [...filteredAnswers]
+
+              group.subQuestions.forEach(subQuestion => {
+                const subQuestionIndex = mergedAnswers.findIndex(a => a.ID === subQuestion.id)
+
+                if (subQuestionIndex >= 0) {
+                  mergedAnswers[subQuestionIndex].answer = subQuestion.answer
+                } else {
+                  mergedAnswers.push({
+                    ID: subQuestion.id,
+                    answer: subQuestion.answer
+                  })
+                }
+              })
+
+              mergedAnswers.sort((a, b) => a.ID - b.ID)
+
+              newQuestions[existingQuestionIndex].answerText = mergedAnswers
+            }
+          } else {
+            newQuestions.push({
+              questionId: group.parentId,
+              answerAudio: null,
+              answerText: group.subQuestions.map(q => ({
+                ID: q.id,
+                answer: q.answer
+              }))
+            })
+          }
+        })
+
+        return {
+          ...prev,
+          questions: newQuestions
+        }
+      })
+    }
+  }, [userAnswers, testData])
 
   const groupedQuestions = useMemo(() => {
     if (!testData?.Parts) {
@@ -118,19 +340,258 @@ const ListeningTest = () => {
 
   const handleAnswerSubmit = (questionId, answer) => {
     setUserAnswers(prev => {
-      const newAnswers = {
-        ...prev,
-        [questionId]: answer
+      if (typeof answer === 'object' && !Array.isArray(answer)) {
+        const existingAnswer = prev[questionId] || {}
+        const newAnswers = {
+          ...prev,
+          [questionId]: {
+            ...existingAnswer,
+            ...answer
+          }
+        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(newAnswers))
+        return newAnswers
+      } else {
+        const newAnswers = {
+          ...prev,
+          [questionId]: answer
+        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(newAnswers))
+        return newAnswers
       }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(newAnswers))
-      return newAnswers
+    })
+
+    setFormattedAnswers(prev => {
+      const isSubQuestion = questionId.includes('-')
+      let parentQuestionId = questionId
+      let subQuestionId = null
+
+      if (isSubQuestion) {
+        const parts = questionId.split('-')
+        parentQuestionId = parts[0]
+        subQuestionId = parts[1]
+      }
+
+      let question = null
+      let questionType = null
+      let fullQuestionId = parentQuestionId
+
+      if (testData?.Parts) {
+        for (const part of testData.Parts) {
+          for (const q of part.Questions) {
+            if (q.ID.startsWith(parentQuestionId)) {
+              question = q
+              questionType = q.Type
+              fullQuestionId = q.ID
+              break
+            }
+          }
+          if (question) {
+            break
+          }
+        }
+      }
+
+      if (!question && userAnswers[questionId] && typeof userAnswers[questionId] === 'object') {
+        questionType = 'dropdown-list'
+        fullQuestionId = questionId
+      }
+
+      const newQuestions = [...prev.questions]
+
+      const existingQuestionIndex = newQuestions.findIndex(q => q.questionId === fullQuestionId)
+
+      if (existingQuestionIndex >= 0) {
+        if (questionType === 'listening-questions-group' && subQuestionId) {
+          let existingAnswer = newQuestions[existingQuestionIndex].answerText || []
+
+          if (!Array.isArray(existingAnswer)) {
+            existingAnswer = []
+          }
+
+          const subQuestionIndex = existingAnswer.findIndex(a => a.ID === parseInt(subQuestionId))
+
+          if (subQuestionIndex >= 0) {
+            existingAnswer[subQuestionIndex] = {
+              ID: parseInt(subQuestionId),
+              answer: answer
+            }
+          } else {
+            existingAnswer.push({
+              ID: parseInt(subQuestionId),
+              answer: answer
+            })
+          }
+
+          existingAnswer.sort((a, b) => a.ID - b.ID)
+
+          newQuestions[existingQuestionIndex].answerText = existingAnswer
+        } else if (questionType === 'dropdown-list') {
+          const existingAnswer = newQuestions[existingQuestionIndex].answerText || []
+
+          if (Array.isArray(existingAnswer)) {
+            const answerKey = Object.keys(answer)[0]
+            const answerValue = answer[answerKey]
+
+            if (answerKey === question?.Content) {
+              return {
+                ...prev,
+                questions: newQuestions
+              }
+            }
+
+            const keyIndex = existingAnswer.findIndex(a => a.key === answerKey)
+
+            if (keyIndex >= 0) {
+              existingAnswer[keyIndex].value = answerValue
+            } else {
+              existingAnswer.push({
+                key: answerKey,
+                value: answerValue
+              })
+            }
+          } else {
+            const answerKey = Object.keys(answer)[0]
+            const answerValue = answer[answerKey]
+
+            if (answerKey === question?.Content) {
+              return {
+                ...prev,
+                questions: newQuestions
+              }
+            }
+
+            newQuestions[existingQuestionIndex].answerText = [
+              {
+                key: answerKey,
+                value: answerValue
+              }
+            ]
+          }
+        } else if (questionType === 'matching') {
+          const existingAnswer = newQuestions[existingQuestionIndex].answerText || []
+
+          if (Array.isArray(existingAnswer)) {
+            const leftIndex = existingAnswer.findIndex(a => a.left === (question?.Content || questionId))
+
+            if (leftIndex >= 0) {
+              existingAnswer[leftIndex].right = answer
+            } else {
+              existingAnswer.push({
+                left: question?.Content || questionId,
+                right: answer
+              })
+            }
+          } else {
+            newQuestions[existingQuestionIndex].answerText = [
+              {
+                left: question?.Content || questionId,
+                right: answer
+              }
+            ]
+          }
+        } else {
+          newQuestions[existingQuestionIndex].answerText = answer
+        }
+      } else {
+        const newQuestion = {
+          questionId: fullQuestionId,
+          answerAudio: null
+        }
+
+        if (questionType === 'listening-questions-group' && subQuestionId) {
+          newQuestion.answerText = [
+            {
+              ID: parseInt(subQuestionId),
+              answer: answer
+            }
+          ]
+        } else if (questionType === 'dropdown-list') {
+          const answerKey = Object.keys(answer)[0]
+          const answerValue = answer[answerKey]
+
+          if (answerKey === question?.Content) {
+            return {
+              ...prev,
+              questions: newQuestions
+            }
+          }
+
+          newQuestion.answerText = [
+            {
+              key: answerKey,
+              value: answerValue
+            }
+          ]
+        } else if (questionType === 'matching') {
+          newQuestion.answerText = [
+            {
+              left: question?.Content || questionId,
+              right: answer
+            }
+          ]
+        } else {
+          newQuestion.answerText = answer
+        }
+
+        newQuestions.push(newQuestion)
+      }
+
+      return {
+        ...prev,
+        questions: newQuestions
+      }
     })
   }
 
-  const handleSubmit = () => {
-    localStorage.removeItem(STORAGE_KEY)
-    localStorage.removeItem('listening_test_answers')
-    setIsSubmitted(true)
+  const handleSubmit = async () => {
+    try {
+      await saveListeningAnswers(formattedAnswers)
+
+      localStorage.setItem('listening_formatted_answers', JSON.stringify(formattedAnswers))
+
+      localStorage.removeItem(STORAGE_KEY)
+      localStorage.removeItem('listening_test_answers')
+      localStorage.removeItem('listening_formatted_answers')
+
+      setUserAnswers({})
+      setFormattedAnswers({
+        studentId: '661abc8e-55a0-4d95-89e4-784acd81227d',
+        topicId: 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc',
+        skillName: 'LISTENING',
+        sessionParticipantId: 'a8e2b9e8-bb60-44f0-bd61-6bd524cdc87d',
+        questions: []
+      })
+
+      setIsSubmitted(true)
+    } catch (error) {
+      console.error('Error submitting listening test:', error)
+    }
+  }
+
+  const handleAutoSubmit = async () => {
+    try {
+      await saveListeningAnswers(formattedAnswers)
+
+      localStorage.setItem('listening_formatted_answers', JSON.stringify(formattedAnswers))
+
+      localStorage.removeItem(STORAGE_KEY)
+      localStorage.removeItem('listening_test_answers')
+      localStorage.removeItem('listening_formatted_answers')
+
+      setUserAnswers({})
+      setFormattedAnswers({
+        studentId: '661abc8e-55a0-4d95-89e4-784acd81227d',
+        topicId: 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc',
+        skillName: 'LISTENING',
+        sessionParticipantId: 'a8e2b9e8-bb60-44f0-bd61-6bd524cdc87d',
+        questions: []
+      })
+
+      setIsSubmitted(true)
+    } catch (error) {
+      console.error('Error auto-submitting listening test:', error)
+    }
   }
 
   const toggleFlag = isFlagged => {
@@ -154,6 +615,31 @@ const ListeningTest = () => {
     try {
       const answerContent =
         typeof question.AnswerContent === 'string' ? JSON.parse(question.AnswerContent) : question.AnswerContent
+
+      if (question.Type === 'listening-questions-group' && question.GroupContent?.listContent) {
+        const formattedQuestions = question.GroupContent.listContent.map(subQuestion => {
+          const options = subQuestion.options.map((option, index) => ({
+            key: String.fromCharCode(65 + index),
+            value: option
+          }))
+
+          return {
+            ...question,
+            ID: `${question.ID}-${subQuestion.ID}`,
+            Content: subQuestion.content,
+            Type: subQuestion.type,
+            AnswerContent: JSON.stringify([
+              {
+                title: subQuestion.content,
+                options,
+                correctAnswer: subQuestion.correctAnswer
+              }
+            ])
+          }
+        })
+
+        return formattedQuestions
+      }
 
       if (answerContent.options && Array.isArray(answerContent.options) && answerContent.correctAnswer) {
         const options = answerContent.options.map((option, index) => ({
@@ -246,6 +732,7 @@ const ListeningTest = () => {
       onQuestionChange={goToQuestion}
       onNext={goToNext}
       onSubmit={handleSubmit}
+      onAutoSubmit={handleAutoSubmit}
       userAnswers={userAnswers}
       flaggedQuestions={flaggedQuestions}
       skillName={testData.Parts[0].Questions[0].Skill.Name}
@@ -262,21 +749,44 @@ const ListeningTest = () => {
       )}
       {currentGroup?.questions.map(question => {
         const formattedQ = formatQuestionData(question)
-        const qType = question.Type
-        return (
-          <div key={question.ID} className="mt-6">
-            {(qType === 'matching' || qType === 'dropdown-list') && (
-              <Typography.Title level={5} className="mb-6">
+        const qType = formattedQ?.Type || question.Type
+
+        if (question.Type === 'listening-questions-group') {
+          if (!Array.isArray(formattedQ)) {
+            return null
+          }
+
+          return (
+            <div key={question.ID} className="mt-6">
+              <Typography.Title level={4} className="mb-6">
                 {question.Content}
               </Typography.Title>
-            )}
+              {formattedQ.map(subQuestion => (
+                <div key={subQuestion.ID} className="mb-8">
+                  <MultipleChoice
+                    questionData={subQuestion}
+                    userAnswer={userAnswers}
+                    setUserAnswer={setUserAnswers}
+                    onSubmit={answer => handleAnswerSubmit(subQuestion.ID, answer)}
+                    className="mt-6"
+                    setUserAnswerSubmit={() => {}}
+                  />
+                </div>
+              ))}
+            </div>
+          )
+        }
+
+        return (
+          <div key={question.ID} className="mt-6">
             {qType === 'multiple-choice' ? (
               <MultipleChoice
                 questionData={formattedQ}
                 userAnswer={userAnswers}
                 setUserAnswer={setUserAnswers}
                 onSubmit={answer => handleAnswerSubmit(question.ID, answer)}
-                className="mt-6"
+                className="z-0 mt-6"
+                setUserAnswerSubmit={() => {}}
               />
             ) : qType === 'matching' || qType === 'dropdown-list' ? (
               <DropdownQuestion

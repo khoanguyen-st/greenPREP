@@ -231,7 +231,7 @@ const Profile = () => {
           }
         }}
       />
-      <StudentHistory />
+      <StudentHistory userId={auth.user?.userId} />
     </>
   )
 }
