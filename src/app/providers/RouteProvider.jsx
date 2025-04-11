@@ -1,6 +1,6 @@
 import PrivateRoute from '@app/routes/PrivateRoute'
 import PublicRoute from '@app/routes/PublicRoute'
-import LoginPage from '@pages/LoginPage'
+import LoginPage from '@pages/login-page'
 import NotFound from '@pages/not-found-page'
 import { Layout } from 'antd'
 import { useSelector } from 'react-redux'

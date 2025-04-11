@@ -2,7 +2,7 @@ import { Typography, Divider, List, Button } from 'antd'
 
 export const Introduction = ({ data, onStart }) => {
   return (
-    <div className="mx-auto mt-10 max-w-3xl space-y-2">
+    <div className="mx-auto mb-2 max-w-3xl space-y-2">
       <Divider orientation="left">
         <Typography.Title level={2}>{data.title}</Typography.Title>
       </Divider>

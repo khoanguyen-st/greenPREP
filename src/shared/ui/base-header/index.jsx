@@ -1,10 +1,10 @@
 import { DownOutlined } from '@ant-design/icons'
-import { Avatar, Dropdown, Layout, Menu } from 'antd'
+import { Logo } from '@assets/images'
+import LogoutModal from '@pages/logout-modal'
+import { Avatar, Dropdown, Layout, Menu, Image } from 'antd'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-
-import LogoutModal from '../../pages/LogoutModal'
 
 const { Header } = Layout
 
@@ -24,11 +24,14 @@ const SharedHeader = () => {
 
   return (
     <>
-      <Header className="bg-primary-color flex h-[80px] items-center justify-end border-0 border-l border-solid border-neutral-400 p-4">
-        <div className="flex items-center">
+      <Header className="flex h-[80px] items-center justify-between border-0 border-l border-solid border-neutral-400 bg-[#003087] p-12">
+        <div className="flex items-center justify-center">
+          <Image className="object-contain" src={Logo} alt="Logo" preview={false} />
+        </div>
+        <div className="flex">
           <Dropdown overlay={menu} trigger={['click']}>
             <a
-              className="ant-dropdown-link flex h-10 w-auto min-w-[150px] max-w-[220px] cursor-pointer items-center justify-between gap-3 rounded-md bg-[#3758F9] px-3 text-white shadow-md transition hover:bg-[#2F4CC9] md:h-12 md:min-w-[180px] md:max-w-[240px]"
+              className="ant-dropdown-link flex h-10 w-auto min-w-[150px] max-w-[220px] cursor-pointer items-center justify-between gap-3 rounded-md bg-[#3758F96B] px-3 text-white shadow-md transition hover:bg-[##3757f952] md:h-12 md:min-w-[180px] md:max-w-[240px]"
               onClick={e => e.preventDefault()}
             >
               <span className="flex items-center space-x-1 text-sm md:text-base">
