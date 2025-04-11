@@ -24,24 +24,23 @@ const SharedHeader = () => {
 
   return (
     <>
-      <Header className="flex h-[80px] items-center justify-between border-0 border-l border-solid border-neutral-400 bg-[#003087] p-12">
-        <div className="flex items-center justify-center">
+      <Header className="flex h-[80px] items-center justify-between border-0 border-l border-solid border-neutral-400 bg-[#003087] px-12">
+        <div className="flex items-center justify-center pb-2">
           <Image className="object-contain" src={Logo} alt="Logo" preview={false} />
         </div>
-        <div className="flex">
-          <Dropdown overlay={menu} trigger={['click']}>
+        <div className="flex items-center justify-center">
+          <Dropdown overlay={menu} trigger={['click']} overlayClassName="border-none shadow-none">
             <a
-              className="ant-dropdown-link flex h-10 w-auto min-w-[150px] max-w-[220px] cursor-pointer items-center justify-between gap-3 rounded-md bg-[#3758F96B] px-3 text-white shadow-md transition hover:bg-[##3757f952] md:h-12 md:min-w-[180px] md:max-w-[240px]"
+              className="bg-primary-color hover:bg-primary-color/80 flex h-12 w-auto min-w-[150px] max-w-[220px] cursor-pointer items-center gap-3 rounded-md px-3 text-white transition"
               onClick={e => e.preventDefault()}
             >
-              <span className="flex items-center space-x-1 text-sm md:text-base">
-                <span>Hi,</span>
-                <span className="font-medium">{user?.lastName}</span>
-              </span>
-              <Avatar className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-gray-500 text-sm font-semibold text-white md:h-10 md:w-10">
+              <Avatar className="bg-primary-color flex h-10 w-10 items-center justify-center rounded-full border-2 border-white text-lg font-semibold text-white">
                 {user?.lastName?.charAt(0)}
               </Avatar>
-              <DownOutlined className="text-sm text-white md:text-base" />
+              <span className="flex items-center space-x-1 text-base">
+                <span className="font-medium">{user?.lastName}</span>
+                <DownOutlined className="text-base text-white" />
+              </span>
             </a>
           </Dropdown>
         </div>

@@ -46,7 +46,7 @@ export const Introduction = ({ data, onStart }) => {
         )}
       />
       <div className="flex justify-end">
-        <Button onClick={onStart} size="large" type="primary" className="bg-[#003087] hover:bg-[#002b6c]">
+        <Button onClick={onStart} size="large" type="primary" className="!rounded-md !bg-[#003087]">
           Start Test
         </Button>
       </div>
