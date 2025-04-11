@@ -9,10 +9,12 @@ import NextScreen from '@shared/ui/submission/next-screen'
 import { useQuery } from '@tanstack/react-query'
 import { Spin, Alert, Typography, Modal } from 'antd'
 import { useState, useMemo, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 
 const STORAGE_KEY = 'listening_test_answers'
 
 const ListeningTest = () => {
+  const userId = useSelector(state => state.auth.user.userId)
   const [currentPartIndex, setCurrentPartIndex] = useState(0)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [userAnswers, setUserAnswers] = useState(() => {
@@ -30,7 +32,7 @@ const ListeningTest = () => {
     return savedFormattedAnswers
       ? JSON.parse(savedFormattedAnswers)
       : {
-          studentId: '97bcdd0e-f590-4592-9e7b-f6cd39c8fd8a',
+          studentId: userId,
           topicId: 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc',
           skillName: 'LISTENING',
           sessionParticipantId: '45c6d73a-ad6f-4eb7-b5ba-9adcb97c91f0',
@@ -552,7 +554,7 @@ const ListeningTest = () => {
 
       setUserAnswers({})
       setFormattedAnswers({
-        studentId: '97bcdd0e-f590-4592-9e7b-f6cd39c8fd8a',
+        studentId: userId,
         topicId: 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc',
         skillName: 'LISTENING',
         sessionParticipantId: '45c6d73a-ad6f-4eb7-b5ba-9adcb97c91f0',
@@ -579,7 +581,7 @@ const ListeningTest = () => {
 
       setUserAnswers({})
       setFormattedAnswers({
-        studentId: '97bcdd0e-f590-4592-9e7b-f6cd39c8fd8a',
+        studentId: userId,
         topicId: 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc',
         skillName: 'LISTENING',
         sessionParticipantId: '45c6d73a-ad6f-4eb7-b5ba-9adcb97c91f0',
