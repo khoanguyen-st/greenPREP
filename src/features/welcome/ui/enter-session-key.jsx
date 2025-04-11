@@ -33,21 +33,21 @@ const EnterSessionKey = () => {
   return (
     <Layout>
       <Content className="flex min-h-screen flex-col items-center justify-center gap-10 bg-white px-5 md:flex-row md:gap-40 md:px-20">
-        <div className="-translate-y-18 flex h-[250px] w-[250px] transform items-center justify-center object-cover sm:h-[300px] sm:w-[300px] md:h-[550px] md:w-[30%] md:w-[550px] md:-translate-y-12">
+        <div className="-translate-y-18 flex h-[250px] w-[250px] transform items-center justify-center object-cover sm:h-[300px] sm:w-[300px] md:h-[550px] md:w-[550px] md:-translate-y-12">
           <Image src={sessionKeyImage} preview={false} />
         </div>
         <div className="mt-0 flex w-full flex-col items-center pr-0 md:mt-[-20%] md:w-[70%] md:items-start md:pr-5">
-          <div className="mb-6 w-full text-center text-[28px] md:text-[40px] lgL:text-left">
-            <Title className="mb-4 font-bold md:mb-5">
-              Welcome to <span className="text-[#003087]">GreenPREP!</span>
+          <div className="mb-6 w-full text-center md:mb-5 lgL:text-left">
+            <Title className="text-[30px] font-bold md:text-[40px]">
+              Welcome to <span className="text-[#003087]">GreenPREP !</span>
             </Title>
             <div className="flex flex-col items-center md:items-start">
-              <div className="mb-8 lg:text-left">
-                <Text className="text-center text-lg font-normal leading-tight md:text-[40px]">
+              <div className="mb-8">
+                <Text className="text-center text-lg font-normal leading-tight md:text-[40px] lg:text-left">
                   Have you received the session key?
                 </Text>
               </div>
-              <Text className="w-fit text-left text-sm text-gray-600 md:text-[20px] lg:text-center">
+              <Text className="w-fit text-left text-sm md:text-[20px] lg:text-center">
                 Please enter session key to start test
               </Text>
             </div>
