@@ -44,13 +44,14 @@ const uploadToCloudinary = async (blob, topicId, partContent, questionIndex) => 
   }
 }
 
-const initializeSpeakingAnswer = topicId => {
+const initializeSpeakingAnswer = (topicId, userId) => {
+  const sessionParticipantId = localStorage.getItem('sessionParticipantId')
   localStorage.removeItem('speaking_answer')
   const speakingAnswer = {
-    studentId: '7a5cb071-5ba0-4ecf-a4cf-b1b62e5f9798',
+    studentId: userId,
     topicId: topicId,
     skillName: 'SPEAKING',
-    sessionParticipantId: 'a8e2b9e8-bb60-44f0-bd61-6bd524cdc87d',
+    sessionParticipantId: sessionParticipantId,
     questions: []
   }
   localStorage.setItem('speaking_answer', JSON.stringify(speakingAnswer))
