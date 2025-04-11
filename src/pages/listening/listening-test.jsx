@@ -9,10 +9,12 @@ import NextScreen from '@shared/ui/submission/next-screen'
 import { useQuery } from '@tanstack/react-query'
 import { Spin, Alert, Typography, Modal } from 'antd'
 import { useState, useMemo, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 
 const STORAGE_KEY = 'listening_test_answers'
 
 const ListeningTest = () => {
+  const userId = useSelector(state => state.auth.user.userId)
   const [currentPartIndex, setCurrentPartIndex] = useState(0)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [userAnswers, setUserAnswers] = useState(() => {
@@ -30,10 +32,10 @@ const ListeningTest = () => {
     return savedFormattedAnswers
       ? JSON.parse(savedFormattedAnswers)
       : {
-          studentId: '661abc8e-55a0-4d95-89e4-784acd81227d',
+          studentId: userId,
           topicId: 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc',
           skillName: 'LISTENING',
-          sessionParticipantId: 'a8e2b9e8-bb60-44f0-bd61-6bd524cdc87d',
+          sessionParticipantId: '45c6d73a-ad6f-4eb7-b5ba-9adcb97c91f0',
           questions: []
         }
   })
@@ -83,7 +85,10 @@ const ListeningTest = () => {
           }
 
           const formattedAnswer = Object.entries(answer)
-            .filter(([key]) => key !== questionContent)
+            .filter(
+              ([key]) =>
+                key !== questionContent && key !== 'questionId' && key !== 'answerText' && key !== 'answerAudio'
+            )
             .map(([key, value]) => ({
               key,
               value
@@ -105,7 +110,13 @@ const ListeningTest = () => {
 
     const existingDropdownListQuestions = formattedAnswers.questions.filter(q => {
       const userAnswer = userAnswers[q.questionId]
-      return userAnswer && typeof userAnswer === 'object' && !Array.isArray(userAnswer)
+      return (
+        userAnswer &&
+        typeof userAnswer === 'object' &&
+        !Array.isArray(userAnswer) &&
+        userAnswer.answerText &&
+        Array.isArray(userAnswer.answerText)
+      )
     })
 
     if (existingDropdownListQuestions.length > 0) {
@@ -118,15 +129,12 @@ const ListeningTest = () => {
           const questionIndex = newQuestions.findIndex(nq => nq.questionId === q.questionId)
 
           if (questionIndex >= 0) {
-            const existingAnswerText = newQuestions[questionIndex].answerText || []
-
-            const existingAnswersMap = {}
-            if (Array.isArray(existingAnswerText)) {
-              existingAnswerText.forEach(item => {
-                if (item.key) {
-                  existingAnswersMap[item.key] = item.value
-                }
-              })
+            if (userAnswer.answerText && Array.isArray(userAnswer.answerText)) {
+              newQuestions[questionIndex] = {
+                ...newQuestions[questionIndex],
+                answerText: userAnswer.answerText
+              }
+              return
             }
 
             let questionContent = null
@@ -144,9 +152,9 @@ const ListeningTest = () => {
               }
             }
 
-            const mergedAnswers = { ...existingAnswersMap }
+            const mergedAnswers = {}
             Object.entries(userAnswer).forEach(([key, value]) => {
-              if (key !== questionContent) {
+              if (key !== questionContent && key !== 'questionId' && key !== 'answerText' && key !== 'answerAudio') {
                 mergedAnswers[key] = value
               }
             })
@@ -430,29 +438,10 @@ const ListeningTest = () => {
 
           newQuestions[existingQuestionIndex].answerText = existingAnswer
         } else if (questionType === 'dropdown-list') {
-          const existingAnswer = newQuestions[existingQuestionIndex].answerText || []
+          const userAnswer = userAnswers[fullQuestionId]
 
-          if (Array.isArray(existingAnswer)) {
-            const answerKey = Object.keys(answer)[0]
-            const answerValue = answer[answerKey]
-
-            if (answerKey === question?.Content) {
-              return {
-                ...prev,
-                questions: newQuestions
-              }
-            }
-
-            const keyIndex = existingAnswer.findIndex(a => a.key === answerKey)
-
-            if (keyIndex >= 0) {
-              existingAnswer[keyIndex].value = answerValue
-            } else {
-              existingAnswer.push({
-                key: answerKey,
-                value: answerValue
-              })
-            }
+          if (userAnswer && userAnswer.answerText && Array.isArray(userAnswer.answerText)) {
+            newQuestions[existingQuestionIndex].answerText = userAnswer.answerText
           } else {
             const answerKey = Object.keys(answer)[0]
             const answerValue = answer[answerKey]
@@ -510,22 +499,28 @@ const ListeningTest = () => {
             }
           ]
         } else if (questionType === 'dropdown-list') {
-          const answerKey = Object.keys(answer)[0]
-          const answerValue = answer[answerKey]
+          const userAnswer = userAnswers[fullQuestionId]
 
-          if (answerKey === question?.Content) {
-            return {
-              ...prev,
-              questions: newQuestions
+          if (userAnswer && userAnswer.answerText && Array.isArray(userAnswer.answerText)) {
+            newQuestion.answerText = userAnswer.answerText
+          } else {
+            const answerKey = Object.keys(answer)[0]
+            const answerValue = answer[answerKey]
+
+            if (answerKey === question?.Content) {
+              return {
+                ...prev,
+                questions: newQuestions
+              }
             }
+
+            newQuestion.answerText = [
+              {
+                key: answerKey,
+                value: answerValue
+              }
+            ]
           }
-
-          newQuestion.answerText = [
-            {
-              key: answerKey,
-              value: answerValue
-            }
-          ]
         } else if (questionType === 'matching') {
           newQuestion.answerText = [
             {
@@ -559,10 +554,10 @@ const ListeningTest = () => {
 
       setUserAnswers({})
       setFormattedAnswers({
-        studentId: '661abc8e-55a0-4d95-89e4-784acd81227d',
+        studentId: userId,
         topicId: 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc',
         skillName: 'LISTENING',
-        sessionParticipantId: 'a8e2b9e8-bb60-44f0-bd61-6bd524cdc87d',
+        sessionParticipantId: '45c6d73a-ad6f-4eb7-b5ba-9adcb97c91f0',
         questions: []
       })
 
@@ -586,10 +581,10 @@ const ListeningTest = () => {
 
       setUserAnswers({})
       setFormattedAnswers({
-        studentId: '661abc8e-55a0-4d95-89e4-784acd81227d',
+        studentId: userId,
         topicId: 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc',
         skillName: 'LISTENING',
-        sessionParticipantId: 'a8e2b9e8-bb60-44f0-bd61-6bd524cdc87d',
+        sessionParticipantId: '45c6d73a-ad6f-4eb7-b5ba-9adcb97c91f0',
         questions: []
       })
 
