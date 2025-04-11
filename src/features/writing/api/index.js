@@ -1,11 +1,7 @@
-import axios from 'axios'
-// @ts-ignore
-const TEST_BASE_URL = import.meta.env.VITE_TEST_BASE_URL
-// @ts-ignore
-const VITE_BASE_URL = import.meta.env.VITE_BASE_URL
+import axiosInstance from '@shared/config/axios'
 
 export const fetchWritingTestDetails = async () => {
-  const response = await axios.get(`${TEST_BASE_URL}/topics/ef6b69aa-2ec2-4c65-bf48-294fd12e13fc`, {
+  const response = await axiosInstance.get(`/topics/ef6b69aa-2ec2-4c65-bf48-294fd12e13fc`, {
     params: {
       questionType: 'writing',
       skillName: 'WRITING'
@@ -15,6 +11,6 @@ export const fetchWritingTestDetails = async () => {
 }
 
 export const submitWritingAnswers = async data => {
-  const response = await axios.post(`${VITE_BASE_URL}/student-answers`, data)
+  const response = await axiosInstance.post(`/student-answers`, data)
   return response.data
 }
