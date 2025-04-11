@@ -10,9 +10,11 @@ import TimerDisplay from '@features/speaking/ui/timer-display'
 import { useMutation } from '@tanstack/react-query'
 import { message } from 'antd'
 import { useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPart }) => {
+  const auth = useSelector(state => state.auth)
   const navigate = useNavigate()
   const timerRef = useRef(null)
 
@@ -81,8 +83,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
     if (mediaRecorderRef?.state === 'recording') {
       mediaRecorderRef.stop()
     }
-
-    initializeSpeakingAnswer(data.TopicID)
+    initializeSpeakingAnswer(data.TopicID, auth.user.userId)
   }, [data.Content, data.TopicID])
 
   useEffect(() => {
