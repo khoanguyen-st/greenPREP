@@ -1,4 +1,3 @@
-import FlagButton from '@shared/ui/flag-button'
 import MatchingQuestion from '@shared/ui/question-type/matching-question'
 import MultipleChoice from '@shared/ui/question-type/multiple-choice'
 import { Form, Typography } from 'antd'
@@ -7,7 +6,7 @@ import { useEffect } from 'react'
 const { Title } = Typography
 
 // eslint-disable-next-line no-unused-vars
-const QuestionForm = ({ currentPart, answers, flaggedQuestions, handleFlagToggle, setUserAnswer, onSubmit }) => {
+const QuestionForm = ({ currentPart, answers, setUserAnswer, onSubmit }) => {
   const handleAnswerSubmit = answer => {
     if (!currentPart) {
       return
@@ -42,12 +41,6 @@ const QuestionForm = ({ currentPart, answers, flaggedQuestions, handleFlagToggle
       )}
       <Form.Item
         key={`answer-${currentPart.ID}`}
-        label={
-          <FlagButton
-            initialFlagged={flaggedQuestions[`answer-${currentPart.ID}`] || false}
-            onFlag={() => handleFlagToggle(`answer-${currentPart.ID}`)}
-          />
-        }
         name={`answer-${currentPart.ID}`}
         initialValue={answers[`answer-${currentPart.ID}`] || ''}
       >
