@@ -143,7 +143,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
           chunks.push(e.data)
         }
         mediaRecorder.onstop = async () => {
-          const blob = new Blob(chunks, { type: 'audio/webm' })
+          const blob = new Blob(chunks, { type: 'audio/mp3' })
           if (!hasUploaded) {
             try {
               setIsUploading(true)
