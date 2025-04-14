@@ -1,7 +1,4 @@
-import { SpeakingSubmission } from '@assets/images'
-import NextScreen from '@shared/ui/submission/next-screen'
 import { useEffect, useState, useRef } from 'react'
-
 const QuestionDisplay = ({
   data,
   currentQuestion,
@@ -20,7 +17,6 @@ const QuestionDisplay = ({
   const [isLoading, setIsLoading] = useState(false)
   const [buttonClicked, setButtonClicked] = useState(false)
   const pendingActionRef = useRef(null)
-  const [isSubmitted, setIsSubmitted] = useState(false)
 
   useEffect(() => {
     if (currentQuestion?.ImageKeys?.[0]) {
@@ -57,36 +53,17 @@ const QuestionDisplay = ({
     }
   }, [isUploading])
 
-  // const executeAction = async action => {
-  //   setIsLoading(true)
-  //   try {
-  //     if (action === 'nextQuestion') {
-  //       await onNextQuestion()
-  //     } else if (action === 'nextPart') {
-  //       await onNextPart()
-  //     }
-  //   } catch (error) {
-  //     console.error('Error during navigation:', error)
-  //   } finally {
-  //     setIsLoading(false)
-  //     setButtonClicked(false)
-  //   }
-  // }
-
   const executeAction = async action => {
     setIsLoading(true)
+
     try {
       if (action === 'nextQuestion') {
         await onNextQuestion()
-      }
-      if (action === 'nextPart') {
+      } else if (action === 'nextPart') {
         await onNextPart()
-        if (isPart4) {
-          setIsSubmitted(true)
-        }
       }
-    } catch (err) {
-      console.error('Navigation error:', err)
+    } catch (error) {
+      console.error('Error during navigation:', error)
     } finally {
       setIsLoading(false)
       setButtonClicked(false)
@@ -95,7 +72,6 @@ const QuestionDisplay = ({
 
   const handleButtonClick = action => {
     setButtonClicked(true)
-
     if (isUploading) {
       pendingActionRef.current = action
     } else {
@@ -104,9 +80,7 @@ const QuestionDisplay = ({
   }
 
   const showLoading = buttonClicked && (isUploading || isLoading || isButtonLoading)
-  if (isSubmitted && isPart4) {
-    return <NextScreen nextPath="/reading" skillName="Grammar&Vocabulary" imageSrc={SpeakingSubmission} />
-  }
+
   return (
     <div className="relative flex h-screen w-2/3 flex-col bg-white p-12">
       <div className="mb-8">

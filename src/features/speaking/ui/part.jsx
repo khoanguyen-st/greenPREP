@@ -57,7 +57,6 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
     mutationFn: submitSpeakingAnswer,
     onSuccess: () => {
       if (data.Content === 'PART 4') {
-        // navigate('/listening')
         setSubmitted(true)
       } else if (onNextPart) {
         onNextPart()
@@ -133,7 +132,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
     return <PartIntro data={data} onStartPart={handleStartPart} />
   }
   if (submitted) {
-    return <NextScreen nextPath="/reading" skillName="Grammar&Vocabulary" imageSrc={SpeakingSubmission} />
+    return <NextScreen nextPath="/reading" skillName="Speaking" imageSrc={SpeakingSubmission} />
   }
   const startRecording = () => {
     navigator.mediaDevices
