@@ -51,6 +51,7 @@ const QuestionDisplay = ({
       executeAction(pendingActionRef.current)
       pendingActionRef.current = null
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUploading])
 
   const executeAction = async action => {

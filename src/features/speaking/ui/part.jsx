@@ -15,6 +15,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPart }) => {
+  // @ts-ignore
   const auth = useSelector(state => state.auth)
   const timerRef = useRef(null)
 
@@ -85,6 +86,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
       mediaRecorderRef.stop()
     }
     initializeSpeakingAnswer(data.TopicID, auth.user.userId)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.Content, data.TopicID])
 
   useEffect(() => {
@@ -118,6 +120,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
         clearInterval(timerRef.current)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isActive, isTimerRunning, phase, currentTimePair])
 
   const handleStartPart = () => {
