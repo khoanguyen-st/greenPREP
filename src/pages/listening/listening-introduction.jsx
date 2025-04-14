@@ -7,7 +7,7 @@ const ListeningIntroduction = () => {
   const navigate = useNavigate()
   const data = useListeningData()
   const onStart = () => {
-    navigate('/listening/test')
+    navigate('/listening/headphonecheck')
   }
 
   return (
