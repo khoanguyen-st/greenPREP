@@ -1,5 +1,5 @@
 import { ExclamationCircleOutlined } from '@ant-design/icons'
-import { SubmissionImage } from '@assets/images'
+import { ListeningSubmission } from '@assets/images'
 import { fetchListeningTestDetails, saveListeningAnswers } from '@features/listening/api/listeningAPI'
 import PlayStopButton from '@features/listening/ui/play-stop-button'
 import TestNavigation from '@features/listening/ui/test-navigation'
@@ -751,7 +751,7 @@ const ListeningTest = () => {
   }, [groupedQuestions, testData?.Parts])
 
   if (isSubmitted) {
-    return <NextScreen nextPath="/grammar" skillName="Listening" imageSrc={SubmissionImage} />
+    return <NextScreen nextPath="/grammar" skillName="Listening" imageSrc={ListeningSubmission} />
   }
 
   if (isLoading) {
