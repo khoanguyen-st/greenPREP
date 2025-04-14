@@ -175,7 +175,7 @@ const LoginPage = () => {
                 )}
               </div>
 
-              <div className="mb-2 flex justify-end sm:mb-4">
+              <div className="mb-0 flex justify-end sm:mb-0.5">
                 <Link to="/forgot-password" className="!text-sm !text-[#003087] hover:underline">
                   Forgot password?
                 </Link>
@@ -191,6 +191,14 @@ const LoginPage = () => {
                   Sign in
                 </Button>
               </Form.Item>
+              <div className="text-left">
+                <Text className="!text-sm !text-gray-500">
+                  Don&apos;t have an account?{' '}
+                  <Link to="/register" className="!text-[#003087] hover:underline">
+                    Sign up
+                  </Link>
+                </Text>
+              </div>
             </Form>
           </Space>
         </div>
