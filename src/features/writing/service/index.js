@@ -1,4 +1,3 @@
-// File: @features/writing/service/submitWritingService.js
 import { submitWritingAnswers } from '@features/writing/api'
 import { message } from 'antd'
 
