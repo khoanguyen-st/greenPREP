@@ -31,7 +31,7 @@ const LoginPage = () => {
   }
 
   const isRoleAllowed = (roles = []) => {
-    const disallowedRoles = ['']
+    const disallowedRoles = []
     return !roles.some(role => disallowedRoles.includes(role.toLowerCase()))
   }
 
