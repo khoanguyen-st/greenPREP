@@ -8,7 +8,7 @@ import { useState } from 'react'
 const QuestionNavigatorContainer = ({
   data,
   answers,
-  flaggedQuestions,
+  flaggedParts,
   setCurrentPartIndex,
   currentPartIndex,
   handleSubmit
@@ -28,14 +28,13 @@ const QuestionNavigatorContainer = ({
         <div
           className={`border-black-300 z-1 fixed right-2 h-auto w-60 rounded-lg border bg-white p-2 shadow-lg ${isNavigatorOpen ? 'block' : 'hidden'} bottom-[65%] md:block mdL:bottom-[70%]`}
         >
-          <TimeRemaining duration={10 * 60} onAutoSubmit={() => setIsPopupOpen(true)} />
+          <TimeRemaining duration={50 * 60} onAutoSubmit={() => setIsPopupOpen(true)} />
           <QuestionNavigator
             values={data.Parts.map(part => {
-              const isFlagged = part.Questions.some((_, index) => flaggedQuestions[`answer-${part.ID}-${index}`])
+              const isFlagged = flaggedParts[part.ID]
               const isAnswered = Object.keys(answers).some(
                 key => key.startsWith(`answer-${part.ID}`) && answers[key]?.trim() !== ''
               )
-
               let type = 'unanswered'
               if (isAnswered && isFlagged) {
                 type = 'answered-flagged'

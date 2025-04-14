@@ -1,6 +1,6 @@
 import { FlagFilled, FlagOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function FlagButton({ onFlag, initialFlagged = false }) {
   const [isFlagged, setIsFlagged] = useState(initialFlagged)
@@ -13,6 +13,9 @@ export default function FlagButton({ onFlag, initialFlagged = false }) {
       onFlag(newFlaggedState)
     }
   }
+  useEffect(() => {
+    setIsFlagged(initialFlagged)
+  }, [initialFlagged])
 
   return (
     <Button

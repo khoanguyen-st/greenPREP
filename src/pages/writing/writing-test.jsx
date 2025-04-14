@@ -1,16 +1,19 @@
-import { fetchWritingTestDetails } from '@features/writing/api/writingAPI'
-import { DEFAULT_MAX_WORDS } from '@features/writing/constance/writing-const'
+import { fetchWritingTestDetails } from '@features/writing/api'
+import { DEFAULT_MAX_WORDS } from '@features/writing/constance'
+import { submitWritingTest } from '@features/writing/service'
 import FooterNavigator from '@features/writing/ui/writing-footer-navigator'
 import QuestionForm from '@features/writing/ui/writing-question-form'
 import QuestionNavigatorContainer from '@features/writing/ui/writing-question-navigator-container'
 import { useQuery } from '@tanstack/react-query'
 import { Typography, Spin, Card, Divider } from 'antd'
 import { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-
-const { Title, Text } = Typography
+const { Title } = Typography
 
 const WritingTest = () => {
+  // @ts-ignore
+  const { userId } = useSelector(state => state.auth.user)
   const navigate = useNavigate()
   const { data, isLoading, isError } = useQuery({
     queryKey: ['writingQuestions'],
@@ -23,9 +26,7 @@ const WritingTest = () => {
   const [currentPartIndex, setCurrentPartIndex] = useState(0)
   const [answers, setAnswers] = useState(() => JSON.parse(localStorage.getItem('writingAnswers')) || {})
   const [wordCounts, setWordCounts] = useState({})
-  const [flaggedQuestions, setFlaggedQuestions] = useState(
-    () => JSON.parse(localStorage.getItem('flaggedQuestions')) || {}
-  )
+  const [flaggedParts, setFlaggedParts] = useState(() => JSON.parse(localStorage.getItem('flaggedParts')) || {})
 
   useEffect(() => {
     if (data) {
@@ -42,7 +43,7 @@ const WritingTest = () => {
     const newWordCounts = {}
     if (data?.Parts) {
       data.Parts.forEach(part => {
-        part.Questions.forEach((question, index) => {
+        part.Questions.forEach((_, index) => {
           const fieldName = `answer-${part.ID}-${index}`
           newWordCounts[fieldName] = countWords(updatedAnswers[fieldName] || '')
         })
@@ -51,13 +52,15 @@ const WritingTest = () => {
     setWordCounts(newWordCounts)
   }
 
-  const handleFlagToggle = questionId => {
-    const updatedFlags = {
-      ...flaggedQuestions,
-      [questionId]: !flaggedQuestions[questionId]
-    }
-    setFlaggedQuestions(updatedFlags)
-    localStorage.setItem('flaggedQuestions', JSON.stringify(updatedFlags))
+  const handleFlagToggle = partId => {
+    setFlaggedParts(prevFlags => {
+      const updatedFlags = {
+        ...prevFlags,
+        [partId]: !prevFlags[partId]
+      }
+      localStorage.setItem('flaggedParts', JSON.stringify(updatedFlags))
+      return updatedFlags
+    })
   }
 
   const handleTextChange = (field, text) => {
@@ -70,12 +73,8 @@ const WritingTest = () => {
     }))
   }
 
-  const handleSubmit = () => {
-    // eslint-disable-next-line no-console
-    console.table(answers)
-    localStorage.removeItem('writingAnswers')
-    localStorage.removeItem('flaggedQuestions')
-    navigate('/complete-test')
+  const handleSubmit = async () => {
+    await submitWritingTest({ data, userId, navigate })
   }
 
   if (isLoading) {
@@ -84,7 +83,6 @@ const WritingTest = () => {
   if (isError) {
     return <div className="text-center text-red-500">Error fetching data</div>
   }
-
   if (!data || !data.Parts || data.Parts.length === 0) {
     return <div className="text-center text-gray-500">No test data available</div>
   }
@@ -95,19 +93,18 @@ const WritingTest = () => {
   return (
     <div className="relative mx-auto min-h-screen max-w-4xl p-5">
       <Divider orientation="left">
-        <Typography.Title level={1}>Writing test</Typography.Title>
+        <Title level={1}>Writing</Title>
       </Divider>
 
       <Card className="mb-32">
         <Title level={3} className="text-l mb-5 font-semibold">
           Question {currentPartIndex + 1} of {data.Parts.length}
         </Title>
-        <Text className="mb-3 mt-8 block text-lg font-semibold xs:mx-2 md:mx-0 md:text-xl">{currentPart.Content}</Text>
         <QuestionForm
           currentPart={currentPart}
           partNumber={partNumber}
           answers={answers}
-          flaggedQuestions={flaggedQuestions}
+          flaggedParts={flaggedParts}
           handleFlagToggle={handleFlagToggle}
           handleTextChange={handleTextChange}
           countWords={countWords}
@@ -119,7 +116,7 @@ const WritingTest = () => {
       <QuestionNavigatorContainer
         data={data}
         answers={answers}
-        flaggedQuestions={flaggedQuestions}
+        flaggedParts={flaggedParts}
         setCurrentPartIndex={setCurrentPartIndex}
         currentPartIndex={currentPartIndex}
         handleSubmit={handleSubmit}

@@ -13,7 +13,6 @@ const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className =
   dropdownQuestionSchema.validateSync(questionData)
   const [selectedOptions, setSelectedOptions] = useState({})
   const [error, setError] = useState({})
-
   const processedData = useMemo(() => {
     if (!questionData) {
       return null
@@ -64,31 +63,59 @@ const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className =
     }
 
     const currentUserAnswer = userAnswer[memoizedProcessedData.id] || {}
-    setSelectedOptions(prev => ({
-      ...prev,
-      ...currentUserAnswer
-    }))
+    if (currentUserAnswer.answerText && Array.isArray(currentUserAnswer.answerText)) {
+      const extractedOptions = {}
+      currentUserAnswer.answerText.forEach(item => {
+        if (
+          item.key &&
+          item.value &&
+          item.key !== 'questionId' &&
+          item.key !== 'answerText' &&
+          item.key !== 'answerAudio'
+        ) {
+          extractedOptions[item.key] = item.value
+        }
+      })
+      setSelectedOptions(extractedOptions)
+    } else {
+      setSelectedOptions({})
+    }
 
     setError({})
   }, [memoizedProcessedData, userAnswer])
 
   const handleSelectChange = async (key, value) => {
-    const updatedAnswers = { ...selectedOptions, [key]: value }
+    const updatedAnswers = { ...selectedOptions }
+
+    Object.keys(updatedAnswers).forEach(k => {
+      if (k === 'questionId' || k === 'answerText' || k === 'answerAudio') {
+        delete updatedAnswers[k]
+      }
+    })
+
+    updatedAnswers[key] = value
     setSelectedOptions(updatedAnswers)
 
     try {
       await validationSchema.validate({ selectedOption: value })
       setError(prev => ({ ...prev, [key]: '' }))
 
+      const answerText = Object.entries(updatedAnswers).map(([k, v]) => ({
+        key: k,
+        value: v
+      }))
       setUserAnswer(prev => ({
         ...prev,
-        [processedData.id]: updatedAnswers
+        [processedData.id]: {
+          questionId: processedData.id,
+          answerText: answerText,
+          answerAudio: null
+        }
       }))
     } catch (validationError) {
       setError(prev => ({ ...prev, [key]: validationError.message }))
     }
   }
-
   if (!processedData) {
     return <p className="text-center text-gray-600">No question data available.</p>
   }

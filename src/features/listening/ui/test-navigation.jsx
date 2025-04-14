@@ -20,6 +20,7 @@ const TestNavigation = ({
   onQuestionChange,
   onNext,
   onSubmit,
+  onAutoSubmit,
   userAnswers,
   flaggedQuestions,
   skillName,
@@ -48,7 +49,16 @@ const TestNavigation = ({
 
   const questionNavigatorValues = getAllQuestions().map((q, idx) => {
     const isQuestionFlagged = flaggedQuestions.includes(q.question.ID)
-    const isQuestionAnswered = userAnswers[q.question.ID] !== undefined
+
+    let isQuestionAnswered = false
+    if (q.question.Type === 'listening-questions-group' && q.question.GroupContent?.listContent) {
+      isQuestionAnswered = q.question.GroupContent.listContent.every(subQuestion => {
+        const subQuestionId = `${q.question.ID}-${subQuestion.ID}`
+        return userAnswers[subQuestionId] !== undefined
+      })
+    } else {
+      isQuestionAnswered = userAnswers[q.question.ID] !== undefined
+    }
 
     return {
       index: idx,
@@ -70,7 +80,7 @@ const TestNavigation = ({
 
   const handlePopupSubmit = () => {
     setShowAutoSubmitPopup(false)
-    onSubmit()
+    onAutoSubmit()
   }
 
   return (
@@ -125,6 +135,16 @@ const TestNavigation = ({
         </div>
       </div>
       <PopupSubmission isOpen={showAutoSubmitPopup} type="timeout" onSubmit={handlePopupSubmit} />
+
+      {showAutoSubmitPopup && (
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <h3>Time&apos;s Up!</h3>
+            <p>Your test will be automatically submitted.</p>
+            <button onClick={handlePopupSubmit}>OK</button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

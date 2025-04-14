@@ -1,3 +1,5 @@
+import Profile from '@features/profile/ui/profile'
+import WaitingForApproval from '@features/welcome/ui/waiting-for-approval'
 import GrammarPage from '@pages/grammar'
 import GrammarIntroduction from '@pages/grammar/grammar-introduction'
 import GrammarTest from '@pages/grammar/grammar-test'
@@ -14,10 +16,8 @@ import DesktopRejectRequestPage from '@pages/reject-page'
 import SpeakingPage from '@pages/speaking'
 import MicrophoneCheck from '@pages/speaking/micro-check'
 import SpeakingIntroduction from '@pages/speaking/speaking-introduction'
-import SpeakingIntroparts from '@pages/speaking/speaking-introparts'
 import SpeakingParts from '@pages/speaking/speaking-parts'
 import SubmissionPage from '@pages/submission-page'
-import WaitingForApproval from '@pages/waiting-for-approval'
 import WritingPage from '@pages/writing'
 import WritingIntroduction from '@pages/writing/writing-introduction'
 import WritingTest from '@pages/writing/writing-test'
@@ -88,10 +88,6 @@ const PrivateRoute = [
             element: <SpeakingIntroduction />
           },
           {
-            path: 'instruction/:part',
-            element: <SpeakingIntroparts />
-          },
-          {
             path: 'test/:part',
             element: <SpeakingParts />
           },
@@ -116,7 +112,7 @@ const PrivateRoute = [
         ]
       },
       {
-        path: 'rejectpage',
+        path: 'rejected',
         element: <DesktopRejectRequestPage />
       },
       {
@@ -124,12 +120,16 @@ const PrivateRoute = [
         element: <IntroductionPage />
       },
       {
-        path: 'waiting-for-approval',
+        path: 'waiting-for-approval/:userId/:sessionId/:requestId',
         element: <WaitingForApproval />
       },
       {
         path: 'complete-test',
         element: <SubmissionPage />
+      },
+      {
+        path: 'profile/:userId',
+        element: <Profile />
       }
     ]
   }

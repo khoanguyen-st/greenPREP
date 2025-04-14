@@ -1,10 +1,9 @@
-import FlagButton from '@shared/ui/flag-button'
+import RegisterPage from '@pages/register-page'
 
 const PublicRoute = [
   {
-    path: 'login',
-    // eslint-disable-next-line no-console
-    element: <FlagButton onFlag={() => console.log('clicked')} initialFlagged={true} />
+    path: 'register',
+    element: <RegisterPage />
   }
 ]
 
