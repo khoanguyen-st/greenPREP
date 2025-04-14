@@ -1,6 +1,8 @@
 import { Modal, Button, Typography, Image, Layout, Space, ConfigProvider } from 'antd'
 import { useNavigate } from 'react-router-dom'
 
+import resetPasswordSuccessImage from '../assets/images/resetpasswordsuccess.png'
+
 const { Title, Text } = Typography
 const { Content } = Layout
 
@@ -35,7 +37,7 @@ const ResetPasswordSuccess = ({ open = true }) => {
             {/* Success Icon */}
             <Space className="mt-[18px]">
               <Image
-                src="/src/assets/images/resetpasswordsuccess.png"
+                src={resetPasswordSuccessImage}
                 alt="Reset Password Success"
                 width={121}
                 height={121}
