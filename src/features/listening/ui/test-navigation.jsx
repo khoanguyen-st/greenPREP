@@ -119,7 +119,7 @@ const TestNavigation = ({
       </Space>
 
       <div
-        className={`fixed ${isNavigatorOpen ? 'bottom-[13%] sm:bottom-[30%]' : 'bottom-[50%]'} right-2 flex items-center gap-2 md:bottom-[43%] lg:bottom-[50%]`}
+        className={`fixed ${isNavigatorOpen ? 'bottom-[26.4%] sm:bottom-[42%]' : 'bottom-[51%]'} right-2 flex items-center gap-2 md:bottom-[48%] lg:bottom-[54%]`}
       >
         <Button
           className="rounded-full bg-blue-500 p-2 text-white shadow-lg md:hidden"
@@ -128,7 +128,7 @@ const TestNavigation = ({
           <MenuOutlined />
         </Button>
         <div
-          className={`border-black-300 z-1 h-auto w-60 rounded-lg border bg-white p-2 shadow-lg ${isNavigatorOpen ? 'block' : 'hidden'} md:block`}
+          className={`z-1 h-auto w-60 rounded-lg border bg-white p-2 shadow-lg ${isNavigatorOpen ? 'block' : 'hidden'} md:block`}
         >
           <TimeRemaining duration={40 * 60} onAutoSubmit={handleAutoSubmit} label="Time Remaining" />
           <QuestionNavigator values={questionNavigatorValues} action={onQuestionChange} position={flatIndex} />
