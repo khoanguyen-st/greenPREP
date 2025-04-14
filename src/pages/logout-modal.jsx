@@ -91,7 +91,7 @@ const LogoutModal = ({ isOpen, onClose }) => {
       footer={null}
       title={null}
       centered
-      width={390}
+      width={400}
       maskClosable={false}
       closable={false}
       className="overflow-hidden rounded-lg"
@@ -104,7 +104,7 @@ const LogoutModal = ({ isOpen, onClose }) => {
 
         <div className="mx-auto mb-6 h-[3px] w-[90px] bg-[#1677FF]"></div>
 
-        <Text className="mx-auto mb-8 max-w-[310px] text-center text-[9px] leading-[1.9] tracking-wide text-[rgba(0,0,0,0.65)]">
+        <Text className="mx-auto mb-8 max-w-[310px] text-center text-sm leading-[1.9] tracking-wide text-[rgba(0,0,0,0.65)]">
           Are you sure you want to log out? You will need to log in again to access your account.
         </Text>
 

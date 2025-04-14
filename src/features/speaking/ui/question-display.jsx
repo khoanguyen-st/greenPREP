@@ -155,7 +155,7 @@ const QuestionDisplay = ({
           <button
             onClick={() => handleButtonClick(isLastQuestion || isPart4 ? 'nextPart' : 'nextQuestion')}
             disabled={showLoading}
-            className={`rounded-full bg-[#003087] px-8 py-4 text-xl font-medium text-white transition-all hover:bg-[#002b6c] ${
+            className={`rounded-[6px] bg-[#003087] px-8 py-4 text-xl font-medium text-white transition-all hover:bg-[#002b6c] ${
               showLoading ? 'cursor-not-allowed opacity-70' : ''
             }`}
           >

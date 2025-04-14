@@ -13,7 +13,7 @@ const CustomAlert = ({ show, onConfirm, message }) => {
         <p className="mt-2 text-gray-600">{message}</p>
         <button
           onClick={onConfirm}
-          className="mt-4 w-full rounded-lg bg-blue-600 px-5 py-2 text-white shadow-md transition-all hover:bg-blue-700 md:w-auto"
+          className="mt-4 w-full rounded-lg bg-[#003087] px-5 py-2 text-white shadow-md transition-all hover:!bg-[#002b6c] md:w-auto"
         >
           Continue doing the test
         </button>
