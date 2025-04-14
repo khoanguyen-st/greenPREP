@@ -36,7 +36,6 @@ const SubmissionPage = () => {
         const testData = {
           sessionName: location.state?.sessionName || 'Math Test Session',
           testDetails: `Submission date and time: ${new Date().toLocaleString()}<br>
-          Score: ${location.state?.score || 0}/100<br>
           Confirmation message: Your test has been successfully submitted and recorded in our system.`,
           nextSteps: 'Please wait for the final results. You will be notified once they are available.',
           contactInfo: 'support@greenprep.edu.vn'

@@ -62,7 +62,7 @@ const LoginPage = () => {
           }
           dispatch(login(userData))
           setLoginSuccess('Login successful!')
-          navigate('/dashboard')
+          navigate('/')
         } else {
           setLoginError('Invalid token received')
         }
