@@ -220,9 +220,9 @@ const Profile = () => {
         onSubmit={async (userId, passwordData) => {
           try {
             await changePasswordMutation.mutateAsync({ userId, passwordData })
+            window.location.reload()
             message.success('Password changed successfully!')
             setIsPasswordModalOpen(false)
-            window.location.reload()
           } catch (error) {
             if (error.response) {
               message.error(error.response.data.message || 'Failed to change password')
