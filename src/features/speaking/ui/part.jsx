@@ -1,3 +1,4 @@
+import { SpeakingSubmission } from '@assets/images'
 import {
   uploadToCloudinary,
   initializeSpeakingAnswer,
@@ -7,15 +8,14 @@ import {
 import PartIntro from '@features/speaking/ui/part-intro'
 import QuestionDisplay from '@features/speaking/ui/question-display'
 import TimerDisplay from '@features/speaking/ui/timer-display'
+import NextScreen from '@shared/ui/submission/next-screen'
 import { useMutation } from '@tanstack/react-query'
 import { message } from 'antd'
 import { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 
 const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPart }) => {
   const auth = useSelector(state => state.auth)
-  const navigate = useNavigate()
   const timerRef = useRef(null)
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
@@ -51,12 +51,14 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
 
   const currentQuestion = questions[currentQuestionIndex]
   const currentTimePair = getTimePair(currentQuestionIndex)
+  const [submitted, setSubmitted] = useState(false)
 
   const submitMutation = useMutation({
     mutationFn: submitSpeakingAnswer,
     onSuccess: () => {
       if (data.Content === 'PART 4') {
-        navigate('/listening')
+        // navigate('/listening')
+        setSubmitted(true)
       } else if (onNextPart) {
         onNextPart()
       }
@@ -130,7 +132,9 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
   if (showIntro) {
     return <PartIntro data={data} onStartPart={handleStartPart} />
   }
-
+  if (submitted) {
+    return <NextScreen nextPath="/reading" skillName="Grammar&Vocabulary" imageSrc={SpeakingSubmission} />
+  }
   const startRecording = () => {
     navigator.mediaDevices
       .getUserMedia({ audio: true })
