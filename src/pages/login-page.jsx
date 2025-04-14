@@ -31,7 +31,7 @@ const LoginPage = () => {
   }
 
   const isRoleAllowed = (roles = []) => {
-    const disallowedRoles = ['teacher', 'admin']
+    const disallowedRoles = ['']
     return !roles.some(role => disallowedRoles.includes(role.toLowerCase()))
   }
 
@@ -62,7 +62,7 @@ const LoginPage = () => {
           }
           dispatch(login(userData))
           setLoginSuccess('Login successful!')
-          navigate('/dashboard')
+          navigate('/')
         } else {
           setLoginError('Invalid token received')
         }
