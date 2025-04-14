@@ -18,12 +18,12 @@ const RegisterPage = () => {
     email: '',
     className: '',
     studentCode: '',
-    phoneNumber: '',
+    phone: '',
     password: '',
     confirmPassword: ''
   })
 
-  const phoneNumber = Form.useWatch('phoneNumber', form)
+  const phoneNumber = Form.useWatch('phone', form)
   const showPhoneSuccess = phoneNumber?.length === 10
 
   const { mutate: registerUser, isPending } = useRegister({
@@ -57,6 +57,7 @@ const RegisterPage = () => {
       email: formValues.email,
       className: formValues.className,
       studentCode: formValues.studentCode,
+      phone: formValues.phone,
       password: formValues.password
     }
     // @ts-ignore - The type is defined in the hook's JSDoc
@@ -294,7 +295,7 @@ const RegisterPage = () => {
                         Phone Number
                       </Text>
                     }
-                    name="phoneNumber"
+                    name="phone"
                     validateStatus={showPhoneSuccess ? 'success' : ''}
                     rules={[
                       {
