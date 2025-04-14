@@ -1,4 +1,4 @@
-import { SubmissionImage } from '@assets/images'
+import { GrammarSubmission } from '@assets/images'
 import { fetchGrammarTestDetails } from '@features/grammar/api/grammarAPI'
 import FooterNavigator from '@features/grammar/ui/grammar-footer-navigator'
 import QuestionForm from '@features/grammar/ui/grammar-question-form'
@@ -105,7 +105,7 @@ const GrammarTest = () => {
   }, [answers])
 
   if (isSubmitted) {
-    return <NextScreen nextPath="/reading" skillName="Grammar&Vocabulary" imageSrc={SubmissionImage} />
+    return <NextScreen nextPath="/reading" skillName="Grammar&Vocabulary" imageSrc={GrammarSubmission} />
   }
 
   if (isLoading) {
