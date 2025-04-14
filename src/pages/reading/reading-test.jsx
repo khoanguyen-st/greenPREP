@@ -1,17 +1,26 @@
-import { fetchReadingTestDetails } from '@features/reading/api/readingAPI'
 import FooterNavigator from '@features/reading/ui/reading-footer-navigator'
 import QuestionNavigatorContainer from '@features/reading/ui/reading-question-navigator'
+import axiosInstance from '@shared/config/axios'
 import FlagButton from '@shared/ui/flag-button'
 import MatchingQuestion from '@shared/ui/question-type/matching-question'
 import MultipleChoice from '@shared/ui/question-type/multiple-choice'
 import OrderingQuestion from '@shared/ui/question-type/ordering-question'
 import { useQuery } from '@tanstack/react-query'
-import { Spin, Alert, Typography, Card, Select, Divider } from 'antd'
+import { Spin, Alert, Typography, Card, Select } from 'antd'
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const { Option } = Select
 const { Title, Text } = Typography
+
+const fetchTestData = async topicId => {
+  const baseUrl = 'https://greenprep-api.onrender.com/api/topics'
+  const url = `${baseUrl}/${topicId}`
+  const response = await axiosInstance.get(url, {
+    params: { skillName: 'READING' }
+  })
+  return response.data
+}
 
 const getDefaultAnswerByType = type => {
   switch (type) {
@@ -26,8 +35,14 @@ const getDefaultAnswerByType = type => {
 }
 
 const formatMatchingQuestion = question => ({
-  leftItems: question.AnswerContent.leftItems,
-  rightItems: question.AnswerContent.rightItems
+  leftItems: question.AnswerContent.leftItems.map((item, index) => ({
+    id: index + 1,
+    label: item
+  })),
+  rightItems: question.AnswerContent.rightItems.map((item, index) => ({
+    id: String.fromCharCode(97 + index),
+    label: item
+  }))
 })
 
 const formatMultipleChoiceQuestion = question => ({
@@ -36,7 +51,7 @@ const formatMultipleChoiceQuestion = question => ({
     typeof question.AnswerContent === 'string' ? question.AnswerContent : JSON.stringify(question.AnswerContent)
 })
 
-const ReadingTest = () => {
+const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
   const navigate = useNavigate()
   const [userAnswers, setUserAnswers] = useState(() => {
     try {
@@ -72,8 +87,8 @@ const ReadingTest = () => {
     isLoading,
     isError
   } = useQuery({
-    queryKey: ['fetchReadingTestDetails'],
-    queryFn: fetchReadingTestDetails,
+    queryKey: ['fetchTestData', topicId],
+    queryFn: () => fetchTestData(topicId),
     staleTime: 6000
   })
 
@@ -113,17 +128,6 @@ const ReadingTest = () => {
         const newAnswers = answer(prev)
         return newAnswers
       })
-      return
-    }
-
-    if (currentQuestion.Type === 'ordering' && typeof answer === 'object' && 'partIndex' in answer) {
-      setUserAnswers(prev => ({
-        ...prev,
-        [answer.questionId]: {
-          partIndex: answer.partIndex,
-          answer: answer.answer
-        }
-      }))
       return
     }
 
@@ -192,6 +196,11 @@ const ReadingTest = () => {
   const isLastPart = currentPartIndex === testData.Parts.length - 1
 
   const shouldShowContent = () => {
+    // Không hiển thị nội dung câu hỏi cho Part 5 (index 4) vì đã hiển thị trong renderDropdownQuestion
+    if (currentPartIndex === 4) {
+      return false
+    }
+
     if (currentQuestion.Type === 'matching') {
       return true
     }
@@ -264,7 +273,46 @@ const ReadingTest = () => {
 
     const answer = userAnswers[currentQuestion.ID] || {}
 
+    // Loại bỏ nội dung trong ngoặc tròn nếu là Part 1
+    const processedQuestion =
+      currentPartIndex === 0 ? processedData.question.replace(/\s*\([^()]*\)/g, '') : processedData.question
+
     if (processedData.type === 'right-left') {
+      // Hiển thị dropdown bên trên mỗi đoạn văn ở Part 5 (index 4)
+      if (currentPartIndex === 4) {
+        const paragraphs = processedQuestion
+          .split('\n')
+          .filter(para => para.trim() !== '')
+          .filter(para => !para.startsWith('Tulips')) // Loại bỏ dòng tiêu đề "Tulips"
+        return (
+          <div className="mx-auto w-full max-w-4xl">
+            {paragraphs.map((paragraph, index) => {
+              // Xóa "Paragraph X - " ở đầu mỗi đoạn
+              const cleanedParagraph = paragraph.replace(/^Paragraph \d+ - /, '').trim()
+              const questionKey = `paragraph-${index + 1}` // Sử dụng index để tạo key duy nhất cho mỗi đoạn
+              return (
+                <div key={index} className="mb-6">
+                  <Select
+                    onChange={value => handleAnswerSubmit({ ...answer, [questionKey]: value })}
+                    value={answer?.[questionKey] || ''}
+                    className="mb-2 w-48"
+                  >
+                    <Option value="">Select an option</Option>
+                    {processedData.rightItems.map(rightItem => (
+                      <Option key={rightItem} value={rightItem}>
+                        {rightItem}
+                      </Option>
+                    ))}
+                  </Select>
+                  <p className="mb-2">{cleanedParagraph}</p>
+                </div>
+              )
+            })}
+          </div>
+        )
+      }
+
+      // Logic cho các Part khác
       return (
         <div className="mx-auto w-full max-w-4xl">
           <div className="mt-4">
@@ -297,7 +345,7 @@ const ReadingTest = () => {
       return (
         <div className="mx-auto w-full max-w-4xl">
           <div className="whitespace-pre-wrap text-base text-gray-800">
-            {processedData.question.split(/(\d+\.)/).map((part, index) => {
+            {processedQuestion.split(/(\d+\.)/).map((part, index) => {
               if (part.match(/^\d+\.$/)) {
                 const number = part.replace('.', '')
                 return (
@@ -336,69 +384,27 @@ const ReadingTest = () => {
       return null
     }
 
-    const answer = (() => {
-      const savedAnswer = userAnswers[currentQuestion.ID]
+    const answer = userAnswers[currentQuestion.ID] || getDefaultAnswerByType(currentQuestion.Type)
 
-      if (currentQuestion.Type === 'ordering') {
-        if (
-          savedAnswer &&
-          typeof savedAnswer === 'object' &&
-          'partIndex' in savedAnswer &&
-          savedAnswer.partIndex === currentPartIndex &&
-          Array.isArray(savedAnswer.answer)
-        ) {
-          return savedAnswer.answer
-        }
-        return []
-      }
-
-      return savedAnswer || getDefaultAnswerByType(currentQuestion.Type)
-    })()
+    // Cưỡng chế Part 5 (index 4) sử dụng dropdown-list ngay cả khi Type là matching
+    if (currentPartIndex === 4) {
+      return renderDropdownQuestion()
+    }
 
     switch (currentQuestion.Type) {
-      case 'dropdown-list': {
+      case 'dropdown-list':
         return renderDropdownQuestion()
-      }
-      case 'ordering': {
-        const options = (() => {
-          try {
-            if (Array.isArray(currentQuestion.AnswerContent)) {
-              return currentQuestion.AnswerContent
-            }
-            if (typeof currentQuestion.AnswerContent === 'string') {
-              const parsed = JSON.parse(currentQuestion.AnswerContent)
-              return Array.isArray(parsed) ? parsed : parsed.options || []
-            }
-            return currentQuestion.AnswerContent.options || []
-          } catch (e) {
-            console.error('Error parsing ordering question options:', e)
-            return []
-          }
-        })()
+      case 'ordering':
         return (
           <div className="mx-auto w-full max-w-4xl">
             <OrderingQuestion
-              key={`ordering-${currentPartIndex}-${currentQuestion.ID}`}
-              options={options}
+              options={currentQuestion.AnswerContent.options}
               userAnswer={answer}
-              setUserAnswer={newAnswer => {
-                if (!Array.isArray(newAnswer)) {
-                  console.error('Invalid answer format received from OrderingQuestion')
-                  return
-                }
-
-                handleAnswerSubmit({
-                  partIndex: currentPartIndex,
-                  questionId: currentQuestion.ID,
-                  answer: newAnswer
-                })
-              }}
+              setUserAnswer={handleAnswerSubmit}
             />
           </div>
         )
-      }
-
-      case 'matching': {
+      case 'matching':
         return (
           <div className="mx-auto w-full max-w-4xl">
             <MatchingQuestion
@@ -408,8 +414,7 @@ const ReadingTest = () => {
             />
           </div>
         )
-      }
-      case 'multiple-choice': {
+      case 'multiple-choice':
         return (
           <div className="mx-auto w-full max-w-4xl">
             <MultipleChoice
@@ -420,7 +425,6 @@ const ReadingTest = () => {
             />
           </div>
         )
-      }
       default:
         return <div>Unsupported question type: {currentQuestion.Type}</div>
     }
@@ -428,9 +432,6 @@ const ReadingTest = () => {
 
   return (
     <div className="relative mx-auto min-h-screen max-w-4xl p-5 pb-32">
-      <Divider orientation="left">
-        <Title level={1}>Reading</Title>
-      </Divider>
       <Card className="mb-32">
         <div className="absolute right-4 top-4">
           <FlagButton key={`flag-button-${currentPartIndex}`} onFlag={handleFlagToggle} initialFlagged={isFlagged} />
@@ -444,15 +445,52 @@ const ReadingTest = () => {
           <Text className="block text-lg font-medium text-gray-700">
             {currentPart.Content.startsWith('Part')
               ? currentPart.Content.includes(':')
-                ? currentPart.Content.split(':')[1].trim()
-                : currentPart.Content.split('-').slice(1).join(' ').trim()
-              : currentPart.Content}
+                ? currentPart.Content.split(':')[1]
+                    .trim()
+                    .split('\n')
+                    .map((paragraph, index) => (
+                      <p key={index} className="mb-4">
+                        {paragraph.trim()}
+                      </p>
+                    ))
+                : currentPart.Content.split('-')
+                    .slice(1)
+                    .join(' ')
+                    .trim()
+                    .split('\n')
+                    .map((paragraph, index) => (
+                      <p key={index} className="mb-4">
+                        {paragraph.trim()}
+                      </p>
+                    ))
+              : currentPart.Content.split('\n').map((paragraph, index) => (
+                  <p key={index} className="mb-4">
+                    {paragraph.trim()}
+                  </p>
+                ))}
           </Text>
         </div>
 
         {shouldShowContent() && (
           <div className="prose prose-lg mb-8 whitespace-pre-wrap text-base text-gray-800">
-            {currentQuestion.Content}
+            {currentQuestion.Content.split('\n').map((paragraph, index) => {
+              // Kiểm tra nếu đoạn bắt đầu bằng "Tên:" (ví dụ: "Karl:", "Lucy:", v.v.)
+              const match = paragraph.match(/^(\w+):/)
+              if (match) {
+                const name = match[1] // Lấy tên (ví dụ: "Karl")
+                const restOfParagraph = paragraph.replace(/^\w+:/, '').trim() // Phần còn lại của đoạn
+                return (
+                  <p key={index} className="mb-4">
+                    <strong>{name}:</strong> {restOfParagraph}
+                  </p>
+                )
+              }
+              return (
+                <p key={index} className="mb-4">
+                  {paragraph.trim()}
+                </p>
+              )
+            })}
           </div>
         )}
 
