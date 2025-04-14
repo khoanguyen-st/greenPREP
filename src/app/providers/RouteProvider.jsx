@@ -1,7 +1,7 @@
 import PrivateRoute from '@app/routes/PrivateRoute'
 import PublicRoute from '@app/routes/PublicRoute'
-import LoginPage from '@pages/login-page'
 import ForgotPassword from '@pages/ForgotPassword'
+import LoginPage from '@pages/login-page'
 import NotFound from '@pages/not-found-page'
 import ResetPassword from '@pages/ResetPassword'
 import { Layout } from 'antd'

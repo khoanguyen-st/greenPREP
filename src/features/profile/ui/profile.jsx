@@ -220,6 +220,7 @@ const Profile = () => {
         onSubmit={async (userId, passwordData) => {
           try {
             await changePasswordMutation.mutateAsync({ userId, passwordData })
+            refetch()
             message.success('Password changed successfully!')
             setIsPasswordModalOpen(false)
           } catch (error) {

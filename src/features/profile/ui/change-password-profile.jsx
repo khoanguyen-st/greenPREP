@@ -22,6 +22,7 @@ const ChangePasswordModal = ({ open, onCancel, onSubmit, userId }) => {
         oldPassword: passwordData.oldPassword,
         newPassword: passwordData.newPassword
       })
+      message.success('Password changed successfully!')
       setPasswordData({ oldPassword: '', newPassword: '', confirmPassword: '' })
     } catch (error) {
       if (error.inner) {
