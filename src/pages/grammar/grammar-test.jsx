@@ -105,7 +105,7 @@ const GrammarTest = () => {
   }, [answers])
 
   if (isSubmitted) {
-    return <NextScreen nextPath="/reading" skillName="Grammar&Vocabulary" imageSrc={GrammarSubmission} />
+    return <NextScreen nextPath="/reading" skillName="Grammar & Vocabulary" imageSrc={GrammarSubmission} />
   }
 
   if (isLoading) {

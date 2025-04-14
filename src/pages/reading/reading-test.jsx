@@ -1,3 +1,4 @@
+import { ReadingSubmission } from '@assets/images'
 import { fetchReadingTestDetails } from '@features/reading/api/readingAPI'
 import FooterNavigator from '@features/reading/ui/reading-footer-navigator'
 import QuestionNavigatorContainer from '@features/reading/ui/reading-question-navigator'
@@ -5,10 +6,10 @@ import FlagButton from '@shared/ui/flag-button'
 import MatchingQuestion from '@shared/ui/question-type/matching-question'
 import MultipleChoice from '@shared/ui/question-type/multiple-choice'
 import OrderingQuestion from '@shared/ui/question-type/ordering-question'
+import NextScreen from '@shared/ui/submission/next-screen'
 import { useQuery } from '@tanstack/react-query'
 import { Spin, Alert, Typography, Card, Select, Divider } from 'antd'
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 const { Option } = Select
 const { Title, Text } = Typography
@@ -37,7 +38,7 @@ const formatMultipleChoiceQuestion = question => ({
 })
 
 const ReadingTest = () => {
-  const navigate = useNavigate()
+  const [isSubmitted, setIsSubmitted] = useState(false)
   const [userAnswers, setUserAnswers] = useState(() => {
     try {
       const savedAnswers = localStorage.getItem('readingAnswers')
@@ -165,10 +166,14 @@ const ReadingTest = () => {
   }
 
   const handleSubmit = () => {
+    setIsSubmitted(true)
     localStorage.removeItem('readingAnswers')
     localStorage.removeItem('flaggedQuestions')
     localStorage.removeItem('partFlaggedStates')
-    navigate('/writing')
+  }
+
+  if (isSubmitted) {
+    return <NextScreen nextPath="/writing" skillName="Reading" imageSrc={ReadingSubmission} />
   }
 
   if (isLoading) {
