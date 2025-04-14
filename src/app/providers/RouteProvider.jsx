@@ -1,7 +1,9 @@
 import PrivateRoute from '@app/routes/PrivateRoute'
 import PublicRoute from '@app/routes/PublicRoute'
-import LoginPage from '@pages/LoginPage'
+import ForgotPassword from '@pages/ForgotPassword'
+import LoginPage from '@pages/login-page'
 import NotFound from '@pages/not-found-page'
+import ResetPassword from '@pages/ResetPassword'
 import { Layout } from 'antd'
 import { useSelector } from 'react-redux'
 import { Outlet, createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
@@ -16,6 +18,14 @@ const router = createBrowserRouter(
     {
       path: '/login',
       element: <LoginPage />
+    },
+    {
+      path: '/forgot-password',
+      element: <ForgotPassword />
+    },
+    {
+      path: '/reset-password',
+      element: <ResetPassword />
     },
     {
       path: '/',

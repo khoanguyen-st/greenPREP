@@ -1,8 +1,7 @@
+import { PASSWORD_REG } from '@shared/lib/constants/reg'
 import { Button, Form, Input, message, Modal } from 'antd'
 import { useState } from 'react'
 import * as Yup from 'yup'
-
-import { PASSWORD_REG } from '@/shared/lib/constants/reg'
 
 const passwordValidationSchema = Yup.object().shape({
   oldPassword: Yup.string().required('Old password is required'),
@@ -68,7 +67,7 @@ const ChangePasswordModal = ({ open, onCancel, onSubmit, userId }) => {
                   handleSubmit()
                 })
                 .catch(info => {
-                  message.info('Validation Failed:', info)
+                  console.error('Validation Failed:', info)
                 })
             }}
             className="h-10 w-24 bg-[#003087] hover:bg-[#003087]/90"

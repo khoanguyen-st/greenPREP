@@ -16,10 +16,10 @@ const WaitingForApproval = () => {
   useEffect(() => {
     if (!isLoading && data) {
       const sessionRequest = data?.data?.sessionRequest
-      const sessionPaticipantId = data?.data?.sessionParticipant?.ID
+      const sessionParticipantId = data?.data?.sessionParticipant?.ID
       const status = sessionRequest?.status
 
-      localStorage.setItem('sessionPaticipantId', JSON.stringify(sessionPaticipantId))
+      localStorage.setItem('sessionParticipantId', JSON.stringify(sessionParticipantId))
 
       if (status === 'approved') {
         navigate('/introduction')
