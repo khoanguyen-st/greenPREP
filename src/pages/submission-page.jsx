@@ -128,7 +128,7 @@ const SubmissionPage = () => {
 
       <Button
         type="primary"
-        className="mt-6 flex h-14 items-center gap-3 bg-blue-900 px-6 py-2 text-sm text-white hover:bg-blue-800 md:text-base"
+        className="mt-6 flex h-14 items-center gap-3 bg-[#003087] px-6 py-2 text-sm text-white hover:!bg-[#002b6c] md:text-base"
         onClick={handleNavigation}
       >
         Home <span>&rarr;</span>

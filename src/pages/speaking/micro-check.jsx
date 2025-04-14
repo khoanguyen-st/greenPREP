@@ -78,7 +78,7 @@ const MicrophoneCheck = () => {
               type="primary"
               size="large"
               onClick={startCheck}
-              className="h-10 min-w-[120px] bg-[#003087] hover:bg-[#002b6c]"
+              className="h-10 min-w-[120px] bg-[#003087] hover:!bg-[#002b6c]"
             >
               Start check
             </Button>
@@ -117,7 +117,7 @@ const MicrophoneCheck = () => {
                 type="primary"
                 size="large"
                 onClick={() => navigate('/speaking/test/1')}
-                className="bg-[#003087] hover:bg-[#002b6c]"
+                className="bg-[#003087] hover:!bg-[#002b6c]"
               >
                 Start Test
               </Button>
