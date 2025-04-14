@@ -196,7 +196,6 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
   const isLastPart = currentPartIndex === testData.Parts.length - 1
 
   const shouldShowContent = () => {
-    // Không hiển thị nội dung câu hỏi cho Part 5 (index 4) vì đã hiển thị trong renderDropdownQuestion
     if (currentPartIndex === 4) {
       return false
     }
@@ -273,23 +272,20 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
 
     const answer = userAnswers[currentQuestion.ID] || {}
 
-    // Loại bỏ nội dung trong ngoặc tròn nếu là Part 1
     const processedQuestion =
       currentPartIndex === 0 ? processedData.question.replace(/\s*\([^()]*\)/g, '') : processedData.question
 
     if (processedData.type === 'right-left') {
-      // Hiển thị dropdown bên trên mỗi đoạn văn ở Part 5 (index 4)
       if (currentPartIndex === 4) {
         const paragraphs = processedQuestion
           .split('\n')
           .filter(para => para.trim() !== '')
-          .filter(para => !para.startsWith('Tulips')) // Loại bỏ dòng tiêu đề "Tulips"
+          .filter(para => !para.startsWith('Tulips'))
         return (
           <div className="mx-auto w-full max-w-4xl">
             {paragraphs.map((paragraph, index) => {
-              // Xóa "Paragraph X - " ở đầu mỗi đoạn
               const cleanedParagraph = paragraph.replace(/^Paragraph \d+ - /, '').trim()
-              const questionKey = `paragraph-${index + 1}` // Sử dụng index để tạo key duy nhất cho mỗi đoạn
+              const questionKey = `paragraph-${index + 1}`
               return (
                 <div key={index} className="mb-6">
                   <Select
@@ -312,7 +308,6 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
         )
       }
 
-      // Logic cho các Part khác
       return (
         <div className="mx-auto w-full max-w-4xl">
           <div className="mt-4">
@@ -386,7 +381,6 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
 
     const answer = userAnswers[currentQuestion.ID] || getDefaultAnswerByType(currentQuestion.Type)
 
-    // Cưỡng chế Part 5 (index 4) sử dụng dropdown-list ngay cả khi Type là matching
     if (currentPartIndex === 4) {
       return renderDropdownQuestion()
     }
@@ -477,7 +471,7 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
               // Kiểm tra nếu đoạn bắt đầu bằng "Tên:" (ví dụ: "Karl:", "Lucy:", v.v.)
               const match = paragraph.match(/^(\w+):/)
               if (match) {
-                const name = match[1] // Lấy tên (ví dụ: "Karl")
+                const name = match[1]
                 const restOfParagraph = paragraph.replace(/^\w+:/, '').trim() // Phần còn lại của đoạn
                 return (
                   <p key={index} className="mb-4">
