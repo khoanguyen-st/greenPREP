@@ -5,6 +5,9 @@
 .ant-layout {
   background: white !important;
 }
+.ant-btn-lg {
+  border-radius: 6px !important;
+}
 body {
   margin: 0;
   padding: 0;

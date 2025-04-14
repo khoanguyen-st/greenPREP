@@ -16,16 +16,16 @@ const WaitingForApproval = () => {
   useEffect(() => {
     if (!isLoading && data) {
       const sessionRequest = data?.data?.sessionRequest
-      const sessionPaticipantId = data?.data?.sessionParticipant?.ID
+      const sessionParticipantId = data?.data?.sessionParticipant?.ID
       const status = sessionRequest?.status
 
-      localStorage.setItem('sessionPaticipantId', JSON.stringify(sessionPaticipantId))
+      localStorage.setItem('sessionParticipantId', JSON.stringify(sessionParticipantId))
 
       if (status === 'approved') {
         navigate('/introduction')
       }
-      if (status === 'rejected') {
-        navigate('/rejected')
+      if (!data?.data?.sessionRequest && data?.data.status === 'rejected') {
+        navigate('/rejectpage')
       }
     }
   }, [data, isLoading, navigate])

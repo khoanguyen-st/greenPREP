@@ -112,7 +112,7 @@ const PrivateRoute = [
         ]
       },
       {
-        path: 'rejectpage',
+        path: 'rejected',
         element: <DesktopRejectRequestPage />
       },
       {

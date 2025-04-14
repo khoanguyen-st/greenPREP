@@ -47,9 +47,9 @@ const IntroductionPage = () => {
   return (
     <Layout>
       <SharedHeader />
-      <Content className="px-4 py-6 md:px-6">
+      <Content className="px-4 py-4 md:px-6">
         <div className="p-3">
-          <Card className="mx-auto w-full rounded-2xl p-4 shadow-lg md:w-[95%] md:p-10">
+          <Card className="mx-auto w-full rounded-2xl px-4 shadow-lg md:w-[95%]">
             <p className="p-2 text-lg text-blue-500">Test structure & Flow</p>
             <Title level={2} className="p-2 !text-[30px] font-bold">
               Welcome to English Mock Test Journey!

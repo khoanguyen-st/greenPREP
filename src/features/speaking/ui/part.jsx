@@ -1,3 +1,4 @@
+import { SpeakingSubmission } from '@assets/images'
 import {
   uploadToCloudinary,
   initializeSpeakingAnswer,
@@ -7,13 +8,15 @@ import {
 import PartIntro from '@features/speaking/ui/part-intro'
 import QuestionDisplay from '@features/speaking/ui/question-display'
 import TimerDisplay from '@features/speaking/ui/timer-display'
+import NextScreen from '@shared/ui/submission/next-screen'
 import { useMutation } from '@tanstack/react-query'
 import { message } from 'antd'
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPart }) => {
-  const navigate = useNavigate()
+  // @ts-ignore
+  const auth = useSelector(state => state.auth)
   const timerRef = useRef(null)
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
@@ -49,12 +52,13 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
 
   const currentQuestion = questions[currentQuestionIndex]
   const currentTimePair = getTimePair(currentQuestionIndex)
+  const [submitted, setSubmitted] = useState(false)
 
   const submitMutation = useMutation({
     mutationFn: submitSpeakingAnswer,
     onSuccess: () => {
       if (data.Content === 'PART 4') {
-        navigate('/listening')
+        setSubmitted(true)
       } else if (onNextPart) {
         onNextPart()
       }
@@ -81,8 +85,8 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
     if (mediaRecorderRef?.state === 'recording') {
       mediaRecorderRef.stop()
     }
-
-    initializeSpeakingAnswer(data.TopicID)
+    initializeSpeakingAnswer(data.TopicID, auth.user.userId)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.Content, data.TopicID])
 
   useEffect(() => {
@@ -116,6 +120,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
         clearInterval(timerRef.current)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isActive, isTimerRunning, phase, currentTimePair])
 
   const handleStartPart = () => {
@@ -129,7 +134,9 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
   if (showIntro) {
     return <PartIntro data={data} onStartPart={handleStartPart} />
   }
-
+  if (submitted) {
+    return <NextScreen nextPath="/reading" skillName="Speaking" imageSrc={SpeakingSubmission} />
+  }
   const startRecording = () => {
     navigator.mediaDevices
       .getUserMedia({ audio: true })
@@ -142,7 +149,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
           chunks.push(e.data)
         }
         mediaRecorder.onstop = async () => {
-          const blob = new Blob(chunks, { type: 'audio/webm' })
+          const blob = new Blob(chunks, { type: 'audio/mp3' })
           if (!hasUploaded) {
             try {
               setIsUploading(true)

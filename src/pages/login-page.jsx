@@ -57,8 +57,7 @@ const LoginPage = () => {
       } else {
         setLoginError('Login failed. Please try again.')
       }
-    } catch (error) {
-      console.error('Login error:', error)
+    } catch {
       setLoginError('Invalid email or password')
     } finally {
       setLoading(false)

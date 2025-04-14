@@ -113,7 +113,7 @@ const PartIntro = ({ data, onStartPart }) => {
         </div>
 
         <div className="text-center">
-          <Button type="primary" size="large" onClick={onStartPart} className="bg-[#003087] hover:bg-[#002b6c]">
+          <Button type="primary" size="large" onClick={onStartPart} className="bg-[#003087] hover:!bg-[#002b6c]">
             Start Part
           </Button>
         </div>

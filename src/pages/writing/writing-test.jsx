@@ -1,16 +1,19 @@
-import { fetchWritingTestDetails, submitWritingAnswers } from '@features/writing/api'
+import { fetchWritingTestDetails } from '@features/writing/api'
 import { DEFAULT_MAX_WORDS } from '@features/writing/constance'
+import { submitWritingTest } from '@features/writing/service'
 import FooterNavigator from '@features/writing/ui/writing-footer-navigator'
 import QuestionForm from '@features/writing/ui/writing-question-form'
 import QuestionNavigatorContainer from '@features/writing/ui/writing-question-navigator-container'
 import { useQuery } from '@tanstack/react-query'
-import { Typography, Spin, Card, Divider, message } from 'antd'
+import { Typography, Spin, Card, Divider } from 'antd'
 import { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-
 const { Title } = Typography
 
 const WritingTest = () => {
+  // @ts-ignore
+  const { userId } = useSelector(state => state.auth.user)
   const navigate = useNavigate()
   const { data, isLoading, isError } = useQuery({
     queryKey: ['writingQuestions'],
@@ -71,43 +74,7 @@ const WritingTest = () => {
   }
 
   const handleSubmit = async () => {
-    try {
-      if (!data?.Parts) {
-        return
-      }
-
-      const localAnswers = JSON.parse(localStorage.getItem('writingAnswers')) || {}
-
-      const payload = {
-        studentId: '7a5cb071-5ba0-4ecf-a4cf-b1b62e5f9798',
-        topicId: 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc',
-        skillName: 'WRITING',
-        sessionParticipantId: 'a8e2b9e8-bb60-44f0-bd61-6bd524cdc87d',
-        questions: []
-      }
-
-      data.Parts.forEach(part => {
-        part.Questions.forEach((question, index) => {
-          const key = `answer-${part.ID}-${index}`
-          const answerText = localAnswers[key] || ''
-          payload.questions.push({
-            questionId: question.ID,
-            answerText,
-            answerAudio: null
-          })
-        })
-      })
-      await submitWritingAnswers(payload)
-      localStorage.removeItem('writingAnswers')
-      localStorage.removeItem('flaggedParts')
-
-      navigate('/complete-test')
-    } catch {
-      message.error({
-        content: 'Cannot submit answers. Please contact technical support.',
-        duration: 5
-      })
-    }
+    await submitWritingTest({ data, userId, navigate })
   }
 
   if (isLoading) {

@@ -1,3 +1,4 @@
+import { LeftOutlined } from '@ant-design/icons'
 import { useChangeUserPassword, useUpdateUserProfile, useUserProfile } from '@features/profile/hooks/useProfile'
 import ChangePasswordModal from '@features/profile/ui/change-password-profile'
 import EditProfileModal from '@features/profile/ui/edit-profile'
@@ -121,12 +122,8 @@ const Profile = () => {
     <>
       <SharedHeader />
       <div className="p-6">
-        <Button
-          onClick={() => navigate('/')}
-          className="mb-4 bg-blue-800 text-white hover:bg-blue-700"
-          icon={<span>←</span>}
-        >
-          Back to Home
+        <Button onClick={() => navigate('/')} type="primary" className="mb-4 bg-[#003087] hover:!bg-[#002b6c]">
+          <LeftOutlined /> Back to Home
         </Button>
         <Card className="mb-6 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
           <div className="flex flex-col gap-6 md:flex-row md:items-center">
@@ -142,7 +139,7 @@ const Profile = () => {
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button
                 type="primary"
-                className="bg-blue-800 hover:bg-blue-700"
+                className="bg-[#003087] hover:!bg-[#002b6c]"
                 size="large"
                 onClick={openChangePassword}
               >
@@ -220,6 +217,7 @@ const Profile = () => {
         onSubmit={async (userId, passwordData) => {
           try {
             await changePasswordMutation.mutateAsync({ userId, passwordData })
+            refetch()
             message.success('Password changed successfully!')
             setIsPasswordModalOpen(false)
           } catch (error) {
