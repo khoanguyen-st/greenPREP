@@ -35,7 +35,7 @@ const ListeningTest = () => {
           studentId: userId,
           topicId: 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc',
           skillName: 'LISTENING',
-          sessionId: '6e80c6f3-9d4f-4b92-98af-048d84c03f8b',
+          sessionId: '12bd21ef-b6d8-4991-b9ee-69160ce8fd09',
           sessionParticipantId: '45c6d73a-ad6f-4eb7-b5ba-9adcb97c91f0',
           questions: []
         }
@@ -543,7 +543,7 @@ const ListeningTest = () => {
     })
   }
 
-  const handleSubmit = async () => {
+  const handleSubmitAnswers = async (isAutoSubmit = false) => {
     try {
       await saveListeningAnswers(formattedAnswers)
 
@@ -558,45 +558,25 @@ const ListeningTest = () => {
         studentId: userId,
         topicId: 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc',
         skillName: 'LISTENING',
-        sessionId: '6e80c6f3-9d4f-4b92-98af-048d84c03f8b',
+        sessionId: '12bd21ef-b6d8-4991-b9ee-69160ce8fd09',
         sessionParticipantId: '45c6d73a-ad6f-4eb7-b5ba-9adcb97c91f0',
         questions: []
       })
 
       setIsSubmitted(true)
     } catch (error) {
-      console.error('Error submitting listening test:', error)
+      console.error(`Error ${isAutoSubmit ? 'auto-' : ''}submitting listening test:`, error)
       setErrorMessage(error.message || 'Failed to submit the test. Please try again.')
       setShowErrorModal(true)
     }
   }
 
-  const handleAutoSubmit = async () => {
-    try {
-      await saveListeningAnswers(formattedAnswers)
+  const handleSubmit = () => {
+    handleSubmitAnswers(false)
+  }
 
-      localStorage.setItem('listening_formatted_answers', JSON.stringify(formattedAnswers))
-
-      localStorage.removeItem(STORAGE_KEY)
-      localStorage.removeItem('listening_test_answers')
-      localStorage.removeItem('listening_formatted_answers')
-
-      setUserAnswers({})
-      setFormattedAnswers({
-        studentId: userId,
-        topicId: 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc',
-        skillName: 'LISTENING',
-        sessionId: '6e80c6f3-9d4f-4b92-98af-048d84c03f8b',
-        sessionParticipantId: '45c6d73a-ad6f-4eb7-b5ba-9adcb97c91f0',
-        questions: []
-      })
-
-      setIsSubmitted(true)
-    } catch (error) {
-      console.error('Error auto-submitting listening test:', error)
-      setErrorMessage(error.message || 'Failed to submit the test. Please try again.')
-      setShowErrorModal(true)
-    }
+  const handleAutoSubmit = () => {
+    handleSubmitAnswers(true)
   }
 
   const toggleFlag = isFlagged => {
