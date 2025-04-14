@@ -1,7 +1,7 @@
 import { DownOutlined } from '@ant-design/icons'
 import { Logo } from '@assets/images'
 import LogoutModal from '@pages/logout-modal'
-import { Avatar, Dropdown, Layout, Menu, Image } from 'antd'
+import { Avatar, Dropdown, Image, Layout, Menu } from 'antd'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'

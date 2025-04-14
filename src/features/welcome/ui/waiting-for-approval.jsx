@@ -24,8 +24,8 @@ const WaitingForApproval = () => {
       if (status === 'approved') {
         navigate('/introduction')
       }
-      if (status === 'rejected') {
-        navigate('/rejected')
+      if (!data?.data?.sessionRequest && data?.data.status === 'rejected') {
+        navigate('/rejectpage')
       }
     }
   }, [data, isLoading, navigate])
