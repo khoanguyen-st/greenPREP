@@ -10,13 +10,9 @@ import QuestionDisplay from '@features/speaking/ui/question-display'
 import TimerDisplay from '@features/speaking/ui/timer-display'
 import NextScreen from '@shared/ui/submission/next-screen'
 import { useMutation } from '@tanstack/react-query'
-import { message } from 'antd'
 import { useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
 
 const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPart }) => {
-  // @ts-ignore
-  const auth = useSelector(state => state.auth)
   const timerRef = useRef(null)
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
@@ -64,7 +60,6 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
       }
     },
     onError: error => {
-      message.error('Failed to submit speaking answer:')
       console.error('Error details:', error)
     }
   })
@@ -85,7 +80,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
     if (mediaRecorderRef?.state === 'recording') {
       mediaRecorderRef.stop()
     }
-    initializeSpeakingAnswer(data.TopicID, auth.user.userId)
+    initializeSpeakingAnswer()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.Content, data.TopicID])
 
@@ -135,7 +130,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
     return <PartIntro data={data} onStartPart={handleStartPart} />
   }
   if (submitted) {
-    return <NextScreen nextPath="/reading" skillName="Speaking" imageSrc={SpeakingSubmission} />
+    return <NextScreen nextPath="/listening" skillName="Speaking" imageSrc={SpeakingSubmission} />
   }
   const startRecording = () => {
     navigator.mediaDevices
