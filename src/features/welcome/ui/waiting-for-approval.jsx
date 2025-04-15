@@ -24,9 +24,9 @@ const WaitingForApproval = () => {
           ID: sessionParticipantId,
           SessionID: sessionId,
           UserID: studentId,
-          Session: { examSet: topicId }
+          Session: { examSet: topicId, sessionName: sessionName }
         } = data?.data?.sessionParticipant || {}
-        const sessionData = { sessionParticipantId, sessionId, studentId, topicId }
+        const sessionData = { sessionName, sessionParticipantId, sessionId, studentId, topicId }
         localStorage.setItem('globalData', JSON.stringify(sessionData))
         navigate('/introduction')
       }
