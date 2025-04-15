@@ -1,12 +1,18 @@
 import axiosInstance from '@shared/config/axios'
 
 export const fetchWritingTestDetails = async () => {
-  const response = await axiosInstance.get(`/topics/ef6b69aa-2ec2-4c65-bf48-294fd12e13fc`, {
+  const globalData = JSON.parse(localStorage.getItem('globalData') || '{}')
+  const topicId = globalData.topicId
+  if (!topicId) {
+    throw new Error('Missing topicId in localStorage.globalData')
+  }
+  const response = await axiosInstance.get(`/topics/${topicId}`, {
     params: {
       questionType: 'writing',
       skillName: 'WRITING'
     }
   })
+
   return response.data
 }
 
