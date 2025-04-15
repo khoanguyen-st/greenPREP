@@ -627,7 +627,7 @@ const ReadingTest = () => {
   }
 
   return (
-    <div className="relative mx-auto min-h-screen max-w-4xl p-5 pb-32">
+    <div className="relative mx-auto min-h-screen w-full max-w-4xl p-5 pb-32">
       <Divider orientation="left">
         <Title level={1}>Reading</Title>
       </Divider>
