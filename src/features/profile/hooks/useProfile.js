@@ -1,5 +1,4 @@
-import { changeUserPassword, fetchUserProfile, updateUserProfile } from '@features/profile/api'
-import axiosInstance from '@shared/config/axios'
+import { changeUserPassword, fetchStudentHistory, fetchUserProfile, updateUserProfile } from '@features/profile/api'
 import { useMutation, useQuery } from '@tanstack/react-query'
 
 export const useUserProfile = userId => {
@@ -24,11 +23,11 @@ export const useChangeUserPassword = () => {
 
 export const useStudentHistory = userId => {
   return useQuery({
-    queryKey: ['studentHistory', userId],
+    queryKey: ['studentSessionHistory', userId],
     queryFn: async () => {
       try {
-        const response = await axiosInstance.get(`/api/student/history/${userId}`)
-        return response.data
+        const data = await fetchStudentHistory(userId)
+        return { data: data?.data || [] }
       } catch (error) {
         if (error.response?.status === 404) {
           return { data: [] }
@@ -36,7 +35,6 @@ export const useStudentHistory = userId => {
         throw error
       }
     },
-    enabled: Boolean(userId),
-    staleTime: 5 * 60 * 1000
+    enabled: Boolean(userId)
   })
 }
