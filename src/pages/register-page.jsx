@@ -99,7 +99,7 @@ const RegisterPage = () => {
                       { required: true, message: 'First name is required' },
                       { min: 2, message: 'At least 2 characters' },
                       { max: 50, message: 'Cannot exceed 50 characters' },
-                      { pattern: /^[A-Za-z]+$/, message: 'Only alphabetic characters are allowed' }
+                      { pattern: /^[A-Za-z\s]+$/, message: 'Only alphabetic characters are allowed' }
                     ]}
                     hasFeedback
                     className="!mb-1"
@@ -122,7 +122,7 @@ const RegisterPage = () => {
                       { required: true, message: 'Last name is required' },
                       { min: 2, message: 'At least 2 characters' },
                       { max: 50, message: 'Cannot exceed 50 characters' },
-                      { pattern: /^[A-Za-z]+$/, message: 'Only alphabetic characters are allowed' }
+                      { pattern: /^[A-Za-z\s]+$/, message: 'Only alphabetic characters are allowed' }
                     ]}
                     hasFeedback
                     className="!mb-1"
@@ -193,7 +193,7 @@ const RegisterPage = () => {
                     name="studentCode"
                     rules={[
                       { required: true, message: 'Student ID is required' },
-                      { pattern: /^TC\d{5}$/, message: 'Student ID must start with TC followed by 5 digits' }
+                      { pattern: /^[A-Z]{3}\d{6}$/, message: 'Student ID must have 3 letters followed by 6 numbers' }
                     ]}
                     hasFeedback
                     className="!mb-1"
