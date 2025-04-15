@@ -284,6 +284,14 @@ const ReadingTest = () => {
   const isLastPart = currentPartIndex === testData.Parts.length - 1
 
   const shouldShowContent = () => {
+    if (currentPartIndex === 4 && (currentQuestion.Type === 'matching' || currentQuestion.Type === 'dropdown-list')) {
+      return false
+    }
+
+    if (currentPartIndex === 0) {
+      return false
+    }
+
     if (currentQuestion.Type === 'matching') {
       return true
     }
@@ -293,7 +301,6 @@ const ReadingTest = () => {
         typeof currentQuestion.AnswerContent === 'string'
           ? JSON.parse(currentQuestion.AnswerContent)
           : currentQuestion.AnswerContent
-
       if (answerContent.leftItems && answerContent.rightItems) {
         return true
       }
@@ -313,7 +320,6 @@ const ReadingTest = () => {
           typeof currentQuestion.AnswerContent === 'string'
             ? JSON.parse(currentQuestion.AnswerContent)
             : currentQuestion.AnswerContent
-
         if (parsedAnswerContent.leftItems && parsedAnswerContent.rightItems) {
           return {
             id: currentQuestion.ID,
@@ -356,6 +362,101 @@ const ReadingTest = () => {
 
     const answer = userAnswers[currentQuestion.ID] || {}
 
+    if (currentPartIndex === 4 && processedData.type === 'right-left') {
+      const contentLines = processedData.question.split('\n')
+      const paragraphs = []
+      let currentParagraph = ''
+      let currentParagraphNumber = ''
+
+      for (let i = 0; i < contentLines.length; i++) {
+        const line = contentLines[i]
+        if (line.startsWith('Paragraph')) {
+          if (currentParagraph) {
+            paragraphs.push({
+              number: currentParagraphNumber,
+              text: currentParagraph.trim()
+            })
+          }
+          const match = line.match(/Paragraph (\d+)/)
+          currentParagraphNumber = match ? match[1] : ''
+          currentParagraph = line.replace(/^Paragraph \d+ -/, '').trim()
+        } else if (line.trim() && currentParagraph !== '') {
+          currentParagraph += ' ' + line.trim()
+        }
+      }
+
+      if (currentParagraph) {
+        paragraphs.push({
+          number: currentParagraphNumber,
+          text: currentParagraph.trim()
+        })
+      }
+
+      return (
+        <div className="mx-auto w-full max-w-4xl">
+          <div className="mt-4 flex flex-col gap-8">
+            {paragraphs.map((paragraph, index) => {
+              const leftItem = `Paragraph ${paragraph.number}`
+              return (
+                <div key={index} className="mb-8">
+                  <div className="mb-4">
+                    <Select
+                      onChange={value => handleAnswerSubmit({ ...answer, [leftItem]: value })}
+                      value={answer?.[leftItem] || ''}
+                      className="w-64"
+                      placeholder="Select a heading"
+                    >
+                      {processedData.rightItems.map(rightItem => (
+                        <Option key={rightItem} value={rightItem}>
+                          {rightItem}
+                        </Option>
+                      ))}
+                    </Select>
+                  </div>
+                  <div className="whitespace-pre-wrap text-base text-gray-800">
+                    <strong>Paragraph {paragraph.number}</strong> - {paragraph.text}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )
+    }
+
+    if (currentPartIndex === 0 && processedData.type === 'paragraph') {
+      const cleanedQuestion = processedData.question.replace(/\s*\([^)]*\)/g, '')
+      return (
+        <div className="mx-auto w-full max-w-4xl">
+          <div className="whitespace-pre-wrap text-base text-gray-800">
+            {cleanedQuestion.split(/(\d+\.)/).map((part, index) => {
+              if (part.match(/^\d+\.$/)) {
+                const number = part.replace('.', '')
+                return (
+                  <React.Fragment key={index}>
+                    {part}
+                    <Select
+                      onChange={value => handleAnswerSubmit({ ...answer, [number]: value })}
+                      value={answer?.[number] || ''}
+                      className="mx-2 inline-block w-32"
+                      style={{ marginBottom: 10 }}
+                    >
+                      {processedData.answers[number]?.map(option => (
+                        <Option key={option} value={option}>
+                          {option}
+                        </Option>
+                      ))}
+                    </Select>
+                  </React.Fragment>
+                )
+              }
+              return <span key={index}>{part}</span>
+            })}
+          </div>
+        </div>
+      )
+    }
+
     if (processedData.type === 'right-left') {
       return (
         <div className="mx-auto w-full max-w-4xl">
@@ -386,10 +487,11 @@ const ReadingTest = () => {
     }
 
     if (processedData.type === 'paragraph') {
+      const cleanedQuestion = processedData.question.replace(/\s*\([^)]*\)/g, '')
       return (
         <div className="mx-auto w-full max-w-4xl">
           <div className="whitespace-pre-wrap text-base text-gray-800">
-            {processedData.question.split(/(\d+\.)/).map((part, index) => {
+            {cleanedQuestion.split(/(\d+\.)/).map((part, index) => {
               if (part.match(/^\d+\.$/)) {
                 const number = part.replace('.', '')
                 return (
@@ -449,6 +551,9 @@ const ReadingTest = () => {
 
     switch (currentQuestion.Type) {
       case 'dropdown-list': {
+        if (currentPartIndex === 0) {
+          return renderDropdownQuestion()
+        }
         return renderDropdownQuestion()
       }
       case 'ordering': {
@@ -478,7 +583,6 @@ const ReadingTest = () => {
                   console.error('Invalid answer format received from OrderingQuestion')
                   return
                 }
-
                 handleAnswerSubmit({
                   partIndex: currentPartIndex,
                   questionId: currentQuestion.ID,
@@ -491,6 +595,9 @@ const ReadingTest = () => {
       }
 
       case 'matching': {
+        if (currentPartIndex === 4) {
+          return renderDropdownQuestion()
+        }
         return (
           <div className="mx-auto w-full max-w-4xl">
             <MatchingQuestion
@@ -528,11 +635,9 @@ const ReadingTest = () => {
         <div className="absolute right-4 top-4">
           <FlagButton key={`flag-button-${currentPartIndex}`} onFlag={handleFlagToggle} initialFlagged={isFlagged} />
         </div>
-
         <Title level={2} className="mb-6 text-3xl font-bold">
           {`Part ${currentPartIndex + 1}`}
         </Title>
-
         <div className="prose prose-lg mb-8 max-w-none">
           <Text className="block text-lg font-medium text-gray-700">
             {currentPart.Content.startsWith('Part')
@@ -545,10 +650,21 @@ const ReadingTest = () => {
 
         {shouldShowContent() && (
           <div className="prose prose-lg mb-8 whitespace-pre-wrap text-base text-gray-800">
-            {currentQuestion.Content}
+            {currentPartIndex === 3
+              ? currentQuestion.Content.split('\n').map((paragraph, index) => {
+                  const formattedParagraph = paragraph.replace(
+                    /([A-Z][a-z]+(?: [A-Z][a-z]+)*)(?=:)/g,
+                    '<strong>$1</strong>'
+                  )
+                  return (
+                    <div key={index} className="mb-4">
+                      <div dangerouslySetInnerHTML={{ __html: formattedParagraph }} />
+                    </div>
+                  )
+                })
+              : currentQuestion.Content}
           </div>
         )}
-
         <div className="prose prose-lg flex max-w-none flex-col gap-4">{renderQuestion()}</div>
       </Card>
 
