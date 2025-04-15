@@ -65,25 +65,31 @@ const MultipleChoice = ({ questionData, userAnswer, setUserAnswer, onSubmit, cla
             <div
               key={option.key}
               onClick={() => handleClick(option.value)}
-              className={`flex h-[48px] w-full cursor-pointer rounded-md border transition-all duration-200 ${
+              className={`flex h-[56px] w-full cursor-pointer rounded-xl border transition-all duration-200 ${
                 isSelected
-                  ? 'border-blue-500 bg-blue-50 shadow-sm'
-                  : 'border-gray-200 hover:border-blue-400 hover:bg-blue-50/30 hover:shadow-sm'
+                  ? 'border-[#003087] bg-[#003087]/5 shadow-[0_8px_16px_rgba(0,48,135,0.15)]'
+                  : 'border-gray-200 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.05)] hover:border-[#003087] hover:bg-[#003087]/5 hover:shadow-[0_4px_12px_rgba(0,48,135,0.1)]'
               } `}
             >
               <div
-                className={`flex w-[48px] min-w-[48px] items-center justify-center rounded-l-md border-r ${
+                className={`flex w-[56px] min-w-[56px] items-center justify-center rounded-l-xl border-r ${
                   isSelected
-                    ? 'border-blue-500 bg-blue-500 text-white'
+                    ? 'border-[#003087] bg-[#003087] text-white'
                     : 'border-gray-200 bg-gray-50 group-hover:bg-gray-100'
                 } `}
               >
-                <Text strong className="select-none text-base" style={{ color: isSelected ? 'white' : 'inherit' }}>
+                <Text strong className="select-none text-xl" style={{ color: isSelected ? 'white' : 'inherit' }}>
                   {option.key}
                 </Text>
               </div>
               <div className="flex flex-1 items-center">
-                <Text className="select-none px-5 text-base" style={{ color: isSelected ? '#1a56db' : '#374151' }}>
+                <Text
+                  className="select-none px-6 text-base font-medium"
+                  style={{
+                    color: isSelected ? '#003087' : '#374151',
+                    lineHeight: '1.5'
+                  }}
+                >
                   {option.value}
                 </Text>
               </div>
