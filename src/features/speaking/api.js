@@ -4,7 +4,11 @@ import { message } from 'antd'
 
 const fetchTopicData = async partNumber => {
   try {
-    const response = await axiosInstance.get('/topics/ef6b69aa-2ec2-4c65-bf48-294fd12e13fc', {
+    const globalData = localStorage.getItem('globalData')
+    const parsedData = JSON.parse(globalData)
+    const topicId = parsedData.topicId
+
+    const response = await axiosInstance.get(`/topics/${topicId}`, {
       params: { skillName: 'SPEAKING' }
     })
 
@@ -44,12 +48,21 @@ const uploadToCloudinary = async (blob, topicId, partContent, questionIndex) => 
   }
 }
 
-const initializeSpeakingAnswer = (topicId, userId) => {
-  const sessionParticipantId = localStorage.getItem('sessionParticipantId')
+const initializeSpeakingAnswer = () => {
+  const globalData = localStorage.getItem('globalData')
+
+  const parsedData = JSON.parse(globalData)
+
+  const sessionParticipantId = parsedData.sessionParticipantId
+  const sessionId = parsedData.sessionId
+  const studentId = parsedData.studentId
+  const topicId = parsedData.topicId
+
   localStorage.removeItem('speaking_answer')
   const speakingAnswer = {
-    studentId: userId,
+    studentId: studentId,
     topicId: topicId,
+    sessionId: sessionId,
     skillName: 'SPEAKING',
     sessionParticipantId: sessionParticipantId,
     questions: []
