@@ -120,48 +120,80 @@ const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className =
     return <p className="text-center text-gray-600">No question data available.</p>
   }
   return (
-    <div className={`${className} mx-auto max-w-4xl rounded-lg bg-white p-6 shadow-lg`}>
-      <p className="mb-4 whitespace-pre-wrap text-sm font-semibold text-gray-800">{processedData.question}</p>
+    <div className={`${className} mx-auto max-w-4xl rounded-xl bg-white p-8`}>
+      <style>
+        {`
+          .ant-select-selection-item {
+            font-size: 16px !important;
+            line-height: 1.5 !important;
+          }
+          .dropdown-item {
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 16px;
+            margin-bottom: 16px;
+          }
+          .dropdown-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+          }
+        `}
+      </style>
+      <p className="mb-6 whitespace-pre-wrap text-lg font-semibold text-gray-800">{processedData.question}</p>
       {processedData.type === 'paragraph' ? (
         Object.entries(processedData.answers).map(([key, options]) => (
-          <div key={key} className="mb-4 flex w-full">
+          <div key={key} className="dropdown-item flex w-full">
             <div className={`flex w-1/2`}>
               <Select
                 onChange={value => handleSelectChange(key, value)}
                 value={selectedOptions?.[key] || ''}
-                className={`w-2/3 ${small ? 'h-8 text-xs' : 'h-8 text-sm'} rounded-md border border-gray-300`}
+                className={`w-2/3 ${small ? 'h-12' : 'h-14'} rounded-lg border border-gray-300 text-base shadow-sm`}
+                dropdownStyle={{ fontSize: '16px' }}
               >
                 {options.map(option => (
-                  <Option key={option} value={option}>
+                  <Option key={option} value={option} style={{ fontSize: '16px', padding: '12px 16px' }}>
                     {option}
                   </Option>
                 ))}
               </Select>
             </div>
-            {error[key] && <p className="mt-2 text-xs text-red-500">{error[key]}</p>}
+            {error[key] && <p className="mt-2 text-base text-red-500">{error[key]}</p>}
           </div>
         ))
       ) : (
-        <div className="w-full">
+        <div className="w-full space-y-6">
           {processedData.leftItems.map((leftItem, index) => (
-            <div key={index} className="mb-4 flex w-full">
-              <div className="w-1/2 pr-4">
-                <p className="p-1 text-xs text-gray-700">{leftItem}</p>
+            <div key={index} className="dropdown-item flex w-full items-start gap-6">
+              <div className="min-w-[200px] flex-1">
+                <p className="text-lg font-medium text-gray-700">{leftItem}</p>
               </div>
-              <div className="w-1/2">
+              <div className="w-[300px] flex-shrink-0">
                 <Select
                   onChange={value => handleSelectChange(leftItem, value)}
                   value={selectedOptions[leftItem] || ''}
-                  className={`w-2/3 ${small ? 'h-8 text-xs' : 'h-8 text-xs'} rounded-md border border-gray-300`}
+                  className={`w-full ${small ? 'h-12' : 'h-14'} rounded-lg border border-gray-300 text-base shadow-sm`}
+                  placeholder="Select an answer"
+                  showSearch
+                  dropdownStyle={{ fontSize: '16px' }}
+                  dropdownMatchSelectWidth={false}
+                  style={{ width: '100%' }}
+                  filterOption={(input, option) => String(option.children).toLowerCase().includes(input.toLowerCase())}
+                  optionLabelProp="label"
+                  getPopupContainer={triggerNode => triggerNode.parentNode}
                 >
                   {processedData.rightItems.map(rightItem => (
-                    <Option key={rightItem} value={rightItem}>
+                    <Option
+                      key={rightItem}
+                      value={rightItem}
+                      label={rightItem}
+                      style={{ fontSize: '16px', padding: '12px 16px' }}
+                    >
                       {rightItem}
                     </Option>
                   ))}
                 </Select>
               </div>
-              {error[leftItem] && <p className="mt-2 text-xs text-red-500">{error[leftItem]}</p>}
+              {error[leftItem] && <p className="mt-2 text-base text-red-500">{error[leftItem]}</p>}
             </div>
           ))}
         </div>
