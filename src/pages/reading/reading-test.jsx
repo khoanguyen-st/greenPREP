@@ -1,5 +1,5 @@
-import { ReadingSubmission } from '@assets/images'
-import { fetchReadingTestDetails } from '@features/reading/api/readingAPI'
+import ReadingSubmission from '@assets/images/submission/reading-submission.png'
+import { fetchReadingTestDetails, submitStudentAnswers } from '@features/reading/api/readingAPI'
 import FooterNavigator from '@features/reading/ui/reading-footer-navigator'
 import QuestionNavigatorContainer from '@features/reading/ui/reading-question-navigator'
 import FlagButton from '@shared/ui/flag-button'
@@ -39,6 +39,7 @@ const formatMultipleChoiceQuestion = question => ({
 
 const ReadingTest = () => {
   const [isSubmitted, setIsSubmitted] = useState(false)
+
   const [userAnswers, setUserAnswers] = useState(() => {
     try {
       const savedAnswers = localStorage.getItem('readingAnswers')
@@ -165,15 +166,101 @@ const ReadingTest = () => {
     }))
   }
 
-  const handleSubmit = () => {
-    setIsSubmitted(true)
-    localStorage.removeItem('readingAnswers')
-    localStorage.removeItem('flaggedQuestions')
-    localStorage.removeItem('partFlaggedStates')
+  const handleSubmit = async () => {
+    try {
+      const globalData = JSON.parse(localStorage.getItem('globalData'))
+      if (!globalData) {
+        throw new Error('Global data not found')
+      }
+
+      const formattedAnswers = Object.entries(userAnswers).map(([questionId, answer]) => {
+        const question = testData.Parts.flatMap(part => part.Questions).find(q => q.ID === questionId)
+
+        const formattedAnswer = {
+          questionId,
+          answerText: null,
+          answerAudio: null
+        }
+
+        switch (question?.Type) {
+          case 'multiple-choice':
+            formattedAnswer.answerText = answer
+            break
+          case 'matching':
+            if (answer && typeof answer === 'object') {
+              formattedAnswer.answerText = Object.entries(answer).map(([left, right]) => ({
+                left,
+                right
+              }))
+            }
+            break
+          case 'ordering':
+            if (answer && typeof answer === 'object' && 'partIndex' in answer) {
+              const options = question.AnswerContent
+              formattedAnswer.answerText = answer.answer.map((item, index) => ({
+                key: options[item],
+                value: index + 1
+              }))
+            }
+            break
+          case 'dropdown-list':
+            if (answer && typeof answer === 'object') {
+              formattedAnswer.answerText = Object.entries(answer).map(([key, value]) => ({
+                key,
+                value
+              }))
+            }
+            break
+          case 'speaking':
+            formattedAnswer.answerText = null
+            formattedAnswer.answerAudio = answer
+            break
+          case 'writing':
+            formattedAnswer.answerText = answer
+            break
+          default:
+            formattedAnswer.answerText = answer
+        }
+
+        return formattedAnswer
+      })
+
+      const allQuestions = testData.Parts.flatMap(part => part.Questions)
+      const answeredQuestionIds = new Set(formattedAnswers.map(answer => answer.questionId))
+
+      const autoCompletedAnswers = allQuestions
+        .filter(question => !answeredQuestionIds.has(question.ID))
+        .map(question => ({
+          questionId: question.ID,
+          answerText: null,
+          answerAudio: null
+        }))
+
+      const finalAnswers = [...formattedAnswers, ...autoCompletedAnswers]
+
+      const submitData = {
+        studentId: globalData.studentId,
+        topicId: globalData.topicId,
+        skillName: 'READING',
+        sessionParticipantId: globalData.sessionParticipantId,
+        sessionId: globalData.sessionId,
+        questions: finalAnswers
+      }
+
+      await submitStudentAnswers(submitData)
+
+      localStorage.removeItem('readingAnswers')
+      localStorage.removeItem('flaggedQuestions')
+      localStorage.removeItem('partFlaggedStates')
+
+      setIsSubmitted(true)
+    } catch (error) {
+      console.error('Error submitting answers:', error)
+    }
   }
 
   if (isSubmitted) {
-    return <NextScreen nextPath="/writing" skillName="Reading" imageSrc={ReadingSubmission} />
+    return <NextScreen nextPath="/writing" skillName="Writing" imageSrc={ReadingSubmission} />
   }
 
   if (isLoading) {
@@ -422,6 +509,7 @@ const ReadingTest = () => {
               userAnswer={answer}
               setUserAnswer={handleAnswerSubmit}
               onSubmit={handleAnswerSubmit}
+              setUserAnswerSubmit={() => {}}
             />
           </div>
         )
