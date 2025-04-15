@@ -1,4 +1,4 @@
-import axios from '@shared/config/axios'
+import axiosInstance from '@shared/config/axios'
 import { getGlobalDataFromStorage } from '@shared/hooks/useGlobalData'
 
 export const fetchListeningTestDetails = async () => {
@@ -14,7 +14,7 @@ export const fetchListeningTestDetails = async () => {
       throw new Error('Missing topicId in localStorage.globalData')
     }
 
-    const response = await axios.get(`/topics/${topicId}`, {
+    const response = await axiosInstance.get(`/topics/${topicId}`, {
       params: {
         skillName: 'LISTENING'
       }
@@ -28,7 +28,7 @@ export const fetchListeningTestDetails = async () => {
 
 export const saveListeningAnswers = async formattedAnswers => {
   try {
-    const response = await axios.post(`/student-answers`, formattedAnswers)
+    const response = await axiosInstance.post(`/student-answers`, formattedAnswers)
     return response.data
   } catch (error) {
     console.error('Error saving listening answers:', error)
