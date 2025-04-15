@@ -1,8 +1,9 @@
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { ListeningSubmission } from '@assets/images'
-import { fetchListeningTestDetails, saveListeningAnswers } from '@features/listening/api/listeningAPI'
+import { fetchListeningTestDetails, saveListeningAnswers } from '@features/listening/api'
 import PlayStopButton from '@features/listening/ui/play-stop-button'
 import TestNavigation from '@features/listening/ui/test-navigation'
+import useGlobalData from '@shared/hooks/useGlobalData'
 import DropdownQuestion from '@shared/ui/question-type/dropdown-question'
 import MultipleChoice from '@shared/ui/question-type/multiple-choice'
 import NextScreen from '@shared/ui/submission/next-screen'
@@ -22,33 +23,7 @@ const ListeningTest = () => {
   const [flaggedQuestions, setFlaggedQuestions] = useState([])
   const [isAudioPlaying, setIsAudioPlaying] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
-  const [showErrorModal, setShowErrorModal] = useState(false)
-
-  const getGlobalData = () => {
-    try {
-      const globalDataStr = localStorage.getItem('globalData')
-      if (!globalDataStr) {
-        throw new Error('Missing globalData in localStorage')
-      }
-
-      const globalData = JSON.parse(globalDataStr)
-      if (!globalData || typeof globalData !== 'object') {
-        throw new Error('Invalid globalData format in localStorage')
-      }
-
-      if (!globalData.studentId || !globalData.topicId || !globalData.sessionId || !globalData.sessionParticipantId) {
-        throw new Error('Missing required fields in globalData')
-      }
-
-      return globalData
-    } catch (error) {
-      console.error('Error getting global data:', error)
-      setErrorMessage('Failed to load test data. Please refresh the page or contact support.')
-      setShowErrorModal(true)
-      return null
-    }
-  }
+  const { getGlobalData, errorMessage, setErrorMessage, showErrorModal, setShowErrorModal } = useGlobalData()
 
   const [formattedAnswers, setFormattedAnswers] = useState(() => {
     const savedFormattedAnswers = localStorage.getItem('listening_formatted_answers')
@@ -567,28 +542,6 @@ const ListeningTest = () => {
               }
             ]
           }
-        } else if (questionType === 'matching') {
-          const existingAnswer = newQuestions[existingQuestionIndex].answerText || []
-
-          if (Array.isArray(existingAnswer)) {
-            const leftIndex = existingAnswer.findIndex(a => a.left === (question?.Content || questionId))
-
-            if (leftIndex >= 0) {
-              existingAnswer[leftIndex].right = answer
-            } else {
-              existingAnswer.push({
-                left: question?.Content || questionId,
-                right: answer
-              })
-            }
-          } else {
-            newQuestions[existingQuestionIndex].answerText = [
-              {
-                left: question?.Content || questionId,
-                right: answer
-              }
-            ]
-          }
         } else {
           newQuestions[existingQuestionIndex].answerText = answer
         }
@@ -628,13 +581,6 @@ const ListeningTest = () => {
               }
             ]
           }
-        } else if (questionType === 'matching') {
-          newQuestion.answerText = [
-            {
-              left: question?.Content || questionId,
-              right: answer
-            }
-          ]
         } else {
           newQuestion.answerText = answer
         }
@@ -770,11 +716,8 @@ const ListeningTest = () => {
         let formattedCorrectAnswer = []
         if (answerContent.correctAnswer && Array.isArray(answerContent.correctAnswer)) {
           formattedCorrectAnswer = answerContent.correctAnswer.map(item => {
-            if (item.left && item.right) {
-              return {
-                key: item.left,
-                value: item.right
-              }
+            if (item.key && item.value) {
+              return item
             }
             return item
           })
@@ -792,11 +735,11 @@ const ListeningTest = () => {
 
         return {
           ...question,
-          Type: question.Type === 'matching' ? 'dropdown-list' : question.Type,
+          Type: 'dropdown-list',
           AnswerContent: {
             ...answerContent,
             correctAnswer: formattedCorrectAnswer,
-            type: question.Type === 'matching' ? 'dropdown-list' : answerContent.type
+            type: 'dropdown-list'
           }
         }
       } else if (answerContent.type === 'dropdown-list') {
@@ -805,11 +748,6 @@ const ListeningTest = () => {
           formattedCorrectAnswer = answerContent.correctAnswer.map(item => {
             if (item.key && item.value) {
               return item
-            } else if (item.left && item.right) {
-              return {
-                key: item.left,
-                value: item.right
-              }
             }
             return item
           })
@@ -890,7 +828,6 @@ const ListeningTest = () => {
         onAutoSubmit={handleAutoSubmit}
         userAnswers={userAnswers}
         flaggedQuestions={flaggedQuestions}
-        skillName={testData.Parts[0].Questions[0].Skill.Name}
       >
         <Typography.Title level={4} className="mb-4">
           {currentGroup?.questions[0]?.Part?.Content}
@@ -943,12 +880,12 @@ const ListeningTest = () => {
                   className="z-0 mt-6"
                   setUserAnswerSubmit={() => {}}
                 />
-              ) : qType === 'matching' || qType === 'dropdown-list' ? (
+              ) : qType === 'dropdown-list' ? (
                 <DropdownQuestion
                   questionData={formattedQ}
                   userAnswer={userAnswers}
                   setUserAnswer={setUserAnswers}
-                  className="z-0 mt-6"
+                  className="z-0 mt-6 !p-0 shadow-none"
                 />
               ) : null}
             </div>
