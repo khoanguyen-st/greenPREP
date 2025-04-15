@@ -1,4 +1,5 @@
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons'
+import { EMAIL_REG, PASSWORD_REG, PHONE_REG } from '@shared/lib/constants/reg'
 import { useRegister } from '@shared/lib/hooks/useAuthUsers'
 import { Form, Input, Button, Typography, Space, Row, Col, message } from 'antd'
 import { useState } from 'react'
@@ -11,20 +12,16 @@ const { Title, Text } = Typography
 const RegisterPage = () => {
   const [form] = Form.useForm()
   const navigate = useNavigate()
-  const [confirmTouched, setConfirmTouched] = useState(false)
   const [formValues, setFormValues] = useState({
     firstName: '',
     lastName: '',
     email: '',
     className: '',
     studentCode: '',
-    phoneNumber: '',
+    phone: '',
     password: '',
     confirmPassword: ''
   })
-
-  const phoneNumber = Form.useWatch('phoneNumber', form)
-  const showPhoneSuccess = phoneNumber?.length === 10
 
   const { mutate: registerUser, isPending } = useRegister({
     onSuccess: response => {
@@ -46,10 +43,6 @@ const RegisterPage = () => {
     form.validateFields([fieldName])
   }
 
-  const handleConfirmBlur = () => {
-    setConfirmTouched(true)
-  }
-
   const onFinish = () => {
     const registerData = {
       firstName: formValues.firstName,
@@ -57,6 +50,7 @@ const RegisterPage = () => {
       email: formValues.email,
       className: formValues.className,
       studentCode: formValues.studentCode,
+      phone: formValues.phone,
       password: formValues.password
     }
     // @ts-ignore - The type is defined in the hook's JSDoc
@@ -102,27 +96,10 @@ const RegisterPage = () => {
                     }
                     name="firstName"
                     rules={[
-                      {
-                        validator: (_, value) => {
-                          if (!value) {
-                            return Promise.reject(new Error('First name is required'))
-                          }
-                          const errors = []
-                          if (value.length < 2) {
-                            errors.push('At least 2 characters')
-                          }
-                          if (value.length > 50) {
-                            errors.push('Cannot exceed 50 characters')
-                          }
-                          if (!/^[A-Za-z]+$/.test(value)) {
-                            errors.push('Only alphabetic characters are allowed')
-                          }
-                          if (errors.length > 0) {
-                            return Promise.reject(new Error(`First name: ${errors.join(', ')}`))
-                          }
-                          return Promise.resolve()
-                        }
-                      }
+                      { required: true, message: 'First name is required' },
+                      { min: 2, message: 'At least 2 characters' },
+                      { max: 50, message: 'Cannot exceed 50 characters' },
+                      { pattern: /^[A-Za-z]+$/, message: 'Only alphabetic characters are allowed' }
                     ]}
                     hasFeedback
                     className="!mb-1"
@@ -142,27 +119,10 @@ const RegisterPage = () => {
                     }
                     name="lastName"
                     rules={[
-                      {
-                        validator: (_, value) => {
-                          if (!value) {
-                            return Promise.reject(new Error('Last name is required'))
-                          }
-                          const errors = []
-                          if (value.length < 2) {
-                            errors.push('At least 2 characters')
-                          }
-                          if (value.length > 50) {
-                            errors.push('Cannot exceed 50 characters')
-                          }
-                          if (!/^[A-Za-z]+$/.test(value)) {
-                            errors.push('Only alphabetic characters are allowed')
-                          }
-                          if (errors.length > 0) {
-                            return Promise.reject(new Error(`${errors.join(', ')}`))
-                          }
-                          return Promise.resolve()
-                        }
-                      }
+                      { required: true, message: 'Last name is required' },
+                      { min: 2, message: 'At least 2 characters' },
+                      { max: 50, message: 'Cannot exceed 50 characters' },
+                      { pattern: /^[A-Za-z]+$/, message: 'Only alphabetic characters are allowed' }
                     ]}
                     hasFeedback
                     className="!mb-1"
@@ -185,21 +145,8 @@ const RegisterPage = () => {
                     }
                     name="email"
                     rules={[
-                      {
-                        validator: (_, value) => {
-                          if (!value) {
-                            return Promise.reject(new Error('Email is required'))
-                          }
-                          const errors = []
-                          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-                            errors.push('Please enter a valid email')
-                          }
-                          if (errors.length > 0) {
-                            return Promise.reject(new Error(`${errors.join(', ')}`))
-                          }
-                          return Promise.resolve()
-                        }
-                      }
+                      { required: true, message: 'Email is required' },
+                      { pattern: EMAIL_REG, message: 'Please enter a valid email' }
                     ]}
                     hasFeedback
                     className="!mb-1"
@@ -219,27 +166,10 @@ const RegisterPage = () => {
                     }
                     name="className"
                     rules={[
-                      {
-                        validator: (_, value) => {
-                          if (!value) {
-                            return Promise.reject(new Error('Class name is required'))
-                          }
-                          const errors = []
-                          if (value.length < 2) {
-                            errors.push('At least 2 characters')
-                          }
-                          if (value.length > 100) {
-                            errors.push('Cannot exceed 100 characters')
-                          }
-                          if (!/^[A-Za-z0-9\s]+$/.test(value)) {
-                            errors.push('Only alphanumeric characters and spaces are allowed')
-                          }
-                          if (errors.length > 0) {
-                            return Promise.reject(new Error(`${errors.join(', ')}`))
-                          }
-                          return Promise.resolve()
-                        }
-                      }
+                      { required: true, message: 'Class name is required' },
+                      { min: 2, message: 'At least 2 characters' },
+                      { max: 100, message: 'Cannot exceed 100 characters' },
+                      { pattern: /^[A-Za-z0-9\s]+$/, message: 'Only alphanumeric characters and spaces are allowed' }
                     ]}
                     hasFeedback
                     className="!mb-1"
@@ -262,21 +192,8 @@ const RegisterPage = () => {
                     }
                     name="studentCode"
                     rules={[
-                      {
-                        validator: (_, value) => {
-                          if (!value) {
-                            return Promise.reject(new Error('Student ID is required'))
-                          }
-                          const errors = []
-                          if (!/^[A-Za-z0-9]{5,15}$/.test(value)) {
-                            errors.push('Must be 5-15 alphanumeric characters')
-                          }
-                          if (errors.length > 0) {
-                            return Promise.reject(new Error(`${errors.join(', ')}`))
-                          }
-                          return Promise.resolve()
-                        }
-                      }
+                      { required: true, message: 'Student ID is required' },
+                      { pattern: /^TC\d{5}$/, message: 'Student ID must start with TC followed by 5 digits' }
                     ]}
                     hasFeedback
                     className="!mb-1"
@@ -291,30 +208,14 @@ const RegisterPage = () => {
                   <Form.Item
                     label={
                       <Text strong className="!text-sm">
-                        Phone Number
+                        Phone Number <span className="text-red-500">*</span>
                       </Text>
                     }
-                    name="phoneNumber"
-                    validateStatus={showPhoneSuccess ? 'success' : ''}
+                    name="phone"
                     rules={[
-                      {
-                        validator: (_, value) => {
-                          if (!value) {
-                            return Promise.resolve()
-                          }
-                          const errors = []
-                          if (!/^\d+$/.test(value)) {
-                            errors.push('Must contain only digits')
-                          }
-                          if (value.length !== 10) {
-                            errors.push('Must be exactly 10 digits')
-                          }
-                          if (errors.length > 0) {
-                            return Promise.reject(new Error(`${errors.join(', ')}`))
-                          }
-                          return Promise.resolve()
-                        }
-                      }
+                      { required: true, message: 'Phone number is required' },
+                      { pattern: /^\d+$/, message: 'Phone number must contain only numbers' },
+                      { pattern: PHONE_REG, message: 'Phone number is not valid (e.g. 0988668686)' }
                     ]}
                     hasFeedback
                     className="!mb-1"
@@ -340,31 +241,9 @@ const RegisterPage = () => {
                     rules={[
                       { required: true, message: 'Password is required' },
                       {
-                        validator: (_, value) => {
-                          if (!value) {
-                            return Promise.resolve()
-                          }
-                          const errors = []
-                          if (!/[A-Z]/.test(value)) {
-                            errors.push('One uppercase letter')
-                          }
-                          if (!/[a-z]/.test(value)) {
-                            errors.push('One lowercase letter')
-                          }
-                          if (!/[0-9]/.test(value)) {
-                            errors.push('One number')
-                          }
-                          if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
-                            errors.push('One special character')
-                          }
-                          if (errors.length > 0) {
-                            return Promise.reject(new Error(`Password must contain ${errors[0]}`))
-                          }
-                          if (value.length < 8) {
-                            return Promise.reject(new Error('Password must be at least 8 characters'))
-                          }
-                          return Promise.resolve()
-                        }
+                        pattern: PASSWORD_REG,
+                        message:
+                          'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character'
                       }
                     ]}
                     hasFeedback
@@ -395,13 +274,7 @@ const RegisterPage = () => {
                       { required: true, message: 'Please confirm your password' },
                       ({ getFieldValue }) => ({
                         validator(_, value) {
-                          if (!confirmTouched) {
-                            return Promise.resolve()
-                          }
-                          if (!value) {
-                            return Promise.resolve()
-                          }
-                          if (getFieldValue('password') === value) {
+                          if (!value || getFieldValue('password') === value) {
                             return Promise.resolve()
                           }
                           return Promise.reject(new Error('The two passwords do not match'))
@@ -413,7 +286,6 @@ const RegisterPage = () => {
                   >
                     <Input.Password
                       placeholder="••••••••••"
-                      onBlur={handleConfirmBlur}
                       className="!h-11 !rounded-md !border !bg-gray-50 !px-4 !py-2.5 !text-base"
                       iconRender={visible =>
                         visible ? (

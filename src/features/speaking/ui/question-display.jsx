@@ -107,7 +107,7 @@ const QuestionDisplay = ({
           <>
             <div className="mb-6 flex items-center justify-between">
               <span className="rounded-xl bg-[#003087] px-6 py-2 text-xl font-semibold text-white">
-                {isPart4 ? 'Part 4' : `Question ${currentQuestionIndex + 1} of ${totalQuestions}`}
+                {isPart4 ? 'Questions' : `Question ${currentQuestionIndex + 1} of ${totalQuestions}`}
               </span>
             </div>
             {isPart4 ? (
