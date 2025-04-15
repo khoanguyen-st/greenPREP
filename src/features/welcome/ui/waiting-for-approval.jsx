@@ -16,12 +16,17 @@ const WaitingForApproval = () => {
   useEffect(() => {
     if (!isLoading && data) {
       const sessionRequest = data?.data?.sessionRequest
-      const sessionParticipantId = data?.data?.sessionParticipant?.ID
+      const {
+        ID: sessionParticipantId,
+        SessionID: sessionId,
+        UserID: studentId,
+        Session: { examSet: topicId }
+      } = data?.data?.sessionParticipant || {}
       const status = sessionRequest?.status
 
-      localStorage.setItem('sessionParticipantId', JSON.stringify(sessionParticipantId))
-
       if (status === 'approved') {
+        const sessionData = { sessionParticipantId, sessionId, studentId, topicId }
+        localStorage.setItem('gobalData', JSON.stringify(sessionData))
         navigate('/introduction')
       }
       if (!data?.data?.sessionRequest && data?.data.status === 'rejected') {
