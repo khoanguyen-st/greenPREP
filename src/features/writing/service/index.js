@@ -1,20 +1,31 @@
 import { submitWritingAnswers } from '@features/writing/api'
 import { message } from 'antd'
 
-export const submitWritingTest = async ({ data, userId, navigate }) => {
+export const submitWritingTest = async ({ data, navigate }) => {
   try {
     if (!data?.Parts) {
       return
     }
 
     const localAnswers = JSON.parse(localStorage.getItem('writingAnswers')) || {}
-    const sessionParticipantId = JSON.parse(localStorage.getItem('sessionParticipantId'))
+    const globalData = JSON.parse(localStorage.getItem('globalData')) || {}
+
+    const { studentId, topicId, sessionParticipantId, sessionId } = globalData
+
+    if (!studentId || !topicId || !sessionParticipantId) {
+      message.error({
+        content: 'Missing session information. Please try again or contact support.',
+        duration: 5
+      })
+      return
+    }
 
     const payload = {
-      studentId: userId,
-      topicId: 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc',
+      studentId,
+      topicId,
       skillName: 'WRITING',
       sessionParticipantId,
+      sessionId,
       questions: []
     }
 
@@ -31,11 +42,13 @@ export const submitWritingTest = async ({ data, userId, navigate }) => {
     })
 
     await submitWritingAnswers(payload)
+
     localStorage.removeItem('writingAnswers')
     localStorage.removeItem('flaggedParts')
-
+    localStorage.removeItem('globalData')
     navigate('/complete-test')
-  } catch {
+  } catch (error) {
+    console.error(error)
     message.error({
       content: 'Cannot submit answers. Please contact technical support.',
       duration: 5
