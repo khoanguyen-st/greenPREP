@@ -1,14 +1,34 @@
 import axios from '@shared/config/axios'
-
+// @ts-ignore
 const API_BASE_URL = import.meta.env.VITE_BASE_URL
 
 export const fetchListeningTestDetails = async () => {
-  const response = await axios.get(`${API_BASE_URL}/topics/ef6b69aa-2ec2-4c65-bf48-294fd12e13fc`, {
-    params: {
-      skillName: 'LISTENING'
+  try {
+    const globalDataStr = localStorage.getItem('globalData')
+    if (!globalDataStr) {
+      throw new Error('Missing globalData in localStorage')
     }
-  })
-  return response.data
+
+    const globalData = JSON.parse(globalDataStr)
+    if (!globalData || typeof globalData !== 'object') {
+      throw new Error('Invalid globalData format in localStorage')
+    }
+
+    const topicId = globalData.topicId
+    if (!topicId) {
+      throw new Error('Missing topicId in localStorage.globalData')
+    }
+
+    const response = await axios.get(`${API_BASE_URL}/topics/${topicId}`, {
+      params: {
+        skillName: 'LISTENING'
+      }
+    })
+    return response.data
+  } catch (error) {
+    console.error('Error fetching listening test details:', error)
+    throw error
+  }
 }
 
 export const saveListeningAnswers = async formattedAnswers => {

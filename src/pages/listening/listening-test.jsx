@@ -9,12 +9,10 @@ import NextScreen from '@shared/ui/submission/next-screen'
 import { useQuery } from '@tanstack/react-query'
 import { Spin, Alert, Typography, Modal } from 'antd'
 import { useState, useMemo, useEffect } from 'react'
-import { useSelector } from 'react-redux'
 
 const STORAGE_KEY = 'listening_test_answers'
 
 const ListeningTest = () => {
-  const userId = useSelector(state => state.auth.user.userId)
   const [currentPartIndex, setCurrentPartIndex] = useState(0)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [userAnswers, setUserAnswers] = useState(() => {
@@ -27,16 +25,54 @@ const ListeningTest = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [showErrorModal, setShowErrorModal] = useState(false)
 
+  const getGlobalData = () => {
+    try {
+      const globalDataStr = localStorage.getItem('globalData')
+      if (!globalDataStr) {
+        throw new Error('Missing globalData in localStorage')
+      }
+
+      const globalData = JSON.parse(globalDataStr)
+      if (!globalData || typeof globalData !== 'object') {
+        throw new Error('Invalid globalData format in localStorage')
+      }
+
+      if (!globalData.studentId || !globalData.topicId || !globalData.sessionId || !globalData.sessionParticipantId) {
+        throw new Error('Missing required fields in globalData')
+      }
+
+      return globalData
+    } catch (error) {
+      console.error('Error getting global data:', error)
+      setErrorMessage('Failed to load test data. Please refresh the page or contact support.')
+      setShowErrorModal(true)
+      return null
+    }
+  }
+
   const [formattedAnswers, setFormattedAnswers] = useState(() => {
     const savedFormattedAnswers = localStorage.getItem('listening_formatted_answers')
+    const globalData = getGlobalData()
+
+    if (!globalData) {
+      return {
+        studentId: '',
+        topicId: '',
+        skillName: 'LISTENING',
+        sessionId: '',
+        sessionParticipantId: '',
+        questions: []
+      }
+    }
+
     return savedFormattedAnswers
       ? JSON.parse(savedFormattedAnswers)
       : {
-          studentId: userId,
-          topicId: 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc',
+          studentId: globalData.studentId,
+          topicId: globalData.topicId,
           skillName: 'LISTENING',
-          sessionId: '12bd21ef-b6d8-4991-b9ee-69160ce8fd09',
-          sessionParticipantId: '45c6d73a-ad6f-4eb7-b5ba-9adcb97c91f0',
+          sessionId: globalData.sessionId,
+          sessionParticipantId: globalData.sessionParticipantId,
           questions: []
         }
   })
@@ -57,6 +93,76 @@ const ListeningTest = () => {
     queryKey: ['listeningTest'],
     queryFn: () => fetchListeningTestDetails()
   })
+
+  useEffect(() => {
+    if (testData?.Parts) {
+      const globalData = getGlobalData()
+      if (!globalData) {
+        return
+      }
+
+      const existingFormattedAnswers = localStorage.getItem('listening_formatted_answers')
+      let formattedAnswers = existingFormattedAnswers
+        ? JSON.parse(existingFormattedAnswers)
+        : {
+            studentId: globalData.studentId,
+            topicId: globalData.topicId,
+            skillName: 'LISTENING',
+            sessionId: globalData.sessionId,
+            sessionParticipantId: globalData.sessionParticipantId,
+            questions: []
+          }
+
+      const existingQuestionIds = new Set(formattedAnswers.questions.map(q => q.questionId))
+
+      const newQuestions = []
+
+      testData.Parts.forEach(part => {
+        part.Questions.forEach(question => {
+          if (question.Type === 'listening-questions-group' && question.GroupContent?.listContent) {
+            const parentId = question.ID
+
+            if (!existingQuestionIds.has(parentId)) {
+              newQuestions.push({
+                questionId: parentId,
+                answerAudio: null,
+                answerText: []
+              })
+              existingQuestionIds.add(parentId)
+            }
+          } else if (question.Type === 'dropdown-list') {
+            if (!existingQuestionIds.has(question.ID)) {
+              newQuestions.push({
+                questionId: question.ID,
+                answerAudio: null,
+                answerText: []
+              })
+              existingQuestionIds.add(question.ID)
+            }
+          } else {
+            if (!existingQuestionIds.has(question.ID)) {
+              newQuestions.push({
+                questionId: question.ID,
+                answerAudio: null,
+                answerText: null
+              })
+              existingQuestionIds.add(question.ID)
+            }
+          }
+        })
+      })
+
+      if (newQuestions.length > 0) {
+        formattedAnswers = {
+          ...formattedAnswers,
+          questions: [...formattedAnswers.questions, ...newQuestions]
+        }
+
+        localStorage.setItem('listening_formatted_answers', JSON.stringify(formattedAnswers))
+        setFormattedAnswers(formattedAnswers)
+      }
+    }
+  }, [testData])
 
   useEffect(() => {
     const dropdownListQuestions = Object.entries(userAnswers).filter(([id, answer]) => {
@@ -545,9 +651,22 @@ const ListeningTest = () => {
 
   const handleSubmitAnswers = async (isAutoSubmit = false) => {
     try {
-      await saveListeningAnswers(formattedAnswers)
+      const globalData = getGlobalData()
+      if (!globalData) {
+        throw new Error('Cannot submit: Missing required data')
+      }
 
-      localStorage.setItem('listening_formatted_answers', JSON.stringify(formattedAnswers))
+      const updatedFormattedAnswers = {
+        ...formattedAnswers,
+        studentId: globalData.studentId,
+        topicId: globalData.topicId,
+        sessionId: globalData.sessionId,
+        sessionParticipantId: globalData.sessionParticipantId
+      }
+
+      await saveListeningAnswers(updatedFormattedAnswers)
+
+      localStorage.setItem('listening_formatted_answers', JSON.stringify(updatedFormattedAnswers))
 
       localStorage.removeItem(STORAGE_KEY)
       localStorage.removeItem('listening_test_answers')
@@ -555,11 +674,11 @@ const ListeningTest = () => {
 
       setUserAnswers({})
       setFormattedAnswers({
-        studentId: userId,
-        topicId: 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc',
+        studentId: globalData.studentId,
+        topicId: globalData.topicId,
         skillName: 'LISTENING',
-        sessionId: '12bd21ef-b6d8-4991-b9ee-69160ce8fd09',
-        sessionParticipantId: '45c6d73a-ad6f-4eb7-b5ba-9adcb97c91f0',
+        sessionId: globalData.sessionId,
+        sessionParticipantId: globalData.sessionParticipantId,
         questions: []
       })
 
