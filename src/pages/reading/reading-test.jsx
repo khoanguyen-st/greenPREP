@@ -260,7 +260,7 @@ const ReadingTest = () => {
   }
 
   if (isSubmitted) {
-    return <NextScreen nextPath="/writing" skillName="Writing" imageSrc={ReadingSubmission} />
+    return <NextScreen nextPath="/writing" skillName="Reading" imageSrc={ReadingSubmission} />
   }
 
   if (isLoading) {
