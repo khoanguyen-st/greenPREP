@@ -1,181 +1,172 @@
-import FooterNavigator from '@features/reading/ui/reading-footer-navigator';
-import QuestionNavigatorContainer from '@features/reading/ui/reading-question-navigator';
-import axiosInstance from '@shared/config/axios';
-import FlagButton from '@shared/ui/flag-button';
-import MatchingQuestion from '@shared/ui/question-type/matching-question';
-import MultipleChoice from '@shared/ui/question-type/multiple-choice';
-import OrderingQuestion from '@shared/ui/question-type/ordering-question';
-import { useQuery } from '@tanstack/react-query';
-import { Spin, Alert, Typography, Card, Select } from 'antd';
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { ReadingSubmission } from '@assets/images'
+import { fetchReadingTestDetails } from '@features/reading/api/readingAPI'
+import FooterNavigator from '@features/reading/ui/reading-footer-navigator'
+import QuestionNavigatorContainer from '@features/reading/ui/reading-question-navigator'
+import FlagButton from '@shared/ui/flag-button'
+import MatchingQuestion from '@shared/ui/question-type/matching-question'
+import MultipleChoice from '@shared/ui/question-type/multiple-choice'
+import OrderingQuestion from '@shared/ui/question-type/ordering-question'
+import NextScreen from '@shared/ui/submission/next-screen'
+import { useQuery } from '@tanstack/react-query'
+import { Spin, Alert, Typography, Card, Select, Divider } from 'antd'
+import React, {useState, useEffect} from 'react'
+const { Option } = Select
+const { Title, Text } = Typography
 
-const { Option } = Select;
-const { Title, Text } = Typography;
-
-const fetchTestData = async (topicId) => {
-  const url = `/topics/${topicId}`; 
-  const response = await axiosInstance.get(url, {
-    params: { skillName: 'READING' },
-  });
-  return response.data;
-};
-
-const getDefaultAnswerByType = (type) => {
+const getDefaultAnswerByType = type => {
   switch (type) {
     case 'dropdown-list':
-      return {};
+      return {}
     case 'ordering':
     case 'matching':
-      return [];
+      return []
     default:
-      return '';
+      return ''
   }
-};
+}
 
-const formatMatchingQuestion = (question) => ({
-  leftItems: question.AnswerContent.leftItems.map((item, index) => ({
-    id: index + 1,
-    label: item,
-  })),
-  rightItems: question.AnswerContent.rightItems.map((item, index) => ({
-    id: String.fromCharCode(97 + index),
-    label: item,
-  })),
-});
+const formatMatchingQuestion = question => ({
+  leftItems: question.AnswerContent.leftItems,
+  rightItems: question.AnswerContent.rightItems
+})
 
-const formatMultipleChoiceQuestion = (question) => ({
+const formatMultipleChoiceQuestion = question => ({
   ...question,
   AnswerContent:
-    typeof question.AnswerContent === 'string' ? question.AnswerContent : JSON.stringify(question.AnswerContent),
-});
+    typeof question.AnswerContent === 'string' ? question.AnswerContent : JSON.stringify(question.AnswerContent)
+})
 
-const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
-  const navigate = useNavigate();
+const ReadingTest = () => {
+  const [isSubmitted, setIsSubmitted] = useState(false)
   const [userAnswers, setUserAnswers] = useState(() => {
     try {
-      const savedAnswers = localStorage.getItem('readingAnswers');
-      return savedAnswers ? JSON.parse(savedAnswers) : {};
+      const savedAnswers = localStorage.getItem('readingAnswers')
+      return savedAnswers ? JSON.parse(savedAnswers) : {}
     } catch {
-      return {};
+      return {}
     }
-  });
-
+  })
   const [flaggedQuestions, setFlaggedQuestions] = useState(() => {
     try {
-      const stored = JSON.parse(localStorage.getItem('flaggedQuestions'));
-      return Array.isArray(stored) ? stored : [];
+      const stored = JSON.parse(localStorage.getItem('flaggedQuestions'))
+      return Array.isArray(stored) ? stored : []
     } catch {
-      return [];
+      return []
     }
-  });
-
-  const [currentPartIndex, setCurrentPartIndex] = useState(0);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [isFlagged, setIsFlagged] = useState(false);
+  })
+  const [currentPartIndex, setCurrentPartIndex] = useState(0)
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+  const [isFlagged, setIsFlagged] = useState(false)
   const [partFlaggedStates, setPartFlaggedStates] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem('partFlaggedStates')) || {};
+      return JSON.parse(localStorage.getItem('partFlaggedStates')) || {}
     } catch {
-      return {};
+      return {}
     }
-  });
+  })
 
   const {
     data: testData,
     isLoading,
-    isError,
+    isError
   } = useQuery({
-    queryKey: ['fetchTestData', topicId],
-    queryFn: () => fetchTestData(topicId),
-    staleTime: 6000,
-  });
+    queryKey: ['fetchReadingTestDetails'],
+    queryFn: fetchReadingTestDetails,
+    staleTime: 6000
+  })
 
   useEffect(() => {
     try {
-      localStorage.setItem('readingAnswers', JSON.stringify(userAnswers));
+      localStorage.setItem('readingAnswers', JSON.stringify(userAnswers))
     } catch (error) {
-      console.error('Error saving answers:', error);
+      console.error('Error saving answers:', error)
     }
-  }, [userAnswers]);
+  }, [userAnswers])
 
   useEffect(() => {
-    localStorage.setItem('flaggedQuestions', JSON.stringify(flaggedQuestions));
-  }, [flaggedQuestions]);
+    localStorage.setItem('flaggedQuestions', JSON.stringify(flaggedQuestions))
+  }, [flaggedQuestions])
 
   useEffect(() => {
-    localStorage.setItem('partFlaggedStates', JSON.stringify(partFlaggedStates));
-  }, [partFlaggedStates]);
+    localStorage.setItem('partFlaggedStates', JSON.stringify(partFlaggedStates))
+  }, [partFlaggedStates])
 
   useEffect(() => {
     if (testData?.Parts?.[currentPartIndex]) {
-      setIsFlagged(Boolean(partFlaggedStates[currentPartIndex]));
+      setIsFlagged(Boolean(partFlaggedStates[currentPartIndex]))
     } else {
-      setIsFlagged(false);
+      setIsFlagged(false)
     }
-  }, [currentPartIndex, partFlaggedStates, testData]);
+  }, [currentPartIndex, partFlaggedStates, testData])
 
-  const handleAnswerSubmit = (answer) => {
+  const handleAnswerSubmit = answer => {
     if (!testData?.Parts?.[currentPartIndex]?.Questions?.[currentQuestionIndex]) {
-      return;
+      return
     }
-
-    const currentQuestion = testData.Parts[currentPartIndex].Questions[currentQuestionIndex];
-
+    const currentQuestion = testData.Parts[currentPartIndex].Questions[currentQuestionIndex]
     if (typeof answer === 'function') {
-      setUserAnswers((prev) => {
-        const newAnswers = answer(prev);
-        return newAnswers;
-      });
-      return;
+      setUserAnswers(prev => {
+        const newAnswers = answer(prev)
+        return newAnswers
+      })
+      return
     }
-
+    if (currentQuestion.Type === 'ordering' && typeof answer === 'object' && 'partIndex' in answer) {
+      setUserAnswers(prev => ({
+        ...prev,
+        [answer.questionId]: {
+          partIndex: answer.partIndex,
+          answer: answer.answer
+        }
+      }))
+      return
+    }
     const formattedAnswer =
       currentQuestion.Type === 'dropdown-list'
         ? answer
         : typeof answer === 'object' && answer !== null
-        ? answer
-        : getDefaultAnswerByType(currentQuestion.Type);
-
-    setUserAnswers((prev) => ({
+          ? answer
+          : getDefaultAnswerByType(currentQuestion.Type)
+    setUserAnswers(prev => ({
       ...prev,
-      [currentQuestion.ID]: formattedAnswer,
-    }));
-  };
+      [currentQuestion.ID]: formattedAnswer
+    }))
+  }
 
-  const handlePartChange = (newPartIndex) => {
-    const newPartFlagState = partFlaggedStates[newPartIndex] || false;
-    setIsFlagged(newPartFlagState);
-    setCurrentPartIndex(newPartIndex);
-    setCurrentQuestionIndex(0);
-  };
+  const handlePartChange = newPartIndex => {
+    const newPartFlagState = partFlaggedStates[newPartIndex] || false
+    setIsFlagged(newPartFlagState)
+    setCurrentPartIndex(newPartIndex)
+    setCurrentQuestionIndex(0)
+  }
 
   const handleFlagToggle = () => {
-    const newIsFlagged = !isFlagged;
-    setIsFlagged(newIsFlagged);
-
-    const currentQuestion = testData.Parts[currentPartIndex].Questions[currentQuestionIndex];
-
-    setFlaggedQuestions((prev) => {
-      const newFlags = newIsFlagged ? [...prev, currentQuestion.ID] : prev.filter((id) => id !== currentQuestion.ID);
-      return newFlags;
-    });
-
-    setPartFlaggedStates((prev) => ({
+    const newIsFlagged = !isFlagged
+    setIsFlagged(newIsFlagged)
+    const currentQuestion = testData.Parts[currentPartIndex].Questions[currentQuestionIndex]
+    setFlaggedQuestions(prev => {
+      const newFlags = newIsFlagged ? [...prev, currentQuestion.ID] : prev.filter(id => id !== currentQuestion.ID)
+      return newFlags
+    })
+    setPartFlaggedStates(prev => ({
       ...prev,
-      [currentPartIndex]: newIsFlagged,
-    }));
-  };
+      [currentPartIndex]: newIsFlagged
+    }))
+  }
 
   const handleSubmit = () => {
-    localStorage.removeItem('readingAnswers');
-    localStorage.removeItem('flaggedQuestions');
-    localStorage.removeItem('partFlaggedStates');
-    navigate('/writing');
-  };
+    setIsSubmitted(true)
+    localStorage.removeItem('readingAnswers')
+    localStorage.removeItem('flaggedQuestions')
+    localStorage.removeItem('partFlaggedStates')
+  }
+
+  if (isSubmitted) {
+    return <NextScreen nextPath="/writing" skillName="Reading" imageSrc={ReadingSubmission} />
+  }
 
   if (isLoading) {
-    return <Spin className="flex min-h-screen items-center justify-center" size="large" />;
+    return <Spin className="flex min-h-screen items-center justify-center" size="large" />
   }
 
   if (isError || !testData?.Parts?.length) {
@@ -187,39 +178,41 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
         type="error"
         showIcon
       />
-    );
+    )
   }
 
-  const currentPart = testData.Parts[currentPartIndex];
-  const currentQuestion = currentPart.Questions[currentQuestionIndex];
-  const isLastPart = currentPartIndex === testData.Parts.length - 1;
+  const currentPart = testData.Parts[currentPartIndex]
+  const currentQuestion = currentPart.Questions[currentQuestionIndex]
+  const isLastPart = currentPartIndex === testData.Parts.length - 1
 
   const shouldShowContent = () => {
-    if (currentPartIndex === 4) {
-      return false;
+    if (currentPartIndex === 4 && (currentQuestion.Type === 'matching' || currentQuestion.Type === 'dropdown-list')) {
+      return false
+    }
+
+    if (currentPartIndex === 0) {
+      return false
     }
 
     if (currentQuestion.Type === 'matching') {
-      return true;
+      return true
     }
 
     if (currentQuestion.Type === 'dropdown-list') {
       const answerContent =
         typeof currentQuestion.AnswerContent === 'string'
           ? JSON.parse(currentQuestion.AnswerContent)
-          : currentQuestion.AnswerContent;
-
+          : currentQuestion.AnswerContent
       if (answerContent.leftItems && answerContent.rightItems) {
-        return true;
+        return true
       }
-
       if (answerContent.options) {
-        return false;
+        return false
       }
     }
 
-    return true;
-  };
+    return true
+  }
 
   const renderDropdownQuestion = () => {
     const processedData = (() => {
@@ -227,86 +220,143 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
         const parsedAnswerContent =
           typeof currentQuestion.AnswerContent === 'string'
             ? JSON.parse(currentQuestion.AnswerContent)
-            : currentQuestion.AnswerContent;
-
+            : currentQuestion.AnswerContent
         if (parsedAnswerContent.leftItems && parsedAnswerContent.rightItems) {
           return {
             id: currentQuestion.ID,
             question: currentQuestion.Content,
             leftItems: parsedAnswerContent.leftItems,
             rightItems: parsedAnswerContent.rightItems,
-            type: 'right-left',
-          };
+            type: 'right-left'
+          }
         }
-
         if (parsedAnswerContent.options) {
-          const options = parsedAnswerContent.options || [];
-          const answers = {};
+          const options = parsedAnswerContent.options || []
+          const answers = {}
           options.forEach(({ key, value }) => {
-            answers[key] = value;
-          });
+            answers[key] = value
+          })
           return {
             id: currentQuestion.ID,
             question: currentQuestion.Content,
             answers,
-            type: 'paragraph',
-          };
+            type: 'paragraph'
+          }
         }
-
         return {
           id: currentQuestion.ID,
           question: currentQuestion.Content,
           answers: parsedAnswerContent,
-          type: 'unknown',
-        };
+          type: 'unknown'
+        }
       } catch (error) {
-        console.error('Error parsing question data:', error);
-        return null;
+        console.error('Error parsing question data:', error)
+        return null
       }
-    })();
+    })()
 
     if (!processedData) {
-      return <p className="text-center text-gray-600">No question data available.</p>;
+      return <p className="text-center text-gray-600">No question data available.</p>
     }
 
-    const answer = userAnswers[currentQuestion.ID] || {};
+    const answer = userAnswers[currentQuestion.ID] || {}
 
-    const processedQuestion =
-      currentPartIndex === 0 ? processedData.question.replace(/\s*\([^()]*\)/g, '') : processedData.question;
+    if (currentPartIndex === 4 && processedData.type === 'right-left') {
+      const contentLines = processedData.question.split('\n')
+      const paragraphs = []
+      let currentParagraph = ''
+      let currentParagraphNumber = ''
 
-    if (processedData.type === 'right-left') {
-      if (currentPartIndex === 4) {
-        const paragraphs = processedQuestion
-          .split('\n')
-          .filter((para) => para.trim() !== '')
-          .filter((para) => !para.startsWith('Tulips'));
-        return (
-          <div className="mx-auto w-full max-w-4xl">
-            {paragraphs.map((paragraph, index) => {
-              const cleanedParagraph = paragraph.replace(/^Paragraph \d+ - /, '').trim();
-              const questionKey = `paragraph-${index + 1}`;
-              return (
-                <div key={index} className="mb-6">
-                  <Select
-                    onChange={(value) => handleAnswerSubmit({ ...answer, [questionKey]: value })}
-                    value={answer?.[questionKey] || ''}
-                    className="mb-2 w-48"
-                  >
-                    <Option value="">Select an option</Option>
-                    {processedData.rightItems.map((rightItem) => (
-                      <Option key={rightItem} value={rightItem}>
-                        {rightItem}
-                      </Option>
-                    ))}
-                  </Select>
-                  <p className="mb-2">{cleanedParagraph}</p>
-                </div>
-              );
-            })}
-          </div>
-        );
+      for (let i = 0; i < contentLines.length; i++) {
+        const line = contentLines[i]
+        if (line.startsWith('Paragraph')) {
+          if (currentParagraph) {
+            paragraphs.push({
+              number: currentParagraphNumber,
+              text: currentParagraph.trim()
+            })
+          }
+          const match = line.match(/Paragraph (\d+)/)
+          currentParagraphNumber = match ? match[1] : ''
+          currentParagraph = line.replace(/^Paragraph \d+ -/, '').trim()
+        } else if (line.trim() && currentParagraph !== '') {
+          currentParagraph += ' ' + line.trim()
+        }
       }
 
+      if (currentParagraph) {
+        paragraphs.push({
+          number: currentParagraphNumber,
+          text: currentParagraph.trim()
+        })
+      }
+
+      return (
+        <div className="mx-auto w-full max-w-4xl">
+          <div className="mt-4 flex flex-col gap-8">
+            {paragraphs.map((paragraph, index) => {
+              const leftItem = `Paragraph ${paragraph.number}`
+              return (
+                <div key={index} className="mb-8">
+                  <div className="mb-4">
+                    <Select
+                      onChange={value => handleAnswerSubmit({ ...answer, [leftItem]: value })}
+                      value={answer?.[leftItem] || ''}
+                      className="w-64"
+                      placeholder="Select a heading"
+                    >
+                      {processedData.rightItems.map(rightItem => (
+                        <Option key={rightItem} value={rightItem}>
+                          {rightItem}
+                        </Option>
+                      ))}
+                    </Select>
+                  </div>
+                  <div className="whitespace-pre-wrap text-base text-gray-800">
+                    <strong>Paragraph {paragraph.number}</strong> - {paragraph.text}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )
+    }
+
+    if (currentPartIndex === 0 && processedData.type === 'paragraph') {
+      const cleanedQuestion = processedData.question.replace(/\s*\([^)]*\)/g, '')
+      return (
+        <div className="mx-auto w-full max-w-4xl">
+          <div className="whitespace-pre-wrap text-base text-gray-800">
+            {cleanedQuestion.split(/(\d+\.)/).map((part, index) => {
+              if (part.match(/^\d+\.$/)) {
+                const number = part.replace('.', '')
+                return (
+                  <React.Fragment key={index}>
+                    {part}
+                    <Select
+                      onChange={value => handleAnswerSubmit({ ...answer, [number]: value })}
+                      value={answer?.[number] || ''}
+                      className="mx-2 inline-block w-32"
+                      style={{ marginBottom: 10 }}
+                    >
+                      {processedData.answers[number]?.map(option => (
+                        <Option key={option} value={option}>
+                          {option}
+                        </Option>
+                      ))}
+                    </Select>
+                  </React.Fragment>
+                )
+              }
+              return <span key={index}>{part}</span>
+            })}
+          </div>
+        </div>
+      )
+    }
+
+    if (processedData.type === 'right-left') {
       return (
         <div className="mx-auto w-full max-w-4xl">
           <div className="mt-4">
@@ -317,11 +367,11 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
                 </div>
                 <div className="flex-1">
                   <Select
-                    onChange={(value) => handleAnswerSubmit({ ...answer, [leftItem]: value })}
+                    onChange={value => handleAnswerSubmit({ ...answer, [leftItem]: value })}
                     value={answer?.[leftItem] || ''}
                     className="w-full"
                   >
-                    {processedData.rightItems.map((rightItem) => (
+                    {processedData.rightItems.map(rightItem => (
                       <Option key={rightItem} value={rightItem}>
                         {rightItem}
                       </Option>
@@ -332,72 +382,118 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
             ))}
           </div>
         </div>
-      );
+      )
     }
 
     if (processedData.type === 'paragraph') {
+      const cleanedQuestion = processedData.question.replace(/\s*\([^)]*\)/g, '')
       return (
         <div className="mx-auto w-full max-w-4xl">
           <div className="whitespace-pre-wrap text-base text-gray-800">
-            {processedQuestion.split(/(\d+\.)/).map((part, index) => {
+            {cleanedQuestion.split(/(\d+\.)/).map((part, index) => {
               if (part.match(/^\d+\.$/)) {
-                const number = part.replace('.', '');
+                const number = part.replace('.', '')
                 return (
                   <React.Fragment key={index}>
                     {part}
                     <Select
-                      onChange={(value) => handleAnswerSubmit({ ...answer, [number]: value })}
+                      onChange={value => handleAnswerSubmit({ ...answer, [number]: value })}
                       value={answer?.[number] || ''}
                       className="mx-2 inline-block w-32"
                     >
-                      {processedData.answers[number]?.map((option) => (
+                      {processedData.answers[number]?.map(option => (
                         <Option key={option} value={option}>
                           {option}
                         </Option>
                       ))}
                     </Select>
                   </React.Fragment>
-                );
+                )
               }
-              return <span key={index}>{part}</span>;
+              return <span key={index}>{part}</span>
             })}
           </div>
         </div>
-      );
+      )
     }
 
     return (
       <div className="text-center text-red-600">
         Unsupported dropdown format. Please check the question configuration.
       </div>
-    );
-  };
+    )
+  }
 
   const renderQuestion = () => {
     if (!currentQuestion) {
-      return null;
+      return null
     }
-
-    const answer = userAnswers[currentQuestion.ID] || getDefaultAnswerByType(currentQuestion.Type);
-
-    if (currentPartIndex === 4) {
-      return renderDropdownQuestion();
-    }
+    const answer = (() => {
+      const savedAnswer = userAnswers[currentQuestion.ID]
+      if (currentQuestion.Type === 'ordering') {
+        if (
+          savedAnswer &&
+          typeof savedAnswer === 'object' &&
+          'partIndex' in savedAnswer &&
+          savedAnswer.partIndex === currentPartIndex &&
+          Array.isArray(savedAnswer.answer)
+        ) {
+          return savedAnswer.answer
+        }
+        return []
+      }
+      return savedAnswer || getDefaultAnswerByType(currentQuestion.Type)
+    })()
 
     switch (currentQuestion.Type) {
-      case 'dropdown-list':
-        return renderDropdownQuestion();
-      case 'ordering':
+      case 'dropdown-list': {
+        if (currentPartIndex === 0) {
+          return renderDropdownQuestion()
+        }
+        return renderDropdownQuestion()
+      }
+      case 'ordering': {
+        const options = (() => {
+          try {
+            if (Array.isArray(currentQuestion.AnswerContent)) {
+              return currentQuestion.AnswerContent
+            }
+            if (typeof currentQuestion.AnswerContent === 'string') {
+              const parsed = JSON.parse(currentQuestion.AnswerContent)
+              return Array.isArray(parsed) ? parsed : parsed.options || []
+            }
+            return currentQuestion.AnswerContent.options || []
+          } catch (e) {
+            console.error('Error parsing ordering question options:', e)
+            return []
+          }
+        })()
         return (
           <div className="mx-auto w-full max-w-4xl">
             <OrderingQuestion
-              options={currentQuestion.AnswerContent.options}
+              key={`ordering-${currentPartIndex}-${currentQuestion.ID}`}
+              options={options}
               userAnswer={answer}
-              setUserAnswer={handleAnswerSubmit}
+              setUserAnswer={newAnswer => {
+                if (!Array.isArray(newAnswer)) {
+                  console.error('Invalid answer format received from OrderingQuestion')
+                  return
+                }
+                handleAnswerSubmit({
+                  partIndex: currentPartIndex,
+                  questionId: currentQuestion.ID,
+                  answer: newAnswer
+                })
+              }}
             />
           </div>
-        );
-      case 'matching':
+        )
+      }
+      case 'matching': {
+        if (currentPartIndex === 4) {
+          return renderDropdownQuestion()
+        }
+
         return (
           <div className="mx-auto w-full max-w-4xl">
             <MatchingQuestion
@@ -406,90 +502,64 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
               setUserAnswer={handleAnswerSubmit}
             />
           </div>
-        );
-      case 'multiple-choice':
+        )
+      }
+      case 'multiple-choice': {
         return (
           <div className="mx-auto w-full max-w-4xl">
             <MultipleChoice
               questionData={formatMultipleChoiceQuestion(currentQuestion)}
               userAnswer={answer}
               setUserAnswer={handleAnswerSubmit}
-              onSubmit={handleAnswerSubmit}
-              setUserAnswerSubmit={handleAnswerSubmit} // Thêm prop này để giải quyết lỗi
-            />
+              onSubmit={handleAnswerSubmit} setUserAnswerSubmit={undefined}            />
           </div>
-        );
+        )
+      }
       default:
-        return <div>Unsupported question type: {currentQuestion.Type}</div>;
+        return <div>Unsupported question type: {currentQuestion.Type}</div>
     }
-  };
+  }
 
   return (
     <div className="relative mx-auto min-h-screen max-w-4xl p-5 pb-32">
+      <Divider orientation="left">
+        <Title level={1}>Reading</Title>
+      </Divider>
       <Card className="mb-32">
         <div className="absolute right-4 top-4">
           <FlagButton key={`flag-button-${currentPartIndex}`} onFlag={handleFlagToggle} initialFlagged={isFlagged} />
         </div>
-
         <Title level={2} className="mb-6 text-3xl font-bold">
           {`Part ${currentPartIndex + 1}`}
         </Title>
-
         <div className="prose prose-lg mb-8 max-w-none">
           <Text className="block text-lg font-medium text-gray-700">
             {currentPart.Content.startsWith('Part')
               ? currentPart.Content.includes(':')
-                ? currentPart.Content.split(':')[1]
-                    .trim()
-                    .split('\n')
-                    .map((paragraph, index) => (
-                      <p key={index} className="mb-4">
-                        {paragraph.trim()}
-                      </p>
-                    ))
-                : currentPart.Content.split('-')
-                    .slice(1)
-                    .join(' ')
-                    .trim()
-                    .split('\n')
-                    .map((paragraph, index) => (
-                      <p key={index} className="mb-4">
-                        {paragraph.trim()}
-                      </p>
-                    ))
-              : currentPart.Content.split('\n').map((paragraph, index) => (
-                  <p key={index} className="mb-4">
-                    {paragraph.trim()}
-                  </p>
-                ))}
+                ? currentPart.Content.split(':')[1].trim()
+                : currentPart.Content.split('-').slice(1).join(' ').trim()
+              : currentPart.Content}
           </Text>
         </div>
-
         {shouldShowContent() && (
           <div className="prose prose-lg mb-8 whitespace-pre-wrap text-base text-gray-800">
-            {currentQuestion.Content.split('\n').map((paragraph, index) => {
-              const match = paragraph.match(/^(\w+):/);
-              if (match) {
-                const name = match[1];
-                const restOfParagraph = paragraph.replace(/^\w+:/, '').trim();
-                return (
-                  <p key={index} className="mb-4">
-                    <strong>{name}:</strong> {restOfParagraph}
-                  </p>
-                );
-              }
-              return (
-                <p key={index} className="mb-4">
-                  {paragraph.trim()}
-                </p>
-              );
-            })}
+            {currentPartIndex === 3
+              ? currentQuestion.Content.split('\n').map((paragraph, index) => {
+                  const formattedParagraph = paragraph.replace(
+                    /([A-Z][a-z]+(?: [A-Z][a-z]+)*)(?=:)/g,
+                    '<strong>$1</strong>'
+                  )
+                  return (
+                    <div key={index} className="mb-4">
+                      <div dangerouslySetInnerHTML={{ __html: formattedParagraph }} />
+                    </div>
+                  )
+                })
+              : currentQuestion.Content}
           </div>
         )}
-
         <div className="prose prose-lg flex max-w-none flex-col gap-4">{renderQuestion()}</div>
       </Card>
-
       <QuestionNavigatorContainer
         testData={testData}
         userAnswers={userAnswers}
@@ -498,7 +568,6 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
         currentPartIndex={currentPartIndex}
         handleSubmit={handleSubmit}
       />
-
       <FooterNavigator
         totalParts={testData.Parts.length}
         currentPart={currentPartIndex}
@@ -507,7 +576,7 @@ const ReadingTest = ({ topicId = 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc' }) => {
         isLastPart={isLastPart}
       />
     </div>
-  );
-};
+  )
+}
 
-export default ReadingTest;
+export default ReadingTest
