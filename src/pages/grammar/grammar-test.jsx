@@ -1,24 +1,21 @@
 import { GrammarSubmission } from '@assets/images'
-import { fetchGrammarTestDetails } from '@features/grammar/api/grammarAPI'
+import { fetchGrammarTestDetails } from '@features/grammar/api'
+import { submitGrammarTest } from '@features/grammar/service'
 import FooterNavigator from '@features/grammar/ui/grammar-footer-navigator'
 import QuestionForm from '@features/grammar/ui/grammar-question-form'
 import QuestionNavigatorContainer from '@features/grammar/ui/grammar-question-navigator-container'
 import FlagButton from '@shared/ui/flag-button'
 import NextScreen from '@shared/ui/submission/next-screen'
 import { useQuery } from '@tanstack/react-query'
-import { Card, Divider, Spin, Typography, message } from 'antd'
+import { Card, Divider, Spin, Typography } from 'antd'
 import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 const { Title } = Typography
 
 const GrammarTest = () => {
   const [isSubmitted, setIsSubmitted] = useState(false)
-  //   @ts-ignore
-  const sessionData = useSelector(state => state.session?.currentSession)
-  // @ts-ignore
-  const studentData = useSelector(state => state.auth?.user)
-
+  const navigate = useNavigate()
   const { data, isLoading, isError } = useQuery({
     queryKey: ['grammarQuestions'],
     queryFn: async () => {
@@ -49,53 +46,8 @@ const GrammarTest = () => {
   }
 
   const handleSubmit = async () => {
-    // eslint-disable-next-line no-console
-    console.table(answers)
-    try {
-      const questionsArray = Object.entries(answers)
-        .map(([questionId, answer]) => {
-          const question = mergedArray.find(q => q.ID === questionId)
-          if (!question) {
-            return null
-          }
-
-          let answerText = null
-          if (typeof answer === 'string') {
-            answerText = answer
-          } else if (Array.isArray(answer)) {
-            if (answer[0]?.left !== undefined) {
-              answerText = answer
-            } else if (answer[0]?.key !== undefined) {
-              answerText = answer
-            } else if (answer[0]?.ID !== undefined) {
-              answerText = answer
-            }
-          }
-
-          return {
-            questionId,
-            answerText,
-            answerAudio: null
-          }
-        })
-        .filter(Boolean)
-
-      const payload = {
-        studentId: studentData?.id || '7661abc8e-55a0-4d95-89e4-784acd81227d',
-        topicId: sessionData?.topicId || 'ef6b69aa-2ec2-4c65-bf48-294fd12e13fc',
-        skillName: 'GRAMMAR AND VOCABULARY',
-        sessionParticipantId: sessionData?.participantId || 'a8e2b9e8-bb60-44f0-bd61-6bd524cdc87d',
-        questions: questionsArray
-      }
-
-      localStorage.setItem('grammar_formatted_answers', JSON.stringify(payload))
-      localStorage.removeItem('grammarAnswers')
-      localStorage.removeItem('flaggedQuestions')
-      setAnswers({})
-      setIsSubmitted(true)
-    } catch {
-      message.error('Failed to submit the test. Please try again.')
-    }
+    await submitGrammarTest({ data, answers, navigate })
+    setIsSubmitted(true)
   }
 
   useEffect(() => {

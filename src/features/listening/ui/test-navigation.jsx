@@ -23,7 +23,6 @@ const TestNavigation = ({
   onAutoSubmit,
   userAnswers,
   flaggedQuestions,
-  skillName,
   children
 }) => {
   const [showAutoSubmitPopup, setShowAutoSubmitPopup] = useState(false)
@@ -84,10 +83,10 @@ const TestNavigation = ({
   }
 
   return (
-    <div className="relative mx-auto min-h-screen max-w-4xl p-5">
-      <Space direction="vertical" size="large" className="w-full">
-        <Divider orientation="left">
-          <Title level={1}>{skillName}</Title>
+    <div className="relative mx-auto min-h-screen w-1/2 p-5">
+      <Space direction="vertical" className="w-full">
+        <Divider orientation="left" className="!m-0">
+          <Title level={1}>Listening</Title>
         </Divider>
 
         <Card className="mb-32">
@@ -101,7 +100,7 @@ const TestNavigation = ({
             </div>
           </div>
 
-          {children}
+          <div className="break-words">{children}</div>
 
           <div className="z-10 mt-8 flex justify-between">
             <div className="fixed bottom-8 left-4 z-20 hidden w-fit mdL:block">
