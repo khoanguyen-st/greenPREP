@@ -120,11 +120,11 @@ const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className =
     return <p className="text-center text-gray-600">No question data available.</p>
   }
   return (
-    <div className={`${className} mx-auto max-w-4xl rounded-xl bg-white p-8 shadow-lg`}>
+    <div className={`${className} mx-auto max-w-4xl rounded-xl bg-white p-8`}>
       <style>
         {`
           .ant-select-selection-item {
-            font-size: 18px !important;
+            font-size: 16px !important;
             line-height: 1.5 !important;
           }
           .dropdown-item {
@@ -139,7 +139,7 @@ const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className =
           }
         `}
       </style>
-      <p className="mb-6 whitespace-pre-wrap text-xl font-semibold text-gray-800">{processedData.question}</p>
+      <p className="mb-6 whitespace-pre-wrap text-lg font-semibold text-gray-800">{processedData.question}</p>
       {processedData.type === 'paragraph' ? (
         Object.entries(processedData.answers).map(([key, options]) => (
           <div key={key} className="dropdown-item flex w-full">
@@ -147,11 +147,11 @@ const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className =
               <Select
                 onChange={value => handleSelectChange(key, value)}
                 value={selectedOptions?.[key] || ''}
-                className={`w-2/3 ${small ? 'h-11' : 'h-12'} rounded-lg border border-gray-300 text-lg shadow-sm`}
-                dropdownStyle={{ fontSize: '18px' }}
+                className={`w-2/3 ${small ? 'h-12' : 'h-14'} rounded-lg border border-gray-300 text-base shadow-sm`}
+                dropdownStyle={{ fontSize: '16px' }}
               >
                 {options.map(option => (
-                  <Option key={option} value={option} style={{ fontSize: '18px', padding: '10px 16px' }}>
+                  <Option key={option} value={option} style={{ fontSize: '16px', padding: '12px 16px' }}>
                     {option}
                   </Option>
                 ))}
@@ -165,16 +165,16 @@ const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className =
           {processedData.leftItems.map((leftItem, index) => (
             <div key={index} className="dropdown-item flex w-full items-start gap-6">
               <div className="min-w-[200px] flex-1">
-                <p className="text-xl font-medium text-gray-700">{leftItem}</p>
+                <p className="text-lg font-medium text-gray-700">{leftItem}</p>
               </div>
               <div className="w-[300px] flex-shrink-0">
                 <Select
                   onChange={value => handleSelectChange(leftItem, value)}
                   value={selectedOptions[leftItem] || ''}
-                  className={`w-full ${small ? 'h-11' : 'h-12'} rounded-lg border border-gray-300 text-lg shadow-sm`}
+                  className={`w-full ${small ? 'h-12' : 'h-14'} rounded-lg border border-gray-300 text-base shadow-sm`}
                   placeholder="Select an answer"
                   showSearch
-                  dropdownStyle={{ fontSize: '18px' }}
+                  dropdownStyle={{ fontSize: '16px' }}
                   dropdownMatchSelectWidth={false}
                   style={{ width: '100%' }}
                   filterOption={(input, option) => String(option.children).toLowerCase().includes(input.toLowerCase())}
@@ -186,7 +186,7 @@ const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className =
                       key={rightItem}
                       value={rightItem}
                       label={rightItem}
-                      style={{ fontSize: '18px', padding: '10px 16px' }}
+                      style={{ fontSize: '16px', padding: '12px 16px' }}
                     >
                       {rightItem}
                     </Option>

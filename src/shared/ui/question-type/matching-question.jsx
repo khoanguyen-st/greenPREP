@@ -47,7 +47,7 @@ const MatchingQuestion = ({ leftItems, rightItems, userAnswer = [], setUserAnswe
       <style>
         {`
           .ant-select-selection-item {
-            font-size: 18px !important;
+            font-size: 16px !important;
             line-height: 1.5 !important;
           }
           .matching-item {
@@ -66,16 +66,16 @@ const MatchingQuestion = ({ leftItems, rightItems, userAnswer = [], setUserAnswe
         {leftItems.map((leftItem, index) => (
           <div key={index} className="matching-item flex w-full items-start gap-6">
             <div className="min-w-[200px] flex-1">
-              <p className="text-xl font-medium text-gray-700">{leftItem}</p>
+              <p className="text-lg font-medium text-gray-700">{leftItem}</p>
             </div>
             <div className="w-[300px] flex-shrink-0">
               <Select
                 onChange={value => handleSelectChange(leftItem, value)}
                 value={selectedOptions[leftItem] || ''}
-                className="h-11 w-full rounded-lg border border-gray-300 text-lg shadow-sm"
+                className="h-14 w-full rounded-lg border border-gray-300 text-base shadow-sm"
                 placeholder="Select an answer"
                 showSearch
-                dropdownStyle={{ fontSize: '18px' }}
+                dropdownStyle={{ fontSize: '16px' }}
                 dropdownMatchSelectWidth={false}
                 style={{ width: '100%' }}
                 filterOption={(input, option) => String(option.children).toLowerCase().includes(input.toLowerCase())}
@@ -87,7 +87,7 @@ const MatchingQuestion = ({ leftItems, rightItems, userAnswer = [], setUserAnswe
                     key={rightIndex}
                     value={rightItem}
                     label={rightItem}
-                    style={{ fontSize: '18px', padding: '10px 16px' }}
+                    style={{ fontSize: '16px', padding: '12px 16px' }}
                   >
                     {rightItem}
                   </Option>
