@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from 'react'
-
 const QuestionDisplay = ({
   data,
   currentQuestion,
@@ -52,6 +51,7 @@ const QuestionDisplay = ({
       executeAction(pendingActionRef.current)
       pendingActionRef.current = null
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUploading])
 
   const executeAction = async action => {
@@ -73,7 +73,6 @@ const QuestionDisplay = ({
 
   const handleButtonClick = action => {
     setButtonClicked(true)
-
     if (isUploading) {
       pendingActionRef.current = action
     } else {
@@ -108,7 +107,7 @@ const QuestionDisplay = ({
           <>
             <div className="mb-6 flex items-center justify-between">
               <span className="rounded-xl bg-[#003087] px-6 py-2 text-xl font-semibold text-white">
-                {isPart4 ? 'Part 4' : `Question ${currentQuestionIndex + 1} of ${totalQuestions}`}
+                {isPart4 ? 'Questions' : `Question ${currentQuestionIndex + 1} of ${totalQuestions}`}
               </span>
             </div>
             {isPart4 ? (

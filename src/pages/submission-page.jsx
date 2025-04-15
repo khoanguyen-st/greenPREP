@@ -25,6 +25,9 @@ const SubmissionPage = () => {
   const user = useSelector(selectUser)
   const [emailSent, setEmailSent] = useState(false)
 
+  const globalData = JSON.parse(localStorage.getItem('globalData'))
+  const sessionName = globalData?.sessionName
+
   useEffect(() => {
     const sendEmail = async () => {
       try {
@@ -34,9 +37,8 @@ const SubmissionPage = () => {
 
         // ... existing code ...
         const testData = {
-          sessionName: location.state?.sessionName || 'Math Test Session',
+          sessionName: sessionName,
           testDetails: `Submission date and time: ${new Date().toLocaleString()}<br>
-          Score: ${location.state?.score || 0}/100<br>
           Confirmation message: Your test has been successfully submitted and recorded in our system.`,
           nextSteps: 'Please wait for the final results. You will be notified once they are available.',
           contactInfo: 'support@greenprep.edu.vn'

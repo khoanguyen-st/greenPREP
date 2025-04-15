@@ -33,7 +33,7 @@ const formatMatchingQuestion = question => ({
 const formatMultipleChoiceQuestion = question => ({
   ...question,
   AnswerContent:
-    typeof question.AnswerContent === 'string' ? question.AnswerContent : JSON.stringify(question.AnswerContent)
+      typeof question.AnswerContent === 'string' ? question.AnswerContent : JSON.stringify(question.AnswerContent)
 })
 
 const ReadingTest = () => {
@@ -122,11 +122,11 @@ const ReadingTest = () => {
       return
     }
     const formattedAnswer =
-      currentQuestion.Type === 'dropdown-list'
-        ? answer
-        : typeof answer === 'object' && answer !== null
-          ? answer
-          : getDefaultAnswerByType(currentQuestion.Type)
+        currentQuestion.Type === 'dropdown-list'
+            ? answer
+            : typeof answer === 'object' && answer !== null
+                ? answer
+                : getDefaultAnswerByType(currentQuestion.Type)
     setUserAnswers(prev => ({
       ...prev,
       [currentQuestion.ID]: formattedAnswer
@@ -171,13 +171,13 @@ const ReadingTest = () => {
 
   if (isError || !testData?.Parts?.length) {
     return (
-      <Alert
-        className="flex min-h-screen items-center justify-center"
-        message="Error"
-        description="Failed to load test data. Please try again."
-        type="error"
-        showIcon
-      />
+        <Alert
+            className="flex min-h-screen items-center justify-center"
+            message="Error"
+            description="Failed to load test data. Please try again."
+            type="error"
+            showIcon
+        />
     )
   }
 
@@ -200,9 +200,9 @@ const ReadingTest = () => {
 
     if (currentQuestion.Type === 'dropdown-list') {
       const answerContent =
-        typeof currentQuestion.AnswerContent === 'string'
-          ? JSON.parse(currentQuestion.AnswerContent)
-          : currentQuestion.AnswerContent
+          typeof currentQuestion.AnswerContent === 'string'
+              ? JSON.parse(currentQuestion.AnswerContent)
+              : currentQuestion.AnswerContent
       if (answerContent.leftItems && answerContent.rightItems) {
         return true
       }
@@ -218,9 +218,9 @@ const ReadingTest = () => {
     const processedData = (() => {
       try {
         const parsedAnswerContent =
-          typeof currentQuestion.AnswerContent === 'string'
-            ? JSON.parse(currentQuestion.AnswerContent)
-            : currentQuestion.AnswerContent
+            typeof currentQuestion.AnswerContent === 'string'
+                ? JSON.parse(currentQuestion.AnswerContent)
+                : currentQuestion.AnswerContent
         if (parsedAnswerContent.leftItems && parsedAnswerContent.rightItems) {
           return {
             id: currentQuestion.ID,
@@ -292,135 +292,135 @@ const ReadingTest = () => {
       }
 
       return (
-        <div className="mx-auto w-full max-w-4xl">
-          <div className="mt-4 flex flex-col gap-8">
-            {paragraphs.map((paragraph, index) => {
-              const leftItem = `Paragraph ${paragraph.number}`
-              return (
-                <div key={index} className="mb-8">
-                  <div className="mb-4">
-                    <Select
-                      onChange={value => handleAnswerSubmit({ ...answer, [leftItem]: value })}
-                      value={answer?.[leftItem] || ''}
-                      className="w-64"
-                      placeholder="Select a heading"
-                    >
-                      {processedData.rightItems.map(rightItem => (
-                        <Option key={rightItem} value={rightItem}>
-                          {rightItem}
-                        </Option>
-                      ))}
-                    </Select>
-                  </div>
-                  <div className="whitespace-pre-wrap text-base text-gray-800">
-                    <strong>Paragraph {paragraph.number}</strong> - {paragraph.text}
-                  </div>
-                </div>
-              )
-            })}
+          <div className="mx-auto w-full max-w-4xl">
+            <div className="mt-4 flex flex-col gap-8">
+              {paragraphs.map((paragraph, index) => {
+                const leftItem = `Paragraph ${paragraph.number}`
+                return (
+                    <div key={index} className="mb-8">
+                      <div className="mb-4">
+                        <Select
+                            onChange={value => handleAnswerSubmit({ ...answer, [leftItem]: value })}
+                            value={answer?.[leftItem] || ''}
+                            className="w-64"
+                            placeholder="Select a heading"
+                        >
+                          {processedData.rightItems.map(rightItem => (
+                              <Option key={rightItem} value={rightItem}>
+                                {rightItem}
+                              </Option>
+                          ))}
+                        </Select>
+                      </div>
+                      <div className="whitespace-pre-wrap text-base text-gray-800">
+                        <strong>Paragraph {paragraph.number}</strong> - {paragraph.text}
+                      </div>
+                    </div>
+                )
+              })}
+            </div>
           </div>
-        </div>
       )
     }
 
     if (currentPartIndex === 0 && processedData.type === 'paragraph') {
       const cleanedQuestion = processedData.question.replace(/\s*\([^)]*\)/g, '')
       return (
-        <div className="mx-auto w-full max-w-4xl">
-          <div className="whitespace-pre-wrap text-base text-gray-800">
-            {cleanedQuestion.split(/(\d+\.)/).map((part, index) => {
-              if (part.match(/^\d+\.$/)) {
-                const number = part.replace('.', '')
-                return (
-                  <React.Fragment key={index}>
-                    {part}
-                    <Select
-                      onChange={value => handleAnswerSubmit({ ...answer, [number]: value })}
-                      value={answer?.[number] || ''}
-                      className="mx-2 inline-block w-32"
-                      style={{ marginBottom: 10 }}
-                    >
-                      {processedData.answers[number]?.map(option => (
-                        <Option key={option} value={option}>
-                          {option}
-                        </Option>
-                      ))}
-                    </Select>
-                  </React.Fragment>
-                )
-              }
-              return <span key={index}>{part}</span>
-            })}
+          <div className="mx-auto w-full max-w-4xl">
+            <div className="whitespace-pre-wrap text-base text-gray-800">
+              {cleanedQuestion.split(/(\d+\.)/).map((part, index) => {
+                if (part.match(/^\d+\.$/)) {
+                  const number = part.replace('.', '')
+                  return (
+                      <React.Fragment key={index}>
+                        {part}
+                        <Select
+                            onChange={value => handleAnswerSubmit({ ...answer, [number]: value })}
+                            value={answer?.[number] || ''}
+                            className="mx-2 inline-block w-32"
+                            style={{ marginBottom: 10 }}
+                        >
+                          {processedData.answers[number]?.map(option => (
+                              <Option key={option} value={option}>
+                                {option}
+                              </Option>
+                          ))}
+                        </Select>
+                      </React.Fragment>
+                  )
+                }
+                return <span key={index}>{part}</span>
+              })}
+            </div>
           </div>
-        </div>
       )
     }
 
     if (processedData.type === 'right-left') {
       return (
-        <div className="mx-auto w-full max-w-4xl">
-          <div className="mt-4">
-            {processedData.leftItems.map((leftItem, index) => (
-              <div key={index} className="mb-4 flex w-full items-center gap-4">
-                <div className="min-w-[300px] flex-shrink-0">
-                  <span className="text-sm font-medium">{leftItem}</span>
-                </div>
-                <div className="flex-1">
-                  <Select
-                    onChange={value => handleAnswerSubmit({ ...answer, [leftItem]: value })}
-                    value={answer?.[leftItem] || ''}
-                    className="w-full"
-                  >
-                    {processedData.rightItems.map(rightItem => (
-                      <Option key={rightItem} value={rightItem}>
-                        {rightItem}
-                      </Option>
-                    ))}
-                  </Select>
-                </div>
-              </div>
-            ))}
+          <div className="mx-auto w-full max-w-4xl">
+            <div className="mt-4">
+              {processedData.leftItems.map((leftItem, index) => (
+                  <div key={index} className="mb-4 flex w-full items-center gap-4">
+                    <div className="min-w-[300px] flex-shrink-0">
+                      <span className="text-sm font-medium">{leftItem}</span>
+                    </div>
+                    <div className="flex-1">
+                      <Select
+                          onChange={value => handleAnswerSubmit({ ...answer, [leftItem]: value })}
+                          value={answer?.[leftItem] || ''}
+                          className="w-full"
+                      >
+                        {processedData.rightItems.map(rightItem => (
+                            <Option key={rightItem} value={rightItem}>
+                              {rightItem}
+                            </Option>
+                        ))}
+                      </Select>
+                    </div>
+                  </div>
+              ))}
+            </div>
           </div>
-        </div>
       )
     }
 
     if (processedData.type === 'paragraph') {
       const cleanedQuestion = processedData.question.replace(/\s*\([^)]*\)/g, '')
       return (
-        <div className="mx-auto w-full max-w-4xl">
-          <div className="whitespace-pre-wrap text-base text-gray-800">
-            {cleanedQuestion.split(/(\d+\.)/).map((part, index) => {
-              if (part.match(/^\d+\.$/)) {
-                const number = part.replace('.', '')
-                return (
-                  <React.Fragment key={index}>
-                    {part}
-                    <Select
-                      onChange={value => handleAnswerSubmit({ ...answer, [number]: value })}
-                      value={answer?.[number] || ''}
-                      className="mx-2 inline-block w-32"
-                    >
-                      {processedData.answers[number]?.map(option => (
-                        <Option key={option} value={option}>
-                          {option}
-                        </Option>
-                      ))}
-                    </Select>
-                  </React.Fragment>
-                )
-              }
-              return <span key={index}>{part}</span>
-            })}
+          <div className="mx-auto w-full max-w-4xl">
+            <div className="whitespace-pre-wrap text-base text-gray-800">
+              {cleanedQuestion.split(/(\d+\.)/).map((part, index) => {
+                if (part.match(/^\d+\.$/)) {
+                  const number = part.replace('.', '')
+                  return (
+                      <React.Fragment key={index}>
+                        {part}
+                        <Select
+                            onChange={value => handleAnswerSubmit({ ...answer, [number]: value })}
+                            value={answer?.[number] || ''}
+                            className="mx-2 inline-block w-32"
+                        >
+                          {processedData.answers[number]?.map(option => (
+                              <Option key={option} value={option}>
+                                {option}
+                              </Option>
+                          ))}
+                        </Select>
+                      </React.Fragment>
+                  )
+                }
+                return <span key={index}>{part}</span>
+              })}
+            </div>
           </div>
-        </div>
       )
     }
 
     return (
-      <div className="text-center text-red-600">
-        Unsupported dropdown format. Please check the question configuration.
-      </div>
+        <div className="text-center text-red-600">
+          Unsupported dropdown format. Please check the question configuration.
+        </div>
     )
   }
 
@@ -432,11 +432,11 @@ const ReadingTest = () => {
       const savedAnswer = userAnswers[currentQuestion.ID]
       if (currentQuestion.Type === 'ordering') {
         if (
-          savedAnswer &&
-          typeof savedAnswer === 'object' &&
-          'partIndex' in savedAnswer &&
-          savedAnswer.partIndex === currentPartIndex &&
-          Array.isArray(savedAnswer.answer)
+            savedAnswer &&
+            typeof savedAnswer === 'object' &&
+            'partIndex' in savedAnswer &&
+            savedAnswer.partIndex === currentPartIndex &&
+            Array.isArray(savedAnswer.answer)
         ) {
           return savedAnswer.answer
         }
@@ -469,24 +469,24 @@ const ReadingTest = () => {
           }
         })()
         return (
-          <div className="mx-auto w-full max-w-4xl">
-            <OrderingQuestion
-              key={`ordering-${currentPartIndex}-${currentQuestion.ID}`}
-              options={options}
-              userAnswer={answer}
-              setUserAnswer={newAnswer => {
-                if (!Array.isArray(newAnswer)) {
-                  console.error('Invalid answer format received from OrderingQuestion')
-                  return
-                }
-                handleAnswerSubmit({
-                  partIndex: currentPartIndex,
-                  questionId: currentQuestion.ID,
-                  answer: newAnswer
-                })
-              }}
-            />
-          </div>
+            <div className="mx-auto w-full max-w-4xl">
+              <OrderingQuestion
+                  key={`ordering-${currentPartIndex}-${currentQuestion.ID}`}
+                  options={options}
+                  userAnswer={answer}
+                  setUserAnswer={newAnswer => {
+                    if (!Array.isArray(newAnswer)) {
+                      console.error('Invalid answer format received from OrderingQuestion')
+                      return
+                    }
+                    handleAnswerSubmit({
+                      partIndex: currentPartIndex,
+                      questionId: currentQuestion.ID,
+                      answer: newAnswer
+                    })
+                  }}
+              />
+            </div>
         )
       }
       case 'matching': {
@@ -495,24 +495,24 @@ const ReadingTest = () => {
         }
 
         return (
-          <div className="mx-auto w-full max-w-4xl">
-            <MatchingQuestion
-              {...formatMatchingQuestion(currentQuestion)}
-              userAnswer={answer}
-              setUserAnswer={handleAnswerSubmit}
-            />
-          </div>
+            <div className="mx-auto w-full max-w-4xl">
+              <MatchingQuestion
+                  {...formatMatchingQuestion(currentQuestion)}
+                  userAnswer={answer}
+                  setUserAnswer={handleAnswerSubmit}
+              />
+            </div>
         )
       }
       case 'multiple-choice': {
         return (
-          <div className="mx-auto w-full max-w-4xl">
-            <MultipleChoice
-              questionData={formatMultipleChoiceQuestion(currentQuestion)}
-              userAnswer={answer}
-              setUserAnswer={handleAnswerSubmit}
-              onSubmit={handleAnswerSubmit} setUserAnswerSubmit={undefined}            />
-          </div>
+            <div className="mx-auto w-full max-w-4xl">
+              <MultipleChoice
+                  questionData={formatMultipleChoiceQuestion(currentQuestion)}
+                  userAnswer={answer}
+                  setUserAnswer={handleAnswerSubmit}
+                  onSubmit={handleAnswerSubmit} setUserAnswerSubmit={undefined}            />
+            </div>
         )
       }
       default:
@@ -521,61 +521,61 @@ const ReadingTest = () => {
   }
 
   return (
-    <div className="relative mx-auto min-h-screen max-w-4xl p-5 pb-32">
-      <Divider orientation="left">
-        <Title level={1}>Reading</Title>
-      </Divider>
-      <Card className="mb-32">
-        <div className="absolute right-4 top-4">
-          <FlagButton key={`flag-button-${currentPartIndex}`} onFlag={handleFlagToggle} initialFlagged={isFlagged} />
-        </div>
-        <Title level={2} className="mb-6 text-3xl font-bold">
-          {`Part ${currentPartIndex + 1}`}
-        </Title>
-        <div className="prose prose-lg mb-8 max-w-none">
-          <Text className="block text-lg font-medium text-gray-700">
-            {currentPart.Content.startsWith('Part')
-              ? currentPart.Content.includes(':')
-                ? currentPart.Content.split(':')[1].trim()
-                : currentPart.Content.split('-').slice(1).join(' ').trim()
-              : currentPart.Content}
-          </Text>
-        </div>
-        {shouldShowContent() && (
-          <div className="prose prose-lg mb-8 whitespace-pre-wrap text-base text-gray-800">
-            {currentPartIndex === 3
-              ? currentQuestion.Content.split('\n').map((paragraph, index) => {
-                  const formattedParagraph = paragraph.replace(
-                    /([A-Z][a-z]+(?: [A-Z][a-z]+)*)(?=:)/g,
-                    '<strong>$1</strong>'
-                  )
-                  return (
-                    <div key={index} className="mb-4">
-                      <div dangerouslySetInnerHTML={{ __html: formattedParagraph }} />
-                    </div>
-                  )
-                })
-              : currentQuestion.Content}
+      <div className="relative mx-auto min-h-screen max-w-4xl p-5 pb-32">
+        <Divider orientation="left">
+          <Title level={1}>Reading</Title>
+        </Divider>
+        <Card className="mb-32">
+          <div className="absolute right-4 top-4">
+            <FlagButton key={`flag-button-${currentPartIndex}`} onFlag={handleFlagToggle} initialFlagged={isFlagged} />
           </div>
-        )}
-        <div className="prose prose-lg flex max-w-none flex-col gap-4">{renderQuestion()}</div>
-      </Card>
-      <QuestionNavigatorContainer
-        testData={testData}
-        userAnswers={userAnswers}
-        flaggedQuestions={flaggedQuestions}
-        setCurrentPartIndex={handlePartChange}
-        currentPartIndex={currentPartIndex}
-        handleSubmit={handleSubmit}
-      />
-      <FooterNavigator
-        totalParts={testData.Parts.length}
-        currentPart={currentPartIndex}
-        setCurrentPart={handlePartChange}
-        handleSubmit={handleSubmit}
-        isLastPart={isLastPart}
-      />
-    </div>
+          <Title level={2} className="mb-6 text-3xl font-bold">
+            {`Part ${currentPartIndex + 1}`}
+          </Title>
+          <div className="prose prose-lg mb-8 max-w-none">
+            <Text className="block text-lg font-medium text-gray-700">
+              {currentPart.Content.startsWith('Part')
+                  ? currentPart.Content.includes(':')
+                      ? currentPart.Content.split(':')[1].trim()
+                      : currentPart.Content.split('-').slice(1).join(' ').trim()
+                  : currentPart.Content}
+            </Text>
+          </div>
+          {shouldShowContent() && (
+              <div className="prose prose-lg mb-8 whitespace-pre-wrap text-base text-gray-800">
+                {currentPartIndex === 3
+                    ? currentQuestion.Content.split('\n').map((paragraph, index) => {
+                      const formattedParagraph = paragraph.replace(
+                          /([A-Z][a-z]+(?: [A-Z][a-z]+)*)(?=:)/g,
+                          '<strong>$1</strong>'
+                      )
+                      return (
+                          <div key={index} className="mb-4">
+                            <div dangerouslySetInnerHTML={{ __html: formattedParagraph }} />
+                          </div>
+                      )
+                    })
+                    : currentQuestion.Content}
+              </div>
+          )}
+          <div className="prose prose-lg flex max-w-none flex-col gap-4">{renderQuestion()}</div>
+        </Card>
+        <QuestionNavigatorContainer
+            testData={testData}
+            userAnswers={userAnswers}
+            flaggedQuestions={flaggedQuestions}
+            setCurrentPartIndex={handlePartChange}
+            currentPartIndex={currentPartIndex}
+            handleSubmit={handleSubmit}
+        />
+        <FooterNavigator
+            totalParts={testData.Parts.length}
+            currentPart={currentPartIndex}
+            setCurrentPart={handlePartChange}
+            handleSubmit={handleSubmit}
+            isLastPart={isLastPart}
+        />
+      </div>
   )
 }
 
