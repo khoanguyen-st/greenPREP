@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 
-const AudioVisual = ({ waveColor = '#6A9C89', enableAudioOutput = false }) => {
+const AudioVisual = ({ enableAudioOutput = false }) => {
   const canvasRef = useRef(null)
   const audioContextRef = useRef(null)
   const analyserRef = useRef(null)
   const dataArrayRef = useRef(null)
   const animationFrameRef = useRef(null)
   const mediaStreamRef = useRef(null)
-  const [noAudio, setNoAudio] = useState(false)
+  const [noMic, setNoMic] = useState(false)
 
   useEffect(() => {
     const startAudio = async () => {
@@ -23,9 +23,12 @@ const AudioVisual = ({ waveColor = '#6A9C89', enableAudioOutput = false }) => {
         mediaStreamRef.current = stream
         audioContextRef.current = new AudioContext()
         const source = audioContextRef.current.createMediaStreamSource(stream)
+
         analyserRef.current = audioContextRef.current.createAnalyser()
-        analyserRef.current.fftSize = 256
-        const bufferLength = analyserRef.current.frequencyBinCount
+        analyserRef.current.fftSize = 2048
+        analyserRef.current.smoothingTimeConstant = 1
+
+        const bufferLength = analyserRef.current.fftSize
         dataArrayRef.current = new Uint8Array(bufferLength)
 
         const highPassFilter = audioContextRef.current.createBiquadFilter()
@@ -44,40 +47,57 @@ const AudioVisual = ({ waveColor = '#6A9C89', enableAudioOutput = false }) => {
           analyserRef.current.connect(audioContextRef.current.destination)
         }
 
+        setNoMic(false)
+
         const drawWaveform = () => {
           if (!canvasRef.current) {
             return
           }
+
           const canvas = canvasRef.current
           const ctx = canvas.getContext('2d')
-          analyserRef.current.getByteFrequencyData(dataArrayRef.current)
+          analyserRef.current.getByteTimeDomainData(dataArrayRef.current)
 
           ctx.clearRect(0, 0, canvas.width, canvas.height)
-          ctx.fillStyle = '#F0F0F0'
-          ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-          let hasAudio = false
-          const barWidth = (canvas.width / bufferLength) * 2.5
+          const sliceWidth = (canvas.width * 1.5) / bufferLength
           let x = 0
 
-          for (let i = 0; i < bufferLength; i++) {
-            const barHeight = dataArrayRef.current[i] / 1.5
-            if (barHeight > 10) {
-              hasAudio = true
-            }
-            ctx.fillStyle = waveColor
-            ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight)
-            x += barWidth + 1
-          }
+          const waveLayers = [{ lineWidth: 1, strokeStyle: '#003087', offset: 0 }]
 
-          setNoAudio(!hasAudio)
+          waveLayers.forEach(({ lineWidth, strokeStyle, offset }) => {
+            x = 0
+            ctx.beginPath()
+            ctx.lineWidth = lineWidth
+            ctx.strokeStyle = strokeStyle
+
+            for (let i = 0; i < bufferLength; i++) {
+              const v = dataArrayRef.current[i] / 128.0
+              const y = (v - 1.0) * (canvas.height / 1.5) + canvas.height / 2 + offset
+
+              if (i === 0) {
+                ctx.moveTo(x, y)
+              } else {
+                const prevX = x - sliceWidth
+                const prevY =
+                  (dataArrayRef.current[i - 1] / 128.0 - 1.0) * (canvas.height / 1.5) + canvas.height / 2 + offset
+                const interpolatedY = (prevY + y) / 2
+                ctx.quadraticCurveTo(prevX, prevY, x, interpolatedY)
+              }
+
+              x += sliceWidth
+            }
+
+            ctx.stroke()
+          })
+
           animationFrameRef.current = requestAnimationFrame(drawWaveform)
         }
 
         drawWaveform()
       } catch (error) {
         console.error('Microphone access denied or unavailable.', error)
-        setNoAudio(true)
+        setNoMic(true)
       }
     }
 
@@ -88,12 +108,12 @@ const AudioVisual = ({ waveColor = '#6A9C89', enableAudioOutput = false }) => {
       mediaStreamRef.current?.getTracks().forEach(track => track.stop())
       audioContextRef.current?.close()
     }
-  }, [enableAudioOutput, waveColor])
+  }, [enableAudioOutput])
 
   return (
-    <div className="mx-auto w-4/5 max-w-md rounded-lg p-3">
-      <canvas ref={canvasRef} className="h-24 w-2/3 rounded-xl" />
-      {noAudio && <p className="mt-2 text-sm text-red-600">No record detected!</p>}
+    <div className="w-[800px] rounded-xl border-[6px] border-[#00b894] p-3">
+      <p className="mb-3 text-sm text-gray-600">{noMic ? 'Microphone not detected or permission denied!' : ''}</p>
+      <canvas ref={canvasRef} className="h-24 w-full rounded-xl" />
     </div>
   )
 }
