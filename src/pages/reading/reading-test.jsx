@@ -260,7 +260,7 @@ const ReadingTest = () => {
   }
 
   if (isSubmitted) {
-    return <NextScreen nextPath="/writing" skillName="Writing" imageSrc={ReadingSubmission} />
+    return <NextScreen nextPath="/writing" skillName="Reading" imageSrc={ReadingSubmission} />
   }
 
   if (isLoading) {
@@ -301,6 +301,7 @@ const ReadingTest = () => {
         typeof currentQuestion.AnswerContent === 'string'
           ? JSON.parse(currentQuestion.AnswerContent)
           : currentQuestion.AnswerContent
+
       if (answerContent.leftItems && answerContent.rightItems) {
         return true
       }
@@ -320,6 +321,7 @@ const ReadingTest = () => {
           typeof currentQuestion.AnswerContent === 'string'
             ? JSON.parse(currentQuestion.AnswerContent)
             : currentQuestion.AnswerContent
+
         if (parsedAnswerContent.leftItems && parsedAnswerContent.rightItems) {
           return {
             id: currentQuestion.ID,
@@ -366,59 +368,44 @@ const ReadingTest = () => {
       const contentLines = processedData.question.split('\n')
       const paragraphs = []
       let currentParagraph = ''
-      let currentParagraphNumber = ''
 
       for (let i = 0; i < contentLines.length; i++) {
         const line = contentLines[i]
         if (line.startsWith('Paragraph')) {
+          const cleanedLine = line.replace(/^Paragraph\s*\d+\s*-\s*/, '').trim()
           if (currentParagraph) {
-            paragraphs.push({
-              number: currentParagraphNumber,
-              text: currentParagraph.trim()
-            })
+            paragraphs.push(currentParagraph)
           }
-          const match = line.match(/Paragraph (\d+)/)
-          currentParagraphNumber = match ? match[1] : ''
-          currentParagraph = line.replace(/^Paragraph \d+ -/, '').trim()
+          currentParagraph = cleanedLine
         } else if (line.trim() && currentParagraph !== '') {
           currentParagraph += ' ' + line.trim()
         }
       }
-
       if (currentParagraph) {
-        paragraphs.push({
-          number: currentParagraphNumber,
-          text: currentParagraph.trim()
-        })
+        paragraphs.push(currentParagraph)
       }
-
       return (
         <div className="mx-auto w-full max-w-4xl">
           <div className="mt-4 flex flex-col gap-8">
-            {paragraphs.map((paragraph, index) => {
-              const leftItem = `Paragraph ${paragraph.number}`
-              return (
-                <div key={index} className="mb-8">
-                  <div className="mb-4">
-                    <Select
-                      onChange={value => handleAnswerSubmit({ ...answer, [leftItem]: value })}
-                      value={answer?.[leftItem] || ''}
-                      className="w-64"
-                      placeholder="Select a heading"
-                    >
-                      {processedData.rightItems.map(rightItem => (
-                        <Option key={rightItem} value={rightItem}>
-                          {rightItem}
-                        </Option>
-                      ))}
-                    </Select>
-                  </div>
-                  <div className="whitespace-pre-wrap text-base text-gray-800">
-                    <strong>Paragraph {paragraph.number}</strong> - {paragraph.text}
-                  </div>
+            {paragraphs.map((para, index) => (
+              <div key={index} className="mb-8">
+                <div className="mb-4">
+                  <Select
+                    onChange={value => handleAnswerSubmit({ ...answer, [`para-${index}`]: value })}
+                    value={answer?.[`para-${index}`] || ''}
+                    className="w-64"
+                    placeholder="Select a heading"
+                  >
+                    {processedData.rightItems.map(rightItem => (
+                      <Option key={rightItem} value={rightItem}>
+                        {rightItem}
+                      </Option>
+                    ))}
+                  </Select>
                 </div>
-              )
-            })}
+                <div className="whitespace-pre-wrap text-base text-gray-800">{para}</div>
+              </div>
+            ))}
           </div>
         </div>
       )
@@ -501,6 +488,7 @@ const ReadingTest = () => {
                       onChange={value => handleAnswerSubmit({ ...answer, [number]: value })}
                       value={answer?.[number] || ''}
                       className="mx-2 inline-block w-32"
+                      style={{ marginBottom: 10 }}
                     >
                       {processedData.answers[number]?.map(option => (
                         <Option key={option} value={option}>
@@ -551,9 +539,6 @@ const ReadingTest = () => {
 
     switch (currentQuestion.Type) {
       case 'dropdown-list': {
-        if (currentPartIndex === 0) {
-          return renderDropdownQuestion()
-        }
         return renderDropdownQuestion()
       }
       case 'ordering': {
@@ -583,6 +568,7 @@ const ReadingTest = () => {
                   console.error('Invalid answer format received from OrderingQuestion')
                   return
                 }
+
                 handleAnswerSubmit({
                   partIndex: currentPartIndex,
                   questionId: currentQuestion.ID,
@@ -593,7 +579,6 @@ const ReadingTest = () => {
           </div>
         )
       }
-
       case 'matching': {
         if (currentPartIndex === 4) {
           return renderDropdownQuestion()
@@ -627,7 +612,7 @@ const ReadingTest = () => {
   }
 
   return (
-    <div className="relative mx-auto min-h-screen max-w-4xl p-5 pb-32">
+    <div className="relative mx-auto min-h-screen w-full max-w-4xl p-5 pb-32">
       <Divider orientation="left">
         <Title level={1}>Reading</Title>
       </Divider>
@@ -665,6 +650,7 @@ const ReadingTest = () => {
               : currentQuestion.Content}
           </div>
         )}
+
         <div className="prose prose-lg flex max-w-none flex-col gap-4">{renderQuestion()}</div>
       </Card>
 
