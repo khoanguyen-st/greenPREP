@@ -47,7 +47,6 @@ export const useSubmitWritingTest = () => {
 
       localStorage.removeItem('writingAnswers')
       localStorage.removeItem('flaggedParts')
-      localStorage.removeItem('globalData')
 
       navigate('/complete-test')
     } catch (error) {
