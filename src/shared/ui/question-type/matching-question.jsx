@@ -43,11 +43,11 @@ const MatchingQuestion = ({ leftItems, rightItems, userAnswer = [], setUserAnswe
   }
 
   return (
-    <div className={`mx-auto max-w-4xl rounded-xl bg-white p-8 ${className}`}>
+    <div className={`mx-auto max-w-5xl rounded-xl bg-white p-8 ${className}`}>
       <style>
         {`
           .ant-select-selection-item {
-            font-size: 16px !important;
+            font-size: 15px !important;
             line-height: 1.5 !important;
           }
           .matching-item {
@@ -65,20 +65,18 @@ const MatchingQuestion = ({ leftItems, rightItems, userAnswer = [], setUserAnswe
       <div className="w-full space-y-6">
         {leftItems.map((leftItem, index) => (
           <div key={index} className="matching-item flex w-full items-start gap-6">
-            <div className="min-w-[200px] flex-1">
-              <p className="text-lg font-medium text-gray-700">{leftItem}</p>
+            <div className="min-w-[250px] flex-1">
+              <p className="text-[15px] font-medium leading-relaxed text-gray-700">{leftItem}</p>
             </div>
-            <div className="w-[300px] flex-shrink-0">
+            <div className="w-[350px] flex-shrink-0">
               <Select
                 onChange={value => handleSelectChange(leftItem, value)}
                 value={selectedOptions[leftItem] || ''}
-                className="h-14 w-full rounded-lg border border-gray-300 text-base shadow-sm"
+                className="h-12 w-full rounded-lg border border-gray-300 text-[15px] shadow-sm"
                 placeholder="Select an answer"
-                showSearch
-                dropdownStyle={{ fontSize: '16px' }}
+                dropdownStyle={{ fontSize: '15px' }}
                 dropdownMatchSelectWidth={false}
                 style={{ width: '100%' }}
-                filterOption={(input, option) => String(option.children).toLowerCase().includes(input.toLowerCase())}
                 optionLabelProp="label"
                 getPopupContainer={triggerNode => triggerNode.parentNode}
               >
@@ -87,7 +85,7 @@ const MatchingQuestion = ({ leftItems, rightItems, userAnswer = [], setUserAnswe
                     key={rightIndex}
                     value={rightItem}
                     label={rightItem}
-                    style={{ fontSize: '16px', padding: '12px 16px' }}
+                    style={{ fontSize: '15px', padding: '8px 12px' }}
                   >
                     {rightItem}
                   </Option>
