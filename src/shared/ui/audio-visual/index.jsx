@@ -112,7 +112,7 @@ const AudioVisual = ({ enableAudioOutput = false }) => {
   }, [enableAudioOutput])
 
   return (
-    <div className="p-4s w-[800px] max-w-full rounded-xl border-4 border-[#003087] bg-white">
+    <div className="p-4s w-[800px] max-w-full rounded-xl border-4 border-[#003087] bg-gray-50">
       <p className={`mb-3 text-sm ${noMic ? 'text-red-500' : 'text-gray-600'}`}>
         {noMic ? 'Microphone not detected or permission denied!' : ''}
       </p>
