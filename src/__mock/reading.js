@@ -1,6 +1,6 @@
 export const READING_DATA = {
   title: 'Reading Practice Test',
-  testName: 'Aptis General Practice Test',
+  testName: 'Aptis General Test',
   section: 'Reading',
   testStructure: {
     desc: 'This test has 4 parts, you will have 30 minutes to complete the test.',

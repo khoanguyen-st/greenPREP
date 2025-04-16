@@ -57,6 +57,7 @@ const SubmissionPage = () => {
           setEmailSent(true)
           message.success('Test submitted and confirmation email sent successfully!')
           localStorage.removeItem('pendingEmailSubmission')
+          localStorage.removeItem('globalData')
         } catch (error) {
           console.error('Failed to send email:', error)
           // Show a more user-friendly message
@@ -87,7 +88,7 @@ const SubmissionPage = () => {
       }
     }
     sendEmail()
-  }, [user, location.state, sendConfirmationEmail])
+  }, [user, location.state, sendConfirmationEmail, sessionName])
 
   const handleNavigation = async () => {
     try {
