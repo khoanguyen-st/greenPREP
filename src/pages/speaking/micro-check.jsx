@@ -4,7 +4,7 @@ import { useAudioRecording } from '@shared/lib/hooks/useAudioRecording'
 import { useMicrophoneAccess } from '@shared/lib/hooks/useMicrophoneAccess'
 import AudioVisual from '@shared/ui/audio-visual'
 import { Button } from 'antd'
-import { useState, useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const CircleButton = ({ icon, onClick, disabled = false }) => (
@@ -93,7 +93,7 @@ const MicrophoneCheck = () => {
           <h2 className="mb-4 text-2xl font-bold text-gray-900">Speak for {countdown} seconds...</h2>
           <p className="mb-6 text-gray-600">As you speak we will record your voice and check its quality.</p>
           <div className="mx-auto w-[95%] max-w-4xl rounded-lg p-3">
-            <AudioVisual waveColor="#6A9C89" />
+            <AudioVisual />
           </div>
         </div>
       )
