@@ -6,6 +6,7 @@ import GrammarTest from '@pages/grammar/grammar-test'
 import HomePage from '@pages/home-page'
 import IntroductionPage from '@pages/introduction-page'
 import ListeningPage from '@pages/listening'
+import HeadphoneCheck from '@pages/listening/listening-headphonecheck'
 import ListeningIntroduction from '@pages/listening/listening-introduction'
 import ListeningTest from '@pages/listening/listening-test'
 import ReadingPage from '@pages/reading'
@@ -53,6 +54,10 @@ const PrivateRoute = [
           {
             index: true,
             element: <ListeningIntroduction />
+          },
+          {
+            path: 'headphonecheck',
+            element: <HeadphoneCheck />
           },
           {
             path: 'test',
