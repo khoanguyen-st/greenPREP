@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-const AudioVisualizer = ({ enableAudioOutput = false }) => {
+const AudioVisual = ({ enableAudioOutput = false }) => {
   const circleCanvasRef = useRef(null)
   const audioContextRef = useRef(null)
   const analyserRef = useRef(null)
@@ -200,4 +200,4 @@ const AudioVisualizer = ({ enableAudioOutput = false }) => {
   )
 }
 
-export default AudioVisualizer
+export default AudioVisual
