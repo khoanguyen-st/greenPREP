@@ -45,7 +45,6 @@ export const submitWritingTest = async ({ data, navigate }) => {
 
     localStorage.removeItem('writingAnswers')
     localStorage.removeItem('flaggedParts')
-    localStorage.removeItem('globalData')
     navigate('/complete-test')
   } catch (error) {
     console.error(error)

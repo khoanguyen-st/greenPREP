@@ -23,11 +23,8 @@ export const useTestSubmissionEmail = () => {
       }
 
       setStatusMessage('Validating email data...')
-      const submissionDateTime = new Date().toISOString()
       const emailData = {
-        ...testData,
-        submissionDateTime,
-        submissionId: `${userId}-${submissionDateTime}` // Unique identifier for the submission
+        ...testData // Unique identifier for the submission
       }
 
       setStatusMessage('Sending email...')
