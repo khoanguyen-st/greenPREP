@@ -14,8 +14,8 @@ export const validateEmail = email => {
 
 export const sendTestSubmissionEmail = async (userId, testData, retryCount = 0) => {
   try {
-    if (!userId || !testData?.submissionId) {
-      throw new Error('User ID and submission ID are required')
+    if (!userId) {
+      throw new Error('User ID is required')
     }
 
     const accessToken = localStorage.getItem('access_token')
@@ -52,9 +52,7 @@ export const sendTestSubmissionEmail = async (userId, testData, retryCount = 0) 
     try {
       const failedAttempts = JSON.parse(localStorage.getItem('failedEmails') || '[]')
       failedAttempts.push({
-        userId,
-        submissionId: testData.submissionId,
-        timestamp: testData.timestamp
+        userId
       })
       if (failedAttempts.length > 50) {
         failedAttempts.shift()
