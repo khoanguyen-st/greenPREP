@@ -23,7 +23,7 @@ const AudioVisual = ({ enableAudioOutput = false }) => {
         })
 
         mediaStreamRef.current = stream
-        audioContextRef.current = new window.AudioContext()
+        audioContextRef.current = new AudioContext()
         const source = audioContextRef.current.createMediaStreamSource(stream)
 
         analyserRef.current = audioContextRef.current.createAnalyser()
