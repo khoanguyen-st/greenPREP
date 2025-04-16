@@ -49,7 +49,11 @@ const QuestionForm = ({
 
       {currentPart.Questions.map((question, index) => {
         const fieldName = `answer-${currentPart.ID}-${index}`
-        const maxWords = partNumber === 1 ? null : question.maxWords || DEFAULT_MAX_WORDS[partNumber]
+        const maxWords =
+          question.maxWords ??
+          (Array.isArray(DEFAULT_MAX_WORDS[partNumber])
+            ? DEFAULT_MAX_WORDS[partNumber][index]
+            : DEFAULT_MAX_WORDS[partNumber])
 
         return (
           <Form.Item key={index} label={<Text strong>{question.Content}</Text>}>

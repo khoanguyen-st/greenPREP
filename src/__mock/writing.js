@@ -3,38 +3,39 @@ export const WRITING_DATA = {
   testName: 'Aptis General Practice Test',
   section: 'Writing',
   testStructure: {
-    desc: 'This test has 4 parts, you will have 50 minutes to complete the test.',
+    desc: 'This test has 4 parts. You will have 50 minutes to complete all tasks. Each part will test your ability to write clearly and appropriately in different real-life situations.',
     parts: [
       {
-        name: 'Part 1: Sentence Completions',
-        desc: 'In this part, you will read a sentence with a missing word. You will have to choose the best word to fill the gap from the options provided.'
+        name: 'Part 1: Short Responses',
+        desc: 'You will answer 5 short personal questions using 1–5 words each. This part tests your ability to give brief and relevant information.'
       },
       {
-        name: 'Part 2: Multiple Choice',
-        desc: 'In this part, you will read a text and answer multiple choice questions.'
+        name: 'Part 2: Form Filling',
+        desc: 'You will complete a form with full-sentence answers. You need to provide detailed information about yourself in 20–30 words for each answer.'
       },
       {
-        name: 'Part 3: Multiple Matching',
-        desc: 'In this part, you will read a text and match the questions to the correct answers.'
+        name: 'Part 3: Informal Text Interaction',
+        desc: 'You will respond to three chat messages from other people in a club. Each response should be 30–40 words. This part checks how well you interact in informal writing.'
       },
       {
-        name: 'Part 4: Reading and Writing',
-        desc: 'In this part, you will read a text and write a short answer to a question.'
+        name: 'Part 4: Formal and Informal Emails',
+        desc: 'You will write two emails: one informal (to a friend, about a shared event or news) and one formal (to a club president). The second email should be 75-225 words.'
       }
     ]
   },
   fornDescription: {
-    desc: 'In this test, you will read a variety of texts and answer questions about them. The texts will be taken from a range of sources, such as newspapers, magazines, and books. You will need to read the texts carefully and answer the questions based on what you have read.',
-    duration: '30 minutes',
-    numberOfQuestions: '20 questions'
+    desc: 'In this test, you will complete tasks that reflect real-world writing situations, such as writing messages, completing forms, and composing emails. You will need to demonstrate appropriate tone, structure, and clarity in your writing.',
+    duration: '50 minutes',
+    numberOfQuestions: '4 parts'
   },
   notes: {
     title: 'Notes',
     listNotes: [
-      'You will have 30 minutes to complete the test.',
-      'You can go back and change your answers at any time.',
+      'You will have 50 minutes to complete the test.',
+      'Answer all parts carefully. Each part tests different writing skills.',
+      'You can go back and change your answers during the test.',
       'You can only submit your answers once.',
-      'You will not be able to return to the test once you have submitted your answers.'
+      'You will not be able to return to the test after submission.'
     ]
   }
 }
