@@ -1,5 +1,5 @@
 export const WRITING_DATA = {
-  title: 'Writing',
+  title: 'Writing Practice Test',
   testName: 'Aptis General Practice Test',
   section: 'Writing',
   testStructure: {
