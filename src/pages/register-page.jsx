@@ -16,7 +16,7 @@ const RegisterPage = () => {
     firstName: '',
     lastName: '',
     email: '',
-    className: '',
+    class: '',
     studentCode: '',
     phone: '',
     password: '',
@@ -29,7 +29,7 @@ const RegisterPage = () => {
       navigate('/login')
     },
     onError: error => {
-      message.error(error.response?.data?.message || 'Registration failed. Please try again.')
+      message.error(error.response?.data?.errors || 'Registration failed. Please try again.')
     }
   })
 
@@ -48,7 +48,7 @@ const RegisterPage = () => {
       firstName: formValues.firstName,
       lastName: formValues.lastName,
       email: formValues.email,
-      className: formValues.className,
+      class: formValues.class,
       studentCode: formValues.studentCode,
       phone: formValues.phone,
       password: formValues.password
@@ -164,7 +164,7 @@ const RegisterPage = () => {
                         Class Name <span className="text-red-500">*</span>
                       </Text>
                     }
-                    name="className"
+                    name="class"
                     rules={[
                       { required: true, message: 'Class name is required' },
                       { min: 2, message: 'At least 2 characters' },
