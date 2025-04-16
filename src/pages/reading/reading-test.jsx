@@ -393,7 +393,7 @@ const ReadingTest = () => {
                   <Select
                     onChange={value => handleAnswerSubmit({ ...answer, [`para-${index}`]: value })}
                     value={answer?.[`para-${index}`] || ''}
-                    className="w-64"
+                    className="w-80"
                     placeholder="Select a heading"
                   >
                     {processedData.rightItems.map(rightItem => (
