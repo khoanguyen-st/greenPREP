@@ -63,7 +63,7 @@ const AudioVisual = ({ enableAudioOutput = false }) => {
           const sliceWidth = (canvas.width * 1.5) / bufferLength
           let x = 0
 
-          const waveLayers = [{ lineWidth: 1, strokeStyle: '#003087', offset: 0 }]
+          const waveLayers = [{ lineWidth: 1, strokeStyle: '#003087', offset: 1 }]
 
           waveLayers.forEach(({ lineWidth, strokeStyle, offset }) => {
             x = 0
@@ -73,15 +73,16 @@ const AudioVisual = ({ enableAudioOutput = false }) => {
 
             for (let i = 0; i < bufferLength; i++) {
               const v = dataArrayRef.current[i] / 128.0
-              const y = (v - 1.0) * (canvas.height / 1.5) + canvas.height / 2 + offset
+              const y = (v - 1.0) * (canvas.height / 1) + canvas.height / 2 + offset
 
               if (i === 0) {
                 ctx.moveTo(x, y)
               } else {
                 const prevX = x - sliceWidth
                 const prevY =
-                  (dataArrayRef.current[i - 1] / 128.0 - 1.0) * (canvas.height / 1.5) + canvas.height / 2 + offset
+                  (dataArrayRef.current[i - 1] / 128.0 - 1.0) * (canvas.height / 1) + canvas.height / 2 + offset
                 const interpolatedY = (prevY + y) / 2
+
                 ctx.quadraticCurveTo(prevX, prevY, x, interpolatedY)
               }
 
@@ -111,9 +112,11 @@ const AudioVisual = ({ enableAudioOutput = false }) => {
   }, [enableAudioOutput])
 
   return (
-    <div className="w-[800px] rounded-xl border-[6px] border-[#00b894] p-3">
-      <p className="mb-3 text-sm text-gray-600">{noMic ? 'Microphone not detected or permission denied!' : ''}</p>
-      <canvas ref={canvasRef} className="h-24 w-full rounded-xl" />
+    <div className="p-4s w-[800px] max-w-full rounded-xl border-4 border-[#003087] bg-white">
+      <p className={`mb-3 text-sm ${noMic ? 'text-red-500' : 'text-gray-600'}`}>
+        {noMic ? 'Microphone not detected or permission denied!' : ''}
+      </p>
+      <canvas ref={canvasRef} className="h-32 w-full rounded-xl" />
     </div>
   )
 }
