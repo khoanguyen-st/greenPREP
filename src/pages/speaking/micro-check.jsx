@@ -36,7 +36,6 @@ const MicrophoneCheck = () => {
   }, [startRecording])
 
   const resetTest = useCallback(() => {
-    // Stop audio if it's playing
     if (audioPlayerRef.current && isPlaying) {
       audioPlayerRef.current.pause()
       audioPlayerRef.current.currentTime = 0
@@ -89,13 +88,15 @@ const MicrophoneCheck = () => {
 
     if (isRecording) {
       return (
-        <div className="text-center">
-          <h2 className="mb-4 text-2xl font-bold text-gray-900">Speak for {countdown} seconds...</h2>
-          <p className="mb-6 text-gray-600">As you speak we will record your voice and check its quality.</p>
-          <div className="mx-auto w-[95%] max-w-4xl rounded-lg p-3">
+        <>
+          <div className="text-center">
+            <h2 className="mb-4 text-2xl font-bold text-gray-900">Speak for {countdown} seconds...</h2>
+            <p className="mb-6 text-gray-600">As you speak we will record your voice and check its quality.</p>
+          </div>
+          <div className="mx-auto h-80 w-full max-w-4xl overflow-hidden p-3">
             <AudioVisual />
           </div>
-        </div>
+        </>
       )
     }
 
