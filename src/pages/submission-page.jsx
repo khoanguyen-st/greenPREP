@@ -31,7 +31,7 @@ const SubmissionPage = () => {
   useEffect(() => {
     const sendEmail = async () => {
       try {
-        if (!user?.email || !user?.fullUser?.userId) {
+        if (!user?.email || !user?.fullUser?.userId || !globalData) {
           return
         }
 
