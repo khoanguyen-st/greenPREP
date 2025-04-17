@@ -27,6 +27,9 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
   const [showIntro, setShowIntro] = useState(true)
   const [isUploading, setIsUploading] = useState(false)
   const [isButtonLoading, setIsButtonLoading] = useState(false)
+  const [isAutoSubmitting, setIsAutoSubmitting] = useState(false)
+  const autoSubmitTimerRef = useRef(null)
+  const buttonRef = useRef(null)
 
   const parseTime = timeStr => {
     const [min, sec] = timeStr.split(':').map(Number)
@@ -118,6 +121,37 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isActive, isTimerRunning, phase, currentTimePair])
 
+  useEffect(() => {
+    if (!isRecording && phase === 'answering' && countdown === 0 && !isAutoSubmitting) {
+      setIsAutoSubmitting(true)
+      autoSubmitTimerRef.current = setTimeout(() => {
+        if (buttonRef.current) {
+          buttonRef.current.click()
+        }
+      }, 2000)
+
+      const timerElement = document.createElement('div')
+      timerElement.dataset.autoSubmitTimer = autoSubmitTimerRef.current
+      document.body.appendChild(timerElement)
+    }
+
+    return () => {
+      if (autoSubmitTimerRef.current) {
+        clearTimeout(autoSubmitTimerRef.current)
+        const timerElement = document.querySelector('[data-auto-submit-timer]')
+        if (timerElement) {
+          timerElement.remove()
+        }
+      }
+    }
+  }, [isRecording, phase, countdown])
+
+  useEffect(() => {
+    if (isAutoSubmitting) {
+      setIsAutoSubmitting(false)
+    }
+  }, [currentQuestionIndex])
+
   const handleStartPart = () => {
     setShowIntro(false)
     setIsActive(true)
@@ -170,25 +204,29 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
   }
 
   const handleNextQuestion = async () => {
-    if (currentQuestionIndex < totalQuestions - 1) {
-      setIsButtonLoading(true)
-      if (isUploading) {
-        while (isUploading) {
-          await new Promise(resolve => setTimeout(resolve, 100))
-        }
-      }
-
-      setCurrentQuestionIndex(prev => prev + 1)
-      setPhase('reading')
-      setCountdown(parseTime(getTimePair(currentQuestionIndex + 1).read))
-      setIsActive(true)
-      setIsTimerRunning(true)
-      setHasUploaded(false)
-      setIsButtonLoading(false)
+    if (autoSubmitTimerRef.current) {
+      clearTimeout(autoSubmitTimerRef.current)
     }
+    setIsButtonLoading(true)
+    if (isUploading) {
+      while (isUploading) {
+        await new Promise(resolve => setTimeout(resolve, 100))
+      }
+    }
+
+    setCurrentQuestionIndex(prev => prev + 1)
+    setPhase('reading')
+    setCountdown(parseTime(getTimePair(currentQuestionIndex + 1).read))
+    setIsActive(true)
+    setIsTimerRunning(true)
+    setHasUploaded(false)
+    setIsButtonLoading(false)
   }
 
   const handleNextPart = async () => {
+    if (autoSubmitTimerRef.current) {
+      clearTimeout(autoSubmitTimerRef.current)
+    }
     setIsButtonLoading(true)
     if (isUploading) {
       while (isUploading) {
@@ -217,6 +255,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
         isPart4={data.Content === 'PART 4'}
         isUploading={isUploading}
         isButtonLoading={isButtonLoading || submitMutation.isPending}
+        buttonRef={buttonRef}
       />
       <div className="flex h-screen w-1/3 flex-col items-center justify-center bg-gradient-to-br from-[#003087] via-[#002b6c] to-[#001f4d]">
         <h2 className="mb-4 text-4xl font-bold text-white">
