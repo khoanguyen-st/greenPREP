@@ -1,4 +1,4 @@
-const TimerDisplay = ({ countdown, phase }) => {
+const TimerDisplay = ({ countdown, phase, content }) => {
   const formatTime = seconds => {
     const minutes = Math.floor(seconds / 60)
     const secs = seconds % 60
@@ -13,9 +13,8 @@ const TimerDisplay = ({ countdown, phase }) => {
           text: 'text-[#003087]',
           border: 'border-[#003087]',
           glow: 'shadow-[0_0_30px_rgba(0,48,135,0.1)]',
-          progress: 'stroke-[#003087]',
-          progressBg: 'stroke-gray-100',
-          label: 'text-[#003087]'
+          progress: '#003087',
+          progressBg: '#ddd'
         }
       case 'answering':
         return {
@@ -23,9 +22,8 @@ const TimerDisplay = ({ countdown, phase }) => {
           text: 'text-red-600',
           border: 'border-red-600',
           glow: 'shadow-[0_0_30px_rgba(220,38,38,0.1)]',
-          progress: 'stroke-red-600',
-          progressBg: 'stroke-gray-100',
-          label: 'text-red-600'
+          progress: '#DC2626',
+          progressBg: '#ddd'
         }
       default:
         return {
@@ -33,46 +31,91 @@ const TimerDisplay = ({ countdown, phase }) => {
           text: 'text-gray-600',
           border: 'border-gray-600',
           glow: 'shadow-[0_0_30px_rgba(107,114,128,0.1)]',
-          progress: 'stroke-gray-600',
-          progressBg: 'stroke-gray-100',
-          label: 'text-gray-600'
+          progress: '#4B5563',
+          progressBg: '#ddd'
         }
     }
   }
 
   const colors = getPhaseColor()
 
+  const getMaxTime = () => {
+    if (phase === 'reading') {
+      return content === 'PART 4' ? 60 : 5
+    } else {
+      if (content === 'PART 1') {
+        return 30
+      }
+      if (content === 'PART 4') {
+        return 120
+      }
+      return 45
+    }
+  }
+
+  const maxTime = getMaxTime()
+  const progress = (countdown / maxTime) * 100
+
   return (
     <div className="relative">
       <div
-        className={`relative flex h-64 w-64 items-center justify-center rounded-full border-2 ${colors.border} ${colors.bg} ${colors.glow} transition-all duration-500`}
+        className={`relative flex h-64 w-64 items-center justify-center rounded-full border-2 ${colors.border} ${colors.bg} ${colors.glow}`}
       >
-        <div className="absolute inset-0 rounded-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAzNGM0LjQxOCAwIDgtMy41ODIgOC04cy0zLjU4Mi04LTgtOC04IDMuNTgyLTggOCAzLjU4MiA4IDggOHoiIHN0cm9rZT0iIzAwMzA4NyIgc3Ryb2tlLW9wYWNpdHk9Ii4wNSIvPjwvZz48L3N2Zz4=')] opacity-10" />
+        <style>
+          {`
+            @property --progress {
+              syntax: "<number>";
+              inherits: false;
+              initial-value: 0;
+            }
 
-        <div className="relative text-center">
+            .circular-progress {
+              --size: 256px;
+              --half-size: calc(var(--size) / 2);
+              --stroke-width: 6px;
+              --radius: calc((var(--size) - var(--stroke-width)) / 2);
+              --circumference: calc(var(--radius) * 3.14159 * 2);
+              --dash: calc((${progress} * var(--circumference)) / 100);
+            }
+
+            .circular-progress circle {
+              cx: var(--half-size);
+              cy: var(--half-size);
+              r: var(--radius);
+              stroke-width: var(--stroke-width);
+              fill: none;
+              stroke-linecap: round;
+            }
+
+            .circular-progress circle.bg {
+              stroke: ${colors.progressBg};
+            }
+
+            .circular-progress circle.fg {
+              transform: rotate(-90deg);
+              transform-origin: var(--half-size) var(--half-size);
+              stroke-dasharray: var(--dash) calc(var(--circumference) - var(--dash));
+              transition: stroke-dasharray 0.3s linear;
+              stroke: ${colors.progress};
+            }
+          `}
+        </style>
+
+        <div className="absolute inset-0">
+          <svg className="circular-progress" viewBox="0 0 256 256">
+            <circle className="bg" />
+            <circle className="fg" />
+          </svg>
+        </div>
+
+        <div className="relative z-10 text-center">
           <div className="flex items-baseline justify-center">
             <span className={`text-6xl font-bold ${colors.text}`}>{formatTime(countdown)}</span>
           </div>
-          <p className={`mt-4 text-lg font-medium ${colors.label}`}>
+          <p className={`mt-4 text-lg font-medium ${colors.text}`}>
             {phase === 'reading' ? 'Reading Time' : 'Recording Time'}
           </p>
         </div>
-
-        <svg className="absolute inset-0 h-full w-full -rotate-90 transform">
-          <circle className={`fill-none ${colors.progressBg}`} strokeWidth="3" cx="50%" cy="50%" r="48%" />
-          <circle
-            className={`fill-none ${colors.progress} transition-all duration-1000 ease-in-out`}
-            strokeWidth="3"
-            strokeDasharray={`${(countdown / (phase === 'reading' ? 5 : 60)) * 100} 100`}
-            strokeLinecap="round"
-            cx="50%"
-            cy="50%"
-            r="48%"
-          />
-        </svg>
-
-        <div className="absolute inset-0 rounded-full border-2 border-[#003087]/10" />
-        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#003087]/5 to-transparent" />
       </div>
     </div>
   )
