@@ -23,7 +23,6 @@ const TestNavigation = ({
   onAutoSubmit,
   userAnswers,
   flaggedQuestions,
-  skillName,
   children
 }) => {
   const [showAutoSubmitPopup, setShowAutoSubmitPopup] = useState(false)
@@ -84,10 +83,10 @@ const TestNavigation = ({
   }
 
   return (
-    <div className="relative mx-auto min-h-screen max-w-4xl p-5">
-      <Space direction="vertical" size="large" className="w-full">
-        <Divider orientation="left">
-          <Title level={1}>{skillName}</Title>
+    <div className="relative mx-auto min-h-screen w-1/2 p-5">
+      <Space direction="vertical" className="w-full">
+        <Divider orientation="left" className="!m-0">
+          <Title level={1}>Listening</Title>
         </Divider>
 
         <Card className="mb-32">
@@ -101,7 +100,7 @@ const TestNavigation = ({
             </div>
           </div>
 
-          {children}
+          <div className="break-words">{children}</div>
 
           <div className="z-10 mt-8 flex justify-between">
             <div className="fixed bottom-8 left-4 z-20 hidden w-fit mdL:block">
@@ -119,7 +118,7 @@ const TestNavigation = ({
       </Space>
 
       <div
-        className={`fixed ${isNavigatorOpen ? 'bottom-[13%] sm:bottom-[30%]' : 'bottom-[50%]'} right-2 flex items-center gap-2 md:bottom-[43%] lg:bottom-[50%]`}
+        className={`fixed ${isNavigatorOpen ? 'bottom-[26.4%] sm:bottom-[42%]' : 'bottom-[51%]'} right-2 flex items-center gap-2 md:bottom-[48%] lg:bottom-[54%]`}
       >
         <Button
           className="rounded-full bg-blue-500 p-2 text-white shadow-lg md:hidden"
@@ -128,7 +127,7 @@ const TestNavigation = ({
           <MenuOutlined />
         </Button>
         <div
-          className={`border-black-300 z-1 h-auto w-60 rounded-lg border bg-white p-2 shadow-lg ${isNavigatorOpen ? 'block' : 'hidden'} md:block`}
+          className={`z-1 h-auto w-60 rounded-lg border bg-white p-2 shadow-lg ${isNavigatorOpen ? 'block' : 'hidden'} md:block`}
         >
           <TimeRemaining duration={40 * 60} onAutoSubmit={handleAutoSubmit} label="Time Remaining" />
           <QuestionNavigator values={questionNavigatorValues} action={onQuestionChange} position={flatIndex} />

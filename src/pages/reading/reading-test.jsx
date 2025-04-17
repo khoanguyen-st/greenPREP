@@ -1,14 +1,15 @@
-import { fetchReadingTestDetails } from '@features/reading/api/readingAPI'
+import ReadingSubmission from '@assets/images/submission/reading-submission.png'
+import { fetchReadingTestDetails, submitStudentAnswers } from '@features/reading/api/readingAPI'
 import FooterNavigator from '@features/reading/ui/reading-footer-navigator'
 import QuestionNavigatorContainer from '@features/reading/ui/reading-question-navigator'
 import FlagButton from '@shared/ui/flag-button'
 import MatchingQuestion from '@shared/ui/question-type/matching-question'
 import MultipleChoice from '@shared/ui/question-type/multiple-choice'
 import OrderingQuestion from '@shared/ui/question-type/ordering-question'
+import NextScreen from '@shared/ui/submission/next-screen'
 import { useQuery } from '@tanstack/react-query'
 import { Spin, Alert, Typography, Card, Select, Divider } from 'antd'
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 const { Option } = Select
 const { Title, Text } = Typography
@@ -37,7 +38,8 @@ const formatMultipleChoiceQuestion = question => ({
 })
 
 const ReadingTest = () => {
-  const navigate = useNavigate()
+  const [isSubmitted, setIsSubmitted] = useState(false)
+
   const [userAnswers, setUserAnswers] = useState(() => {
     try {
       const savedAnswers = localStorage.getItem('readingAnswers')
@@ -164,11 +166,101 @@ const ReadingTest = () => {
     }))
   }
 
-  const handleSubmit = () => {
-    localStorage.removeItem('readingAnswers')
-    localStorage.removeItem('flaggedQuestions')
-    localStorage.removeItem('partFlaggedStates')
-    navigate('/writing')
+  const handleSubmit = async () => {
+    try {
+      const globalData = JSON.parse(localStorage.getItem('globalData'))
+      if (!globalData) {
+        throw new Error('Global data not found')
+      }
+
+      const formattedAnswers = Object.entries(userAnswers).map(([questionId, answer]) => {
+        const question = testData.Parts.flatMap(part => part.Questions).find(q => q.ID === questionId)
+
+        const formattedAnswer = {
+          questionId,
+          answerText: null,
+          answerAudio: null
+        }
+
+        switch (question?.Type) {
+          case 'multiple-choice':
+            formattedAnswer.answerText = answer
+            break
+          case 'matching':
+            if (answer && typeof answer === 'object') {
+              formattedAnswer.answerText = Object.entries(answer).map(([left, right]) => ({
+                left,
+                right
+              }))
+            }
+            break
+          case 'ordering':
+            if (answer && typeof answer === 'object' && 'partIndex' in answer) {
+              const options = question.AnswerContent
+              formattedAnswer.answerText = answer.answer.map((item, index) => ({
+                key: options[item],
+                value: index + 1
+              }))
+            }
+            break
+          case 'dropdown-list':
+            if (answer && typeof answer === 'object') {
+              formattedAnswer.answerText = Object.entries(answer).map(([key, value]) => ({
+                key,
+                value
+              }))
+            }
+            break
+          case 'speaking':
+            formattedAnswer.answerText = null
+            formattedAnswer.answerAudio = answer
+            break
+          case 'writing':
+            formattedAnswer.answerText = answer
+            break
+          default:
+            formattedAnswer.answerText = answer
+        }
+
+        return formattedAnswer
+      })
+
+      const allQuestions = testData.Parts.flatMap(part => part.Questions)
+      const answeredQuestionIds = new Set(formattedAnswers.map(answer => answer.questionId))
+
+      const autoCompletedAnswers = allQuestions
+        .filter(question => !answeredQuestionIds.has(question.ID))
+        .map(question => ({
+          questionId: question.ID,
+          answerText: null,
+          answerAudio: null
+        }))
+
+      const finalAnswers = [...formattedAnswers, ...autoCompletedAnswers]
+
+      const submitData = {
+        studentId: globalData.studentId,
+        topicId: globalData.topicId,
+        skillName: 'READING',
+        sessionParticipantId: globalData.sessionParticipantId,
+        sessionId: globalData.sessionId,
+        questions: finalAnswers
+      }
+
+      await submitStudentAnswers(submitData)
+
+      localStorage.removeItem('readingAnswers')
+      localStorage.removeItem('flaggedQuestions')
+      localStorage.removeItem('partFlaggedStates')
+
+      setIsSubmitted(true)
+    } catch (error) {
+      console.error('Error submitting answers:', error)
+    }
+  }
+
+  if (isSubmitted) {
+    return <NextScreen nextPath="/writing" skillName="Reading" imageSrc={ReadingSubmission} />
   }
 
   if (isLoading) {
@@ -192,6 +284,14 @@ const ReadingTest = () => {
   const isLastPart = currentPartIndex === testData.Parts.length - 1
 
   const shouldShowContent = () => {
+    if (currentPartIndex === 4 && (currentQuestion.Type === 'matching' || currentQuestion.Type === 'dropdown-list')) {
+      return false
+    }
+
+    if (currentPartIndex === 0) {
+      return false
+    }
+
     if (currentQuestion.Type === 'matching') {
       return true
     }
@@ -264,6 +364,86 @@ const ReadingTest = () => {
 
     const answer = userAnswers[currentQuestion.ID] || {}
 
+    if (currentPartIndex === 4 && processedData.type === 'right-left') {
+      const contentLines = processedData.question.split('\n')
+      const paragraphs = []
+      let currentParagraph = ''
+
+      for (let i = 0; i < contentLines.length; i++) {
+        const line = contentLines[i]
+        if (line.startsWith('Paragraph')) {
+          const cleanedLine = line.replace(/^Paragraph\s*\d+\s*-\s*/, '').trim()
+          if (currentParagraph) {
+            paragraphs.push(currentParagraph)
+          }
+          currentParagraph = cleanedLine
+        } else if (line.trim() && currentParagraph !== '') {
+          currentParagraph += ' ' + line.trim()
+        }
+      }
+      if (currentParagraph) {
+        paragraphs.push(currentParagraph)
+      }
+      return (
+        <div className="mx-auto w-full max-w-4xl">
+          <div className="mt-4 flex flex-col gap-8">
+            {paragraphs.map((para, index) => (
+              <div key={index} className="mb-8">
+                <div className="mb-4">
+                  <Select
+                    onChange={value => handleAnswerSubmit({ ...answer, [`para-${index}`]: value })}
+                    value={answer?.[`para-${index}`] || ''}
+                    className="w-80"
+                    placeholder="Select a heading"
+                  >
+                    {processedData.rightItems.map(rightItem => (
+                      <Option key={rightItem} value={rightItem}>
+                        {rightItem}
+                      </Option>
+                    ))}
+                  </Select>
+                </div>
+                <div className="whitespace-pre-wrap text-base text-gray-800">{para}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )
+    }
+
+    if (currentPartIndex === 0 && processedData.type === 'paragraph') {
+      const cleanedQuestion = processedData.question.replace(/\s*\([^)]*\)/g, '')
+      return (
+        <div className="mx-auto w-full max-w-4xl">
+          <div className="whitespace-pre-wrap text-base text-gray-800">
+            {cleanedQuestion.split(/(\d+\.)/).map((part, index) => {
+              if (part.match(/^\d+\.$/)) {
+                const number = part.replace('.', '')
+                return (
+                  <React.Fragment key={index}>
+                    {part}
+                    <Select
+                      onChange={value => handleAnswerSubmit({ ...answer, [number]: value })}
+                      value={answer?.[number] || ''}
+                      className="mx-2 inline-block w-32"
+                      style={{ marginBottom: 10 }}
+                    >
+                      {processedData.answers[number]?.map(option => (
+                        <Option key={option} value={option}>
+                          {option}
+                        </Option>
+                      ))}
+                    </Select>
+                  </React.Fragment>
+                )
+              }
+              return <span key={index}>{part}</span>
+            })}
+          </div>
+        </div>
+      )
+    }
+
     if (processedData.type === 'right-left') {
       return (
         <div className="mx-auto w-full max-w-4xl">
@@ -294,10 +474,11 @@ const ReadingTest = () => {
     }
 
     if (processedData.type === 'paragraph') {
+      const cleanedQuestion = processedData.question.replace(/\s*\([^)]*\)/g, '')
       return (
         <div className="mx-auto w-full max-w-4xl">
           <div className="whitespace-pre-wrap text-base text-gray-800">
-            {processedData.question.split(/(\d+\.)/).map((part, index) => {
+            {cleanedQuestion.split(/(\d+\.)/).map((part, index) => {
               if (part.match(/^\d+\.$/)) {
                 const number = part.replace('.', '')
                 return (
@@ -307,6 +488,7 @@ const ReadingTest = () => {
                       onChange={value => handleAnswerSubmit({ ...answer, [number]: value })}
                       value={answer?.[number] || ''}
                       className="mx-2 inline-block w-32"
+                      style={{ marginBottom: 10 }}
                     >
                       {processedData.answers[number]?.map(option => (
                         <Option key={option} value={option}>
@@ -397,8 +579,10 @@ const ReadingTest = () => {
           </div>
         )
       }
-
       case 'matching': {
+        if (currentPartIndex === 4) {
+          return renderDropdownQuestion()
+        }
         return (
           <div className="mx-auto w-full max-w-4xl">
             <MatchingQuestion
@@ -417,6 +601,7 @@ const ReadingTest = () => {
               userAnswer={answer}
               setUserAnswer={handleAnswerSubmit}
               onSubmit={handleAnswerSubmit}
+              setUserAnswerSubmit={() => {}}
             />
           </div>
         )
@@ -427,7 +612,7 @@ const ReadingTest = () => {
   }
 
   return (
-    <div className="relative mx-auto min-h-screen max-w-4xl p-5 pb-32">
+    <div className="relative mx-auto min-h-screen w-full max-w-4xl p-5 pb-32">
       <Divider orientation="left">
         <Title level={1}>Reading</Title>
       </Divider>
@@ -435,11 +620,9 @@ const ReadingTest = () => {
         <div className="absolute right-4 top-4">
           <FlagButton key={`flag-button-${currentPartIndex}`} onFlag={handleFlagToggle} initialFlagged={isFlagged} />
         </div>
-
         <Title level={2} className="mb-6 text-3xl font-bold">
           {`Part ${currentPartIndex + 1}`}
         </Title>
-
         <div className="prose prose-lg mb-8 max-w-none">
           <Text className="block text-lg font-medium text-gray-700">
             {currentPart.Content.startsWith('Part')
@@ -452,7 +635,19 @@ const ReadingTest = () => {
 
         {shouldShowContent() && (
           <div className="prose prose-lg mb-8 whitespace-pre-wrap text-base text-gray-800">
-            {currentQuestion.Content}
+            {currentPartIndex === 3
+              ? currentQuestion.Content.split('\n').map((paragraph, index) => {
+                  const formattedParagraph = paragraph.replace(
+                    /([A-Z][a-z]+(?: [A-Z][a-z]+)*)(?=:)/g,
+                    '<strong>$1</strong>'
+                  )
+                  return (
+                    <div key={index} className="mb-4">
+                      <div dangerouslySetInnerHTML={{ __html: formattedParagraph }} />
+                    </div>
+                  )
+                })
+              : currentQuestion.Content}
           </div>
         )}
 

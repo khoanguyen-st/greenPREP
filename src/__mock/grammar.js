@@ -1,5 +1,5 @@
 export const GRAMMAR_DATA = {
-  title: 'Grammar Practice Test',
+  title: 'Grammar and Vocabulary ',
   testName: 'Aptis General Practice Test',
   section: 'Grammar',
   testStructure: {

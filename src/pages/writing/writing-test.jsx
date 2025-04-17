@@ -1,20 +1,16 @@
 import { fetchWritingTestDetails } from '@features/writing/api'
 import { DEFAULT_MAX_WORDS } from '@features/writing/constance'
-import { submitWritingTest } from '@features/writing/service'
+import { useSubmitWritingTest } from '@features/writing/hooks'
 import FooterNavigator from '@features/writing/ui/writing-footer-navigator'
 import QuestionForm from '@features/writing/ui/writing-question-form'
 import QuestionNavigatorContainer from '@features/writing/ui/writing-question-navigator-container'
 import { useQuery } from '@tanstack/react-query'
 import { Typography, Spin, Card, Divider } from 'antd'
 import { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 const { Title } = Typography
 
 const WritingTest = () => {
-  // @ts-ignore
-  const { userId } = useSelector(state => state.auth.user)
-  const navigate = useNavigate()
+  const { submitWritingTest } = useSubmitWritingTest()
   const { data, isLoading, isError } = useQuery({
     queryKey: ['writingQuestions'],
     queryFn: async () => {
@@ -74,7 +70,8 @@ const WritingTest = () => {
   }
 
   const handleSubmit = async () => {
-    await submitWritingTest({ data, userId, navigate })
+    // await submitWritingTest({ data, navigate })
+    await submitWritingTest(data)
   }
 
   if (isLoading) {

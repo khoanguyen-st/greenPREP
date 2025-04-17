@@ -30,11 +30,6 @@ const LoginPage = () => {
     }
   }
 
-  const isRoleAllowed = (roles = []) => {
-    const disallowedRoles = ['teacher', 'admin']
-    return !roles.some(role => disallowedRoles.includes(role.toLowerCase()))
-  }
-
   const onFinish = async values => {
     setLoading(true)
     setLoginError('')
@@ -53,24 +48,16 @@ const LoginPage = () => {
         const userData = getUserData(token)
 
         if (userData) {
-          const userRoles = userData?.role || []
-
-          if (!isRoleAllowed(userRoles)) {
-            setLoginError('Access denied: Your account is not permitted to login.')
-            localStorage.removeItem(ACCESS_TOKEN)
-            return
-          }
           dispatch(login(userData))
           setLoginSuccess('Login successful!')
-          navigate('/dashboard')
+          navigate('/')
         } else {
           setLoginError('Invalid token received')
         }
       } else {
         setLoginError('Login failed. Please try again.')
       }
-    } catch (error) {
-      console.error('Login error:', error)
+    } catch {
       setLoginError('Invalid email or password')
     } finally {
       setLoading(false)
@@ -187,7 +174,7 @@ const LoginPage = () => {
                 )}
               </div>
 
-              <div className="mb-2 flex justify-end sm:mb-4">
+              <div className="mb-0 flex justify-end sm:mb-0.5">
                 <Link to="/forgot-password" className="!text-sm !text-[#003087] hover:underline">
                   Forgot password?
                 </Link>
@@ -203,6 +190,15 @@ const LoginPage = () => {
                   Sign in
                 </Button>
               </Form.Item>
+
+              <div className="text-left">
+                <Text className="!text-sm !text-gray-500">
+                  Don&apos;t have an account?{' '}
+                  <Link to="/register" className="!text-[#003087] hover:underline">
+                    Sign up
+                  </Link>
+                </Text>
+              </div>
             </Form>
           </Space>
         </div>

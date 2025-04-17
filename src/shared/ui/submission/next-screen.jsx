@@ -40,7 +40,13 @@ const NextScreen = ({ nextPath, skillName, imageSrc }) => {
         </p>
       )}
 
-      {imageSrc && <img src={imageSrc} alt="nextquestion" className="absolute bottom-0 left-6 w-24 md:w-64 lg:w-64" />}
+      {imageSrc && (
+        <img
+          src={imageSrc}
+          alt="nextquestion"
+          className="md:w-[350px]lg:w-[350px] absolute bottom-0 left-6 w-[350px]"
+        />
+      )}
     </div>
   )
 }
