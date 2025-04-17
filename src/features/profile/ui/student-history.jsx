@@ -45,22 +45,15 @@ const StudentHistory = ({ userId }) => {
   const levels = [...new Set(sessionData.map(item => item.finalLevel).filter(Boolean))]
 
   const renderScore = (score, level) => {
-    const color = score >= 80 ? '#52c41a' : score >= 60 ? '#faad14' : '#ff4d4f'
+    const color = score <= 8 && level === 'X' ? '#ff4d4f' : score >= 8 ? '#000' : ''
     return (
-      <div>
-        <span style={{ color, fontWeight: 500, marginRight: 8 }}>{score ?? '-'}</span>
+      <div style={{ fontWeight: 500 }}>
+        <span style={{ color }}>{score ?? '-'}</span>
         {level && (
-          <span
-            style={{
-              padding: '2px 8px',
-              borderRadius: '12px',
-              backgroundColor: '#e6f7ff',
-              color: '#1890ff',
-              fontWeight: 500
-            }}
-          >
-            {level}
-          </span>
+          <>
+            <span style={{ margin: '0 6px', color: '#000' }}>|</span>
+            <span style={{ color, textTransform: 'uppercase' }}>{level}</span>
+          </>
         )}
       </div>
     )
@@ -130,8 +123,7 @@ const StudentHistory = ({ userId }) => {
       align: 'center',
       width: 100,
       render: score => {
-        const color = score >= 80 ? '#52c41a' : score >= 60 ? '#faad14' : '#ff4d4f'
-        return <span style={{ fontSize: '16px', fontWeight: 'bold', color }}>{score ?? '-'}</span>
+        return <span style={{ fontSize: '16px', fontWeight: '', color: '#000' }}>{score ?? '-'}</span>
       }
     },
     {
@@ -144,12 +136,10 @@ const StudentHistory = ({ userId }) => {
         level ? (
           <span
             style={{
-              padding: '4px 12px',
-              borderRadius: '16px',
-              backgroundColor: '#1890ff',
-              color: 'white',
+              color: level === 'X' ? 'red' : 'black',
+              textTransform: 'uppercase',
               fontWeight: 'bold',
-              fontSize: '14px'
+              fontSize: '16px'
             }}
           >
             {level}

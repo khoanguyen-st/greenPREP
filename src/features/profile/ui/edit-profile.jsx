@@ -95,6 +95,14 @@ const EditProfileModal = ({ open, onCancel, onSave, formData, setFormData }) => 
             placeholder="Enter phone number"
           />
         </Form.Item>
+        <Form.Item label="Address" name="address" hasFeedback>
+          <Input
+            value={formData.address}
+            onChange={e => setFormData({ ...formData, address: e.target.value })}
+            className="h-11 rounded-lg border-[#D1D5DB] bg-[#F9FAFB] px-3"
+            placeholder="Enter your address"
+          />
+        </Form.Item>
       </Form>
     </Modal>
   )
