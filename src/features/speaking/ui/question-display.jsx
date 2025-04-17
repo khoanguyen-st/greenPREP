@@ -10,7 +10,8 @@ const QuestionDisplay = ({
   showNavigation,
   isPart4,
   isUploading,
-  isButtonLoading
+  isButtonLoading,
+  buttonRef
 }) => {
   const [imageUrl, setImageUrl] = useState(null)
   const [audioUrl, setAudioUrl] = useState(null)
@@ -72,6 +73,20 @@ const QuestionDisplay = ({
   }
 
   const handleButtonClick = action => {
+    if (
+      buttonRef.current?.parentElement?.parentElement?.parentElement?.parentElement?.querySelector(
+        '[data-auto-submit-timer]'
+      )
+    ) {
+      const timerElement =
+        buttonRef.current.parentElement.parentElement.parentElement.parentElement.querySelector(
+          '[data-auto-submit-timer]'
+        )
+      if (timerElement) {
+        clearTimeout(Number(timerElement.dataset.autoSubmitTimer))
+      }
+    }
+
     setButtonClicked(true)
     if (isUploading) {
       pendingActionRef.current = action
@@ -152,6 +167,7 @@ const QuestionDisplay = ({
       {showNavigation && (
         <div className="mt-6 flex justify-end">
           <button
+            ref={buttonRef}
             onClick={() => handleButtonClick(isLastQuestion || isPart4 ? 'nextPart' : 'nextQuestion')}
             disabled={showLoading}
             className={`rounded-[6px] bg-[#003087] px-8 py-4 text-xl font-medium text-white transition-all hover:bg-[#002b6c] ${
