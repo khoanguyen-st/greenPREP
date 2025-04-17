@@ -33,7 +33,7 @@ const EnterSessionKey = () => {
   return (
     <Layout>
       <Content className="flex min-h-screen flex-col items-center justify-center gap-10 bg-white px-5 md:flex-row md:gap-40 md:px-20">
-        <div className="-translate-y-18 flex h-[250px] w-[250px] transform items-center justify-center object-cover sm:h-[300px] sm:w-[300px] md:h-[550px] md:w-[550px] md:-translate-y-12">
+        <div className="-translate-y-18 flex h-[250px] w-[250px] transform justify-center object-cover sm:h-[300px] sm:w-[300px] md:h-[550px] md:w-[550px] md:-translate-y-12">
           <Image src={sessionKeyImage} preview={false} />
         </div>
         <div className="mt-0 flex w-full flex-col items-center pr-0 md:mt-[-20%] md:w-[70%] md:items-start md:pr-5">
