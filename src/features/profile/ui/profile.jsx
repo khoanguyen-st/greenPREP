@@ -1,12 +1,12 @@
-import { LeftOutlined } from '@ant-design/icons'
+import { LeftOutlined, LogoutOutlined } from '@ant-design/icons'
 import { useChangeUserPassword, useUpdateUserProfile, useUserProfile } from '@features/profile/hooks/useProfile'
 import ChangePasswordModal from '@features/profile/ui/change-password-profile'
 import EditProfileModal from '@features/profile/ui/edit-profile'
 import { EMAIL_REG, PHONE_REG } from '@shared/lib/constants/reg'
 import SharedHeader from '@shared/ui/base-header'
-import { Avatar, Button, Card, message, Spin } from 'antd'
+import { Avatar, Button, Card, Menu, message, Spin } from 'antd'
 import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import * as Yup from 'yup'
 
@@ -23,11 +23,14 @@ const profileValidationSchema = Yup.object().shape({
 
 const Profile = () => {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   // @ts-ignore
   const auth = useSelector(state => state.auth)
   const { data: userData, isLoading, isError, refetch } = useUserProfile(auth.user?.userId)
+
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false)
+  const [selectedTab, setSelectedTab] = useState('edit')
   const updateProfileMutation = useUpdateUserProfile()
   const changePasswordMutation = useChangeUserPassword()
   const [formData, setFormData] = useState({
@@ -50,26 +53,9 @@ const Profile = () => {
     }
   }, [userData])
 
-  const handleEdit = () => {
-    setFormData({
-      firstName: userData.firstName || '',
-      lastName: userData.lastName || '',
-      email: userData.email || '',
-      phone: userData.phone || '',
-      address: userData.address || ''
-    })
-    setIsEditModalOpen(true)
-  }
-
-  const handleCancelEdit = () => {
-    setFormData({
-      firstName: userData.firstName || '',
-      lastName: userData.lastName || '',
-      email: userData.email || '',
-      phone: userData.phone || '',
-      address: userData.address || ''
-    })
-    setIsEditModalOpen(false)
+  const handleLogout = () => {
+    dispatch({ type: 'LOGOUT' })
+    navigate('/')
   }
 
   const handleSave = async () => {
@@ -78,6 +64,7 @@ const Profile = () => {
         message.error('Phone number must have 10 digits')
         return
       }
+
       await profileValidationSchema.validate(formData, { abortEarly: false })
 
       await updateProfileMutation.mutateAsync({
@@ -92,9 +79,7 @@ const Profile = () => {
       if (error.response) {
         message.error(error.response.data.message || 'Failed to update profile')
       } else if (error.inner) {
-        error.inner.forEach(err => {
-          message.error(err.message)
-        })
+        error.inner.forEach(err => message.error(err.message))
       } else {
         message.error('Failed to update profile')
       }
@@ -117,7 +102,6 @@ const Profile = () => {
   const openChangePassword = () => {
     setIsPasswordModalOpen(true)
   }
-
   return (
     <>
       <SharedHeader />
@@ -131,7 +115,7 @@ const Profile = () => {
               {userData?.lastName?.charAt(0)}
             </Avatar>
             <div className="flex-grow">
-              <h2 className="text-2xl font-semibold text-gray-800">
+              <h2 className="text-xl font-semibold">
                 {userData?.firstName} {userData?.lastName}
               </h2>
               <p className="text-gray-600">{userData?.email}</p>
@@ -145,38 +129,73 @@ const Profile = () => {
               >
                 Change Password
               </Button>
-              <Button type="default" size="large" onClick={handleEdit}>
+              <Button type="default" size="large" onClick={() => setIsEditModalOpen(true)}>
                 Edit
               </Button>
             </div>
           </div>
         </Card>
 
-        <Card className="overflow-hidden rounded-lg border border-gray-200 shadow-sm">
-          <div className="grid grid-cols-3 gap-8 md:grid-cols-3">
-            <div>
-              <p className="mb-1 text-gray-600">Phone number</p>
-              <p className="text-gray-500">{userData.phone}</p>
-            </div>
-            <div>
-              <p className="mb-1 text-gray-600">Student Code</p>
-              <p className="text-gray-500">{userData.studentCode || 'Not available'}</p>
-            </div>
-            <div>
-              <p className="mb-1 text-gray-600">Address</p>
-              <p className="text-gray-500">{userData.address || 'Not available'}</p>
-            </div>
+        <div className="flex flex-col gap-6 md:flex-row">
+          <div className="w-full rounded-xl md:w-1/6">
+            <Menu
+              mode="vertical"
+              selectedKeys={[selectedTab]}
+              onClick={({ key }) => setSelectedTab(key)}
+              items={[
+                { key: 'edit', label: 'Edit Profile' },
+                { key: 'history', label: 'Test History' },
+                {
+                  key: 'logout',
+                  label: (
+                    <span className="text-red-600">
+                      <LogoutOutlined className="mr-2" />
+                      Sign out
+                    </span>
+                  ),
+                  onClick: handleLogout
+                }
+              ]}
+            />
           </div>
-        </Card>
 
-        <EditProfileModal
-          open={isEditModalOpen}
-          onCancel={handleCancelEdit}
-          onSave={handleSave}
-          formData={formData}
-          setFormData={setFormData}
-        />
+          <div className="flex-1">
+            {selectedTab === 'edit' && (
+              <Card className="!border !border-gray-200 shadow-sm">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                  <div>
+                    <p className="text-gray-600">Phone Number:</p>
+                    <p>{userData.phone || 'Not available'}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600">Student Code:</p>
+                    <p>{userData.studentCode || 'Not available'}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600">Address:</p>
+                    <p>{userData.address || 'Not available'}</p>
+                  </div>
+                </div>
+              </Card>
+            )}
+
+            {selectedTab === 'history' && (
+              <Card className="">
+                <StudentHistory userId={auth.user?.userId} />
+              </Card>
+            )}
+          </div>
+        </div>
       </div>
+
+      <EditProfileModal
+        open={isEditModalOpen}
+        onCancel={() => setIsEditModalOpen(false)}
+        onSave={handleSave}
+        formData={formData}
+        setFormData={setFormData}
+      />
+
       <ChangePasswordModal
         open={isPasswordModalOpen}
         onCancel={() => setIsPasswordModalOpen(false)}
@@ -195,7 +214,6 @@ const Profile = () => {
           }
         }}
       />
-      <StudentHistory userId={auth.user?.userId} />
     </>
   )
 }

@@ -162,15 +162,12 @@ const StudentHistory = ({ userId }) => {
     <div
       style={{
         background: '#fff',
-        padding: '24px',
         borderRadius: '8px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+        boxShadow: '0 2px rgba(0,0,0,0.1)',
         overflowX: 'auto'
       }}
     >
       <h2 style={{ marginBottom: '24px', fontSize: '24px', fontWeight: 'bold' }}>Session History</h2>
-
-      {/* Filters - Responsive wrap */}
       <div
         style={{
           marginBottom: 24,
