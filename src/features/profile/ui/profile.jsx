@@ -4,7 +4,7 @@ import ChangePasswordModal from '@features/profile/ui/change-password-profile'
 import EditProfileModal from '@features/profile/ui/edit-profile'
 import { EMAIL_REG, PHONE_REG } from '@shared/lib/constants/reg'
 import SharedHeader from '@shared/ui/base-header'
-import { Avatar, Button, Card, Divider, message, Spin, Tag } from 'antd'
+import { Avatar, Button, Card, message, Spin } from 'antd'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -153,44 +153,7 @@ const Profile = () => {
         </Card>
 
         <Card className="overflow-hidden rounded-lg border border-gray-200 shadow-sm">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div>
-              <p className="mb-1 text-gray-600">Role</p>
-              <div className="flex flex-wrap gap-2">
-                {Array.isArray(userData?.roleIDs) && userData?.roleIDs?.length > 0 ? (
-                  userData.roleIDs.map((role, index) => (
-                    <p key={index} className="capitalize text-gray-500">
-                      {role}
-                    </p>
-                  ))
-                ) : (
-                  <Tag className="capitalize">{userData?.role || 'No role assigned'}</Tag>
-                )}
-              </div>
-            </div>
-            <div>
-              <p className="mb-1 text-gray-600">Classes</p>
-              {userData?.class ? (
-                Array.isArray(userData.class) ? (
-                  userData.class.length > 0 ? (
-                    userData.class.map((cls, index) => (
-                      <p key={index} className="text-gray-500">
-                        {cls}
-                      </p>
-                    ))
-                  ) : (
-                    <p className="text-gray-500">No classes assigned</p>
-                  )
-                ) : (
-                  <p className="text-gray-500">{userData.class}</p>
-                )
-              ) : (
-                <p className="text-gray-500">No classes assigned</p>
-              )}
-            </div>
-          </div>
-          <Divider className="my-6" />
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="grid grid-cols-3 gap-8 md:grid-cols-3">
             <div>
               <p className="mb-1 text-gray-600">Phone number</p>
               <p className="text-gray-500">{userData.phone}</p>
@@ -198,6 +161,10 @@ const Profile = () => {
             <div>
               <p className="mb-1 text-gray-600">Student Code</p>
               <p className="text-gray-500">{userData.studentCode || 'Not available'}</p>
+            </div>
+            <div>
+              <p className="mb-1 text-gray-600">Address</p>
+              <p className="text-gray-500">{userData.address || 'Not available'}</p>
             </div>
           </div>
         </Card>
