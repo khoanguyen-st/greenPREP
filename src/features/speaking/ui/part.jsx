@@ -225,7 +225,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
         <p className="mb-12 text-lg text-white/80">
           {phase === 'reading' ? 'Please read the question carefully' : 'Please speak clearly into your microphone'}
         </p>
-        <TimerDisplay countdown={countdown} phase={phase} />
+        <TimerDisplay countdown={countdown} phase={phase} content={data.Content} />
         {data.Content !== 'PART 4' && (
           <div className="mt-8 flex gap-2">
             <div className={`h-2 w-2 rounded-full ${currentQuestionIndex === 0 ? 'bg-white' : 'bg-white/30'}`} />
