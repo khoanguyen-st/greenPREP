@@ -1,5 +1,4 @@
-import { FlagOutlined, FlagFilled } from '@ant-design/icons'
-import { Form, Input, Typography, Button } from 'antd'
+import { Form, Input, Typography } from 'antd'
 
 const { Text, Title } = Typography
 
@@ -7,8 +6,6 @@ const QuestionForm = ({
   currentPart,
   partNumber,
   answers,
-  flaggedParts,
-  handleFlagToggle,
   handleTextChange,
   countWords,
   wordCounts,
@@ -31,20 +28,9 @@ const QuestionForm = ({
   return (
     <Form layout="vertical">
       <div className="mb-4 flex items-center justify-between">
-        <Title level={4} className="font-semibold">
-          {currentPart.Content}
+        <Title level={4} className="mr-4 text-justify">
+          {currentPart.Content.replace(/^Part\s*\d+:\s*/i, '')}
         </Title>
-        <Button
-          icon={flaggedParts[currentPart.ID] ? <FlagFilled className="text-red-600" /> : <FlagOutlined />}
-          className={`mx-auto flex h-10 items-center justify-center gap-2 rounded-md border px-4 transition-colors ${
-            flaggedParts[currentPart.ID]
-              ? 'border-red-300 bg-red-50 hover:border-red-400'
-              : 'border-gray-300 hover:border-gray-400'
-          }`}
-          onClick={() => handleFlagToggle(currentPart.ID)}
-        >
-          <span className={`text-base font-normal ${flaggedParts[currentPart.ID] ? 'text-red-600' : ''}`}>Flag</span>
-        </Button>
       </div>
 
       {currentPart.Questions.map((question, index) => {
@@ -56,7 +42,7 @@ const QuestionForm = ({
             : DEFAULT_MAX_WORDS[partNumber])
 
         return (
-          <Form.Item key={index} label={<Text strong>{question.Content}</Text>}>
+          <Form.Item key={index} label={<Text className="text-base">{question.Content.replace(/^\d+\.\s*/, '')}</Text>}>
             <Input.TextArea
               rows={5}
               autoSize={{ minRows: 5, maxRows: 10 }}
