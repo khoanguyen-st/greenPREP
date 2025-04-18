@@ -45,7 +45,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
     } else if (data.Content === 'PART 2' || data.Content === 'PART 3') {
       return { read: '00:05', answer: '00:45' }
     } else if (data.Content === 'PART 4') {
-      return { read: '01:00', answer: '02:00' }
+      return { read: '00:05', answer: '02:00' }
     }
     return timePairs[index] || timePairs[timePairs.length - 1] || { read: '00:05', answer: '00:30' }
   }
@@ -72,8 +72,8 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
     setShowIntro(true)
     setIsActive(false)
     setIsTimerRunning(false)
-    setPhase(data.Content === 'PART 4' ? 'preparing' : 'reading')
-    setCountdown(data.Content === 'PART 4' ? 5 : parseTime(getTimePair(0).read))
+    setPhase('reading')
+    setCountdown(parseTime(getTimePair(0).read))
     if (timerRef.current) {
       clearInterval(timerRef.current)
       timerRef.current = null
@@ -94,10 +94,17 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
         setCountdown(prev => {
           if (prev <= 1) {
             clearInterval(timerRef.current)
-            if (phase === 'preparing') {
-              setPhase('reading')
-              setCountdown(parseTime(currentTimePair.read))
-            } else if (phase === 'reading') {
+            if (phase === 'reading') {
+              if (data.Content === 'PART 4') {
+                setPhase('preparing')
+                setCountdown(60)
+              } else {
+                setPhase('answering')
+                setCountdown(parseTime(currentTimePair.answer))
+                setIsRecording(true)
+                startRecording()
+              }
+            } else if (phase === 'preparing') {
               setPhase('answering')
               setCountdown(parseTime(currentTimePair.answer))
               setIsRecording(true)
@@ -160,8 +167,8 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
     setShowIntro(false)
     setIsActive(true)
     setIsTimerRunning(true)
-    setPhase(data.Content === 'PART 4' ? 'preparing' : 'reading')
-    setCountdown(data.Content === 'PART 4' ? 5 : parseTime(getTimePair(0).read))
+    setPhase('reading')
+    setCountdown(parseTime(getTimePair(0).read))
   }
 
   if (showIntro) {
@@ -219,8 +226,8 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
     }
 
     setCurrentQuestionIndex(prev => prev + 1)
-    setPhase(data.Content === 'PART 4' ? 'preparing' : 'reading')
-    setCountdown(data.Content === 'PART 4' ? 5 : parseTime(getTimePair(currentQuestionIndex + 1).read))
+    setPhase('reading')
+    setCountdown(parseTime(getTimePair(currentQuestionIndex + 1).read))
     setIsActive(true)
     setIsTimerRunning(true)
     setHasUploaded(false)
