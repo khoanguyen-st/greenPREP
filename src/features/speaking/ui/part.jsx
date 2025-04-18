@@ -5,6 +5,7 @@ import {
   addQuestionAnswer,
   submitSpeakingAnswer
 } from '@features/speaking/api'
+import AudioVisualizer from '@features/speaking/ui/audio-visualizer'
 import PartIntro from '@features/speaking/ui/part-intro'
 import QuestionDisplay from '@features/speaking/ui/question-display'
 import TimerDisplay from '@features/speaking/ui/timer-display'
@@ -71,8 +72,8 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
     setShowIntro(true)
     setIsActive(false)
     setIsTimerRunning(false)
-    setPhase('reading')
-    setCountdown(parseTime(getTimePair(0).read))
+    setPhase(data.Content === 'PART 4' ? 'preparing' : 'reading')
+    setCountdown(data.Content === 'PART 4' ? 5 : parseTime(getTimePair(0).read))
     if (timerRef.current) {
       clearInterval(timerRef.current)
       timerRef.current = null
@@ -93,7 +94,10 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
         setCountdown(prev => {
           if (prev <= 1) {
             clearInterval(timerRef.current)
-            if (phase === 'reading') {
+            if (phase === 'preparing') {
+              setPhase('reading')
+              setCountdown(parseTime(currentTimePair.read))
+            } else if (phase === 'reading') {
               setPhase('answering')
               setCountdown(parseTime(currentTimePair.answer))
               setIsRecording(true)
@@ -156,8 +160,8 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
     setShowIntro(false)
     setIsActive(true)
     setIsTimerRunning(true)
-    setPhase('reading')
-    setCountdown(parseTime(getTimePair(0).read))
+    setPhase(data.Content === 'PART 4' ? 'preparing' : 'reading')
+    setCountdown(data.Content === 'PART 4' ? 5 : parseTime(getTimePair(0).read))
   }
 
   if (showIntro) {
@@ -215,8 +219,8 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
     }
 
     setCurrentQuestionIndex(prev => prev + 1)
-    setPhase('reading')
-    setCountdown(parseTime(getTimePair(currentQuestionIndex + 1).read))
+    setPhase(data.Content === 'PART 4' ? 'preparing' : 'reading')
+    setCountdown(data.Content === 'PART 4' ? 5 : parseTime(getTimePair(currentQuestionIndex + 1).read))
     setIsActive(true)
     setIsTimerRunning(true)
     setHasUploaded(false)
@@ -259,12 +263,23 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
       />
       <div className="flex h-screen w-1/3 flex-col items-center justify-center bg-gradient-to-br from-[#003087] via-[#002b6c] to-[#001f4d]">
         <h2 className="mb-4 text-4xl font-bold text-white">
-          {phase === 'reading' ? 'Reading Time' : 'Recording Time'}
+          {phase === 'preparing' ? 'Preparing Time' : phase === 'reading' ? 'Reading Time' : 'Recording Time'}
         </h2>
         <p className="mb-12 text-lg text-white/80">
-          {phase === 'reading' ? 'Please read the question carefully' : 'Please speak clearly into your microphone'}
+          {phase === 'preparing'
+            ? 'Get ready to read the question'
+            : phase === 'reading'
+              ? 'Please read the question carefully'
+              : 'Please speak clearly into your microphone'}
         </p>
-        <TimerDisplay countdown={countdown} phase={phase} content={data.Content} />
+
+        <div className="relative">
+          <TimerDisplay countdown={countdown} phase={phase} content={data.Content} />
+          {isRecording && streamRef && (
+            <AudioVisualizer isRecording={isRecording} stream={streamRef} diameter={264} phase={phase} />
+          )}
+        </div>
+
         {data.Content !== 'PART 4' && (
           <div className="mt-8 flex gap-2">
             <div className={`h-2 w-2 rounded-full ${currentQuestionIndex === 0 ? 'bg-white' : 'bg-white/30'}`} />

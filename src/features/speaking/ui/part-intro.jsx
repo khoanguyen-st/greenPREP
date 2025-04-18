@@ -51,15 +51,17 @@ const PartIntro = ({ data, onStartPart }) => {
       case 'PART 4':
         return {
           title: 'Part 4: Topic Discussion',
-          description: 'You will be asked to discuss a topic in detail.',
+          description: 'You will be asked to discuss a topic in detail with multiple questions.',
+          preparingTime: '05 seconds',
           readingTime: '60 seconds',
           answeringTime: '120 seconds',
-          totalQuestions: 3,
+          totalQuestions: 2,
           instructions: [
-            'You will be shown a topic',
-            'You have 60 seconds to read and prepare',
-            'You have 120 seconds to discuss the topic',
-            'Speak clearly and organize your thoughts',
+            'You will be shown a topic with multiple questions',
+            'You have 5 seconds to prepare before reading',
+            'You have 60 seconds to read and understand the questions',
+            'You have 120 seconds to answer all questions',
+            'Organize your thoughts and speak clearly',
             'Try to cover all aspects of the topic'
           ]
         }
@@ -86,18 +88,37 @@ const PartIntro = ({ data, onStartPart }) => {
         </div>
 
         <div className="mb-8 grid grid-cols-3 gap-6 rounded-xl border border-gray-200 bg-white p-6 shadow-[0_4px_12px_rgb(0,0,0,0.05)]">
-          <div className="text-center">
-            <div className="text-sm font-medium text-gray-500">Reading Time</div>
-            <div className="mt-2 text-2xl font-bold text-[#003087]">{info.readingTime}</div>
-          </div>
-          <div className="text-center">
-            <div className="text-sm font-medium text-gray-500">Answer Time</div>
-            <div className="mt-2 text-2xl font-bold text-[#003087]">{info.answeringTime}</div>
-          </div>
-          <div className="text-center">
-            <div className="text-sm font-medium text-gray-500">Total Questions</div>
-            <div className="mt-2 text-2xl font-bold text-[#003087]">{info.totalQuestions}</div>
-          </div>
+          {data.Content === 'PART 4' ? (
+            <>
+              <div className="text-center">
+                <div className="text-sm font-medium text-gray-500">Preparing Time</div>
+                <div className="mt-2 text-2xl font-bold text-[#003087]">{info.preparingTime}</div>
+              </div>
+              <div className="text-center">
+                <div className="text-sm font-medium text-gray-500">Reading Time</div>
+                <div className="mt-2 text-2xl font-bold text-[#003087]">{info.readingTime}</div>
+              </div>
+              <div className="text-center">
+                <div className="text-sm font-medium text-gray-500">Answer Time</div>
+                <div className="mt-2 text-2xl font-bold text-[#003087]">{info.answeringTime}</div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="text-center">
+                <div className="text-sm font-medium text-gray-500">Reading Time</div>
+                <div className="mt-2 text-2xl font-bold text-[#003087]">{info.readingTime}</div>
+              </div>
+              <div className="text-center">
+                <div className="text-sm font-medium text-gray-500">Answer Time</div>
+                <div className="mt-2 text-2xl font-bold text-[#003087]">{info.answeringTime}</div>
+              </div>
+              <div className="text-center">
+                <div className="text-sm font-medium text-gray-500">Total Questions</div>
+                <div className="mt-2 text-2xl font-bold text-[#003087]">{info.totalQuestions}</div>
+              </div>
+            </>
+          )}
         </div>
 
         <div className="mb-8">
