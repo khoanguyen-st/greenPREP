@@ -47,36 +47,38 @@ const QuestionForm = ({
         </Button>
       </div>
 
-      {currentPart.Questions.map((question, index) => {
-        const fieldName = `answer-${currentPart.ID}-${index}`
-        const maxWords =
-          question.maxWords ??
-          (Array.isArray(DEFAULT_MAX_WORDS[partNumber])
-            ? DEFAULT_MAX_WORDS[partNumber][index]
-            : DEFAULT_MAX_WORDS[partNumber])
+      {[...currentPart.Questions]
+        .sort((a, b) => a.Sequence - b.Sequence)
+        .map((question, index) => {
+          const fieldName = `answer-${currentPart.ID}-${index}`
+          const maxWords =
+            question.maxWords ??
+            (Array.isArray(DEFAULT_MAX_WORDS[partNumber])
+              ? DEFAULT_MAX_WORDS[partNumber][index]
+              : DEFAULT_MAX_WORDS[partNumber])
 
-        return (
-          <Form.Item key={index} label={<Text strong>{question.Content}</Text>}>
-            <Input.TextArea
-              rows={5}
-              autoSize={{ minRows: 5, maxRows: 10 }}
-              className="w-full"
-              placeholder="Enter your answer here"
-              value={answers[fieldName] || ''}
-              onChange={e => handleTextAreaChange(fieldName, e.target.value, maxWords)}
-              onKeyDown={e => handleKeyDown(e, fieldName, maxWords)}
-              disabled={maxWords && wordCounts[fieldName] > maxWords}
-            />
-            {maxWords && (
-              <Text
-                className={`mt-1 block text-sm ${wordCounts[fieldName] === maxWords ? 'text-red-500' : 'text-gray-500'}`}
-              >
-                {`Word count: ${wordCounts[fieldName] || 0} / ${maxWords}`}
-              </Text>
-            )}
-          </Form.Item>
-        )
-      })}
+          return (
+            <Form.Item key={index} label={<Text strong>{question.Content}</Text>}>
+              <Input.TextArea
+                rows={5}
+                autoSize={{ minRows: 5, maxRows: 10 }}
+                className="w-full"
+                placeholder="Enter your answer here"
+                value={answers[fieldName] || ''}
+                onChange={e => handleTextAreaChange(fieldName, e.target.value, maxWords)}
+                onKeyDown={e => handleKeyDown(e, fieldName, maxWords)}
+                disabled={maxWords && wordCounts[fieldName] > maxWords}
+              />
+              {maxWords && (
+                <Text
+                  className={`mt-1 block text-sm ${wordCounts[fieldName] === maxWords ? 'text-red-500' : 'text-gray-500'}`}
+                >
+                  {`Word count: ${wordCounts[fieldName] || 0} / ${maxWords}`}
+                </Text>
+              )}
+            </Form.Item>
+          )
+        })}
     </Form>
   )
 }
