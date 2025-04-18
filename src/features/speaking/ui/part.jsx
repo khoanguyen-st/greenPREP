@@ -37,7 +37,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
     return min * 60 + sec
   }
 
-  const questions = data.Questions || []
+  const questions = (data.Questions || []).sort((a, b) => a.Sequence - b.Sequence)
   const totalQuestions = questions.length
   const getTimePair = index => {
     if (data.Content === 'PART 1') {
