@@ -6,23 +6,23 @@ export const READING_DATA = {
     desc: 'This test has 4 parts, you will have 30 minutes to complete the test.',
     parts: [
       {
-        name: 'Part 1: Sentence Completions.',
+        name: 'Part 1: Sentence Completions. ',
         desc: 'In this part, you will read a sentence with a missing word. You will have to choose the best word to fill the gap from the options provided.'
       },
       {
-        name: 'Part 2: Multiple Choice.',
+        name: 'Part 2: Multiple Choice. ',
         desc: 'In this part, you will read a text and answer multiple choice questions.'
       },
       {
-        name: 'Part 3: Multiple Matching.',
+        name: 'Part 3: Multiple Matching. ',
         desc: 'In this part, you will read a text and match the questions to the correct answers.'
       },
       {
-        name: 'Part 4: Reading and Writing.',
+        name: 'Part 4: Reading and Writing. ',
         desc: 'In this part, you will read a text and write a short answer to a question.'
       },
       {
-        name: 'Part 5: Matching question.',
+        name: 'Part 5: Matching question. ',
         desc: 'In this part, you will read a paragraph and match the asnwer to the paragraph.'
       }
     ]
