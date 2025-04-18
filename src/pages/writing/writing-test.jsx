@@ -1,3 +1,4 @@
+import { FlagFilled, FlagOutlined } from '@ant-design/icons'
 import { fetchWritingTestDetails } from '@features/writing/api'
 import { DEFAULT_MAX_WORDS } from '@features/writing/constance'
 import { useSubmitWritingTest } from '@features/writing/hooks'
@@ -5,7 +6,7 @@ import FooterNavigator from '@features/writing/ui/writing-footer-navigator'
 import QuestionForm from '@features/writing/ui/writing-question-form'
 import QuestionNavigatorContainer from '@features/writing/ui/writing-question-navigator-container'
 import { useQuery } from '@tanstack/react-query'
-import { Typography, Spin, Card, Divider } from 'antd'
+import { Typography, Spin, Card, Divider, Button } from 'antd'
 import { useState, useEffect } from 'react'
 const { Title } = Typography
 
@@ -70,7 +71,6 @@ const WritingTest = () => {
   }
 
   const handleSubmit = async () => {
-    // await submitWritingTest({ data, navigate })
     await submitWritingTest(data)
   }
 
@@ -94,15 +94,27 @@ const WritingTest = () => {
       </Divider>
 
       <Card className="mb-32">
-        <Title level={3} className="text-l mb-5 font-semibold">
-          Question {currentPartIndex + 1} of {data.Parts.length}
-        </Title>
+        <div className="mb-4 flex w-full items-center justify-between">
+          <Title level={4} className="text-l mb-5 font-semibold">
+            Question {currentPartIndex + 1} of {data.Parts.length}
+          </Title>
+          <Button
+            icon={flaggedParts[currentPart.ID] ? <FlagFilled className="text-red-600" /> : <FlagOutlined />}
+            className={`h-10 items-center justify-center gap-2 rounded-md border px-4 transition-colors ${
+              flaggedParts[currentPart.ID]
+                ? 'border-red-300 bg-red-50 hover:border-red-400'
+                : 'border-gray-300 hover:border-gray-400'
+            }`}
+            onClick={() => handleFlagToggle(currentPart.ID)}
+          >
+            <span className={`text-base font-normal ${flaggedParts[currentPart.ID] ? 'text-red-600' : ''}`}>Flag</span>
+          </Button>
+        </div>
+
         <QuestionForm
           currentPart={currentPart}
           partNumber={partNumber}
           answers={answers}
-          flaggedParts={flaggedParts}
-          handleFlagToggle={handleFlagToggle}
           handleTextChange={handleTextChange}
           countWords={countWords}
           wordCounts={wordCounts}
