@@ -42,10 +42,19 @@ const QuestionForm = ({
             : DEFAULT_MAX_WORDS[partNumber])
 
         return (
-          <Form.Item key={index} label={<Text className="text-base">{question.Content.replace(/^\d+\.\s*/, '')}</Text>}>
+          <Form.Item
+            key={index}
+            label={
+              <Text className="text-base">
+                {question.Content.replace(/^\d+\.\s*/, '')
+                  .replace(/\(\d+\s*points?\)/i, '')
+                  .trim()}
+              </Text>
+            }
+          >
             <Input.TextArea
-              rows={5}
-              autoSize={{ minRows: 5, maxRows: 10 }}
+              rows={partNumber === 1 ? 3 : 5}
+              autoSize={partNumber === 1 ? { minRows: 3, maxRows: 6 } : { minRows: 5, maxRows: 10 }}
               className="w-full"
               placeholder="Enter your answer here"
               value={answers[fieldName] || ''}
