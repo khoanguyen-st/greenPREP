@@ -1,5 +1,5 @@
 export const READING_DATA = {
-  title: 'Reading Test',
+  title: 'Reading',
   testName: 'Aptis General Test',
   section: 'Reading',
   testStructure: {
