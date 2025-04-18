@@ -396,11 +396,14 @@ const ReadingTest = () => {
                     className="w-80"
                     placeholder="Select a heading"
                   >
-                    {processedData.rightItems.map(rightItem => (
-                      <Option key={rightItem} value={rightItem}>
-                        {rightItem}
-                      </Option>
-                    ))}
+                    {processedData.rightItems.map(rightItem => {
+                      const displayText = rightItem.replace(/^[A-Z]\. /, '')
+                      return (
+                        <Option key={rightItem} value={rightItem}>
+                          {displayText}
+                        </Option>
+                      )
+                    })}
                   </Select>
                 </div>
                 <div className="whitespace-pre-wrap text-base text-gray-800">{para}</div>
@@ -428,11 +431,14 @@ const ReadingTest = () => {
                       className="mx-2 inline-block w-32"
                       style={{ marginBottom: 10 }}
                     >
-                      {processedData.answers[number]?.map(option => (
-                        <Option key={option} value={option}>
-                          {option}
-                        </Option>
-                      ))}
+                      {processedData.answers[number]?.map(option => {
+                        const displayText = option.replace(/^[A-Z]\. /, '')
+                        return (
+                          <Option key={option} value={option}>
+                            {displayText}
+                          </Option>
+                        )
+                      })}
                     </Select>
                   </React.Fragment>
                 )
@@ -459,11 +465,14 @@ const ReadingTest = () => {
                     value={answer?.[leftItem] || ''}
                     className="w-full"
                   >
-                    {processedData.rightItems.map(rightItem => (
-                      <Option key={rightItem} value={rightItem}>
-                        {rightItem}
-                      </Option>
-                    ))}
+                    {processedData.rightItems.map(rightItem => {
+                      const displayText = rightItem.replace(/^[A-Z]\. /, '')
+                      return (
+                        <Option key={rightItem} value={rightItem}>
+                          {displayText}
+                        </Option>
+                      )
+                    })}
                   </Select>
                 </div>
               </div>
@@ -490,11 +499,14 @@ const ReadingTest = () => {
                       className="mx-2 inline-block w-32"
                       style={{ marginBottom: 10 }}
                     >
-                      {processedData.answers[number]?.map(option => (
-                        <Option key={option} value={option}>
-                          {option}
-                        </Option>
-                      ))}
+                      {processedData.answers[number]?.map(option => {
+                        const displayText = option.replace(/^[A-Z]\. /, '')
+                        return (
+                          <Option key={option} value={option}>
+                            {displayText}
+                          </Option>
+                        )
+                      })}
                     </Select>
                   </React.Fragment>
                 )
