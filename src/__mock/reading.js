@@ -1,5 +1,5 @@
 export const READING_DATA = {
-  title: 'Reading Practice Test',
+  title: 'Reading Test',
   testName: 'Aptis General Test',
   section: 'Reading',
   testStructure: {
@@ -20,6 +20,10 @@ export const READING_DATA = {
       {
         name: 'Part 4: Reading and Writing',
         desc: 'In this part, you will read a text and write a short answer to a question.'
+      },
+      {
+        name: 'Part 5: Matching question',
+        desc: 'In this part, you will read a paragraph and match the asnwer to the paragraph.'
       }
     ]
   },

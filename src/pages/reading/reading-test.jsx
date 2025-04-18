@@ -406,7 +406,7 @@ const ReadingTest = () => {
                     })}
                   </Select>
                 </div>
-                <div className="whitespace-pre-wrap text-base text-gray-800">{para}</div>
+                <div className="whitespace-pre-wrap text-justify text-lg text-gray-800">{para}</div>
               </div>
             ))}
           </div>
@@ -418,7 +418,7 @@ const ReadingTest = () => {
       const cleanedQuestion = processedData.question.replace(/\s*\([^)]*\)/g, '')
       return (
         <div className="mx-auto w-full max-w-4xl">
-          <div className="whitespace-pre-wrap text-base text-gray-800">
+          <div className="whitespace-pre-wrap text-lg text-gray-800">
             {cleanedQuestion.split(/(\d+\.)/).map((part, index) => {
               if (part.match(/^\d+\.$/)) {
                 const number = part.replace('.', '')
@@ -457,7 +457,7 @@ const ReadingTest = () => {
             {processedData.leftItems.map((leftItem, index) => (
               <div key={index} className="mb-4 flex w-full items-center gap-4">
                 <div className="min-w-[300px] flex-shrink-0">
-                  <span className="text-sm font-medium">{leftItem}</span>
+                  <span className="text-base font-medium">{leftItem}</span>
                 </div>
                 <div className="flex-1">
                   <Select
@@ -486,7 +486,7 @@ const ReadingTest = () => {
       const cleanedQuestion = processedData.question.replace(/\s*\([^)]*\)/g, '')
       return (
         <div className="mx-auto w-full max-w-4xl">
-          <div className="whitespace-pre-wrap text-base text-gray-800">
+          <div className="whitespace-pre-wrap text-lg text-gray-800">
             {cleanedQuestion.split(/(\d+\.)/).map((part, index) => {
               if (part.match(/^\d+\.$/)) {
                 const number = part.replace('.', '')
@@ -636,7 +636,7 @@ const ReadingTest = () => {
           {`Part ${currentPartIndex + 1}`}
         </Title>
         <div className="prose prose-lg mb-8 max-w-none">
-          <Text className="block text-lg font-medium text-gray-700">
+          <Text className="mb-2 block text-xl font-semibold text-gray-800">
             {currentPart.Content.startsWith('Part')
               ? currentPart.Content.includes(':')
                 ? currentPart.Content.split(':')[1].trim()
@@ -646,7 +646,7 @@ const ReadingTest = () => {
         </div>
 
         {shouldShowContent() && (
-          <div className="prose prose-lg mb-8 whitespace-pre-wrap text-base text-gray-800">
+          <div className="prose prose-lg mb-8 whitespace-pre-wrap text-lg text-gray-800">
             {currentPartIndex === 3
               ? currentQuestion.Content.split('\n').map((paragraph, index) => {
                   const formattedParagraph = paragraph.replace(
