@@ -50,9 +50,9 @@ const TimerDisplay = ({ countdown, phase, content }) => {
 
   const getMaxTime = () => {
     if (phase === 'preparing') {
-      return 5
+      return content === 'PART 4' ? 60 : 0
     } else if (phase === 'reading') {
-      return content === 'PART 4' ? 60 : 5
+      return 5
     } else {
       if (content === 'PART 1') {
         return 30

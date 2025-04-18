@@ -113,13 +113,28 @@ const AudioVisualizer = ({ isRecording, stream, diameter = 300, phase }) => {
     ctx.beginPath()
 
     let firstX, firstY
+    let previousAmplitude = 0
+
+    let total = 0
+    for (let i = 0; i < dataArray.length; i++) {
+      total += dataArray[i]
+    }
+    const average = total / dataArray.length
 
     for (let i = 0; i < segments; i++) {
       const dataIndex = (i + dataOffset) % (dataArray.length / 2)
-      const value = dataArray[dataIndex] / 255.0
 
-      const amplitude = Math.min(value * 15, 15)
-      const currentRadius = radius + amplitude
+      const baseValue = average / 255.0
+      const pointValue = dataArray[dataIndex] / 255.0
+
+      const combinedValue = baseValue * 0.5 + pointValue * 0.5
+
+      const amplitude = Math.min(combinedValue * 40, 40)
+
+      const smoothedAmplitude = (amplitude + previousAmplitude) / 2
+      previousAmplitude = amplitude
+
+      const currentRadius = radius + smoothedAmplitude
 
       const angle = i * step
       const x = centerX + Math.cos(angle) * currentRadius
