@@ -355,21 +355,8 @@ const ListeningTest = () => {
       return []
     }
 
-    const sortedParts = [...testData.Parts].sort((a, b) => {
-      if (a.Sequence !== undefined && b.Sequence !== undefined) {
-        return a.Sequence - b.Sequence
-      }
-      if (a.Sequence !== undefined) {
-        return -1
-      }
-      if (b.Sequence !== undefined) {
-        return 1
-      }
-      return 0
-    })
-
     const groups = {}
-    sortedParts.forEach(part => {
+    testData.Parts.forEach(part => {
       const sortedQuestions = [...part.Questions].sort((a, b) => {
         if (a.Sequence !== undefined && b.Sequence !== undefined) {
           return a.Sequence - b.Sequence
@@ -388,7 +375,7 @@ const ListeningTest = () => {
           groups[question.AudioKeys] = {
             audioUrl: question.AudioKeys,
             questions: [],
-            partIndex: sortedParts.indexOf(part)
+            partIndex: testData.Parts.indexOf(part)
           }
         }
         groups[question.AudioKeys].questions.push(question)
