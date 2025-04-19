@@ -49,7 +49,7 @@ const QuestionForm = ({
             label={
               <Text className="text-base !font-medium">
                 {question.Content.replace(/^\d+\.\s*/, '')
-                  .replace(/\(\d+\s*points?\)/i, '')
+                  .replace(/\(\d+(\.\d+)?\s*points?\)/i, '')
                   .trim()}
               </Text>
             }
