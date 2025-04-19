@@ -8,6 +8,8 @@ import { Layout } from 'antd'
 import { useSelector } from 'react-redux'
 import { Outlet, createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 
+import { GuestOnlyRoute } from '../routes/GuestOnlyRoute'
+
 const ProtectedRoute = ({ children }) => {
   const isAuth = useSelector(state => state.auth.isAuth)
   return isAuth ? children : <Navigate to="/login" replace />
@@ -17,11 +19,19 @@ const router = createBrowserRouter(
   [
     {
       path: '/login',
-      element: <LoginPage />
+      element: (
+        <GuestOnlyRoute>
+          <LoginPage />
+        </GuestOnlyRoute>
+      )
     },
     {
       path: '/forgot-password',
-      element: <ForgotPassword />
+      element: (
+        <GuestOnlyRoute>
+          <ForgotPassword />
+        </GuestOnlyRoute>
+      )
     },
     {
       path: '/reset-password',
