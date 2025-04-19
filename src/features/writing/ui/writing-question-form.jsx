@@ -29,7 +29,9 @@ const QuestionForm = ({
     <Form layout="vertical">
       <div className="mb-4 flex items-center justify-between">
         <Title level={4} className="text-justify">
-          {currentPart.Content.replace(/^Part\s*\d+:\s*/i, '')}
+          {currentPart.Content.replace(/^Part\s*\d+:\s*/i, '')
+            .replace(/\(\d+(\.\d+)?\s*points?\)/i, '')
+            .trim()}
         </Title>
       </div>
 
@@ -45,7 +47,7 @@ const QuestionForm = ({
           <Form.Item
             key={index}
             label={
-              <Text className="text-base font-medium">
+              <Text className="text-base !font-medium">
                 {question.Content.replace(/^\d+\.\s*/, '')
                   .replace(/\(\d+\s*points?\)/i, '')
                   .trim()}
