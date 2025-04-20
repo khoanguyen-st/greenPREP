@@ -1,9 +1,15 @@
 import RegisterPage from '@pages/register-page'
 
+import { GuestOnlyRoute } from './GuestOnlyRoute'
+
 const PublicRoute = [
   {
     path: 'register',
-    element: <RegisterPage />
+    element: (
+      <GuestOnlyRoute>
+        <RegisterPage />
+      </GuestOnlyRoute>
+    )
   }
 ]
 
