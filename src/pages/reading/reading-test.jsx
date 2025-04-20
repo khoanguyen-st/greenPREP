@@ -280,7 +280,8 @@ const ReadingTest = () => {
   }
 
   const currentPart = testData.Parts[currentPartIndex]
-  const currentQuestion = currentPart.Questions[currentQuestionIndex]
+  const sortedQuestions = (currentPart.Questions || []).sort((a, b) => a.Sequence - b.Sequence)
+  const currentQuestion = sortedQuestions[currentQuestionIndex]
   const isLastPart = currentPartIndex === testData.Parts.length - 1
 
   const shouldShowContent = () => {
