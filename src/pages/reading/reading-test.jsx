@@ -608,10 +608,25 @@ const ReadingTest = () => {
         <div className="prose prose-lg mb-8 max-w-none">
           <Text className="mb-2 block text-xl font-semibold text-gray-800">
             {currentPart.Content.startsWith('Part')
-              ? currentPart.Content.includes(':')
-                ? currentPart.Content.split(':')[1].trim()
-                : currentPart.Content.split('-').slice(1).join(' ').trim()
-              : currentPart.Content}
+              ? (currentPart.Content.includes(':')
+                  ? currentPart.Content.split(':')[1]
+                  : currentPart.Content.split('-').slice(1).join(' ')
+                )
+                  .trim()
+                  .split('\n')
+                  .map((line, idx) => (
+                    <span key={idx}>
+                      {line}
+                      <br />
+                    </span>
+                  ))
+              : currentPart.Content.split('\n').map((line, idx) => (
+                  <span key={idx}>
+                    {line}
+                    <br />
+                    <br />
+                  </span>
+                ))}
           </Text>
         </div>
 
