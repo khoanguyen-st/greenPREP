@@ -1,5 +1,5 @@
 export const LISTENING_DATA = {
-  title: 'Listening Practice Test',
+  title: 'Listening',
   testName: 'Aptis General Practice Test',
   section: 'Listening',
   testStructure: {
