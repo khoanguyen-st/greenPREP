@@ -1,25 +1,25 @@
 export const SPEAKING_DATA = {
-  title: 'Speaking Practice Test',
-  testName: 'Aptis General Practice Test',
+  title: 'Speaking',
+  testName: 'Aptis General',
   section: 'speaking',
   testStructure: {
     desc: 'This test has 4 parts, you will have 12 minutes to complete the test.',
     parts: [
       {
         name: 'Part 1: Personal Information',
-        desc: ''
+        desc: 'You will be asked to answer questions about yourself and your experiences.'
       },
       {
-        name: 'Part 2: Picture Description & Personal Experience',
-        desc: ''
+        name: 'Part 2: Picture Description',
+        desc: 'You will be shown a picture and asked to describe it in detail.'
       },
       {
-        name: 'Part 3: Comparative Description & Discussion',
-        desc: ''
+        name: 'Part 3: Picture Discussion',
+        desc: 'You will be shown a picture and asked to answer related questions.'
       },
       {
-        name: 'Part 4: Extended Response',
-        desc: ''
+        name: 'Part 4: Topic Discussion',
+        desc: 'You will be asked to discuss a topic in detail with multiple questions.'
       }
     ]
   },

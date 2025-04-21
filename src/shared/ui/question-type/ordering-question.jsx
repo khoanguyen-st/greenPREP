@@ -172,7 +172,7 @@ const OrderingQuestion = ({ options = [], className = '', userAnswer = [], setUs
                 onDrop={e => handleDrop(e, index)}
                 className="flex h-20 items-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-4 transition-all duration-300 hover:border-[rgb(0,48,135)]"
               >
-                <div className="mr-4 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-[rgb(0,48,135)] text-base font-semibold text-white shadow-md">
+                <div className="mr-4 flex h-8 w-8 flex-shrink-0 select-none items-center justify-center rounded-lg bg-[rgb(0,48,135)] text-base font-semibold text-white shadow-md">
                   {index + 1}
                 </div>
                 {placedItem ? (
@@ -186,7 +186,7 @@ const OrderingQuestion = ({ options = [], className = '', userAnswer = [], setUs
                   </div>
                 ) : (
                   <div
-                    className={`flex-grow text-base ${
+                    className={`flex-grow select-none text-base ${
                       selectedItem ? 'cursor-pointer text-slate-600 hover:bg-slate-100' : 'text-slate-400'
                     } flex h-full items-center`}
                     onClick={() => {
@@ -228,7 +228,7 @@ const OrderingQuestion = ({ options = [], className = '', userAnswer = [], setUs
                   </div>
                 ))
             ) : (
-              <div className="flex h-24 items-center justify-center rounded-lg border-2 border-dashed border-slate-200 bg-slate-50">
+              <div className="flex h-24 select-none items-center justify-center rounded-lg border-2 border-dashed border-slate-200 bg-slate-50">
                 <div className="flex flex-col items-center gap-2 text-slate-400">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

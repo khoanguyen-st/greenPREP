@@ -5,7 +5,7 @@ import { Button, message, Spin, Typography } from 'antd'
 import { useEffect, useState } from 'react'
 import { AiOutlineCheckCircle } from 'react-icons/ai'
 import { useSelector } from 'react-redux'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 // Create memoized selector
 const selectUser = createSelector([state => state.auth?.user], user => ({
@@ -58,6 +58,7 @@ const SubmissionPage = () => {
           message.success('Test submitted and confirmation email sent successfully!')
           localStorage.removeItem('pendingEmailSubmission')
           localStorage.removeItem('globalData')
+          localStorage.removeItem('key')
         } catch (error) {
           console.error('Failed to send email:', error)
           // Show a more user-friendly message
@@ -92,6 +93,8 @@ const SubmissionPage = () => {
 
   const handleNavigation = async () => {
     try {
+      const keysToRemove = ['key', 'globalData']
+      keysToRemove.forEach(key => localStorage.removeItem(key))
       navigate('/')
     } catch (err) {
       setError(err.message)

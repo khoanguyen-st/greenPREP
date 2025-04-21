@@ -6,8 +6,8 @@ import { Image } from 'antd'
 const FooterNavigator = ({ totalParts, currentPart, setCurrentPart, handleSubmit, isLastPart = false }) => {
   return (
     <>
-      <div className="fixed bottom-8 left-4 z-20 hidden w-fit mdL:block">
-        <Image src={navigateLogo} alt="Logo" preview={false} className="h-[100px] w-auto" />
+      <div className="fixed bottom-8 left-4 z-20 hidden w-fit select-none mdL:block">
+        <Image src={navigateLogo} alt="Logo" preview={false} className="h-[100px] w-auto" draggable="false" />
       </div>
 
       <div className="fixed bottom-0 left-0 w-full shadow-md">

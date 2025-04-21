@@ -100,7 +100,7 @@ const PartIntro = ({ data, onStartPart }) => {
               </div>
 
               <div className="text-center">
-                <div className="text-sm font-medium text-gray-500">Answer Time</div>
+                <div className="text-sm font-medium text-gray-500">Recording Time</div>
                 <div className="mt-2 text-2xl font-bold text-[#003087]">{info.answeringTime}</div>
               </div>
             </>
@@ -111,7 +111,7 @@ const PartIntro = ({ data, onStartPart }) => {
                 <div className="mt-2 text-2xl font-bold text-[#003087]">{info.readingTime}</div>
               </div>
               <div className="text-center">
-                <div className="text-sm font-medium text-gray-500">Answer Time</div>
+                <div className="text-sm font-medium text-gray-500">Recording Time</div>
                 <div className="mt-2 text-2xl font-bold text-[#003087]">{info.answeringTime}</div>
               </div>
               <div className="text-center">
