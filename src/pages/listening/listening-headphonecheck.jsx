@@ -71,12 +71,12 @@ const HeadphoneCheck = () => {
     <div className="flex flex-col items-center justify-center pt-0 md:pt-32">
       <div className="mx-auto h-full max-w-3xl px-4 py-12">
         <div className="mb-8 text-left">
-          <Typography.Title>This is checking headphone Page</Typography.Title>
+          <Typography.Title>This is the headphone checking page</Typography.Title>
           <Typography.Title level={3}>
-            Please checking your headphone carefully by using the play button below
+            Please check your headphone carefully using the play button below
           </Typography.Title>
           <Typography.Title level={3}>
-            If the sound is too loud or too small, using the slider below to adjust the sound
+            If the sound is too loud or too small, use the slider below to adjust the sound
           </Typography.Title>
           <h4 className="font-medium text-gray-800">
             Headphone Check <span className="text-red-500">*</span>
@@ -104,7 +104,7 @@ const HeadphoneCheck = () => {
 
         <div className="text-center">
           <Typography.Text>
-            After adjust the level of the sound, click the start button to start the text
+            After adjusting the level of the sound, click the start button to start the test
           </Typography.Text>
           <Button
             onClick={handleNext}
