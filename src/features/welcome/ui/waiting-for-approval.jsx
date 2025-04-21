@@ -1,7 +1,8 @@
+// @ts-nocheck
 import { WaitingGif } from '@assets/images'
 import { useGetStudentSessionRequest } from '@features/welcome/hooks'
 import SharedHeader from '@shared/ui/base-header'
-import { Image, Layout, Typography } from 'antd'
+import { Image, Layout, message, Typography } from 'antd'
 import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -10,10 +11,12 @@ const WaitingForApproval = () => {
   const { Title, Text } = Typography
   const navigate = useNavigate()
   const { userId, sessionId, requestId } = useParams()
-
-  const { data, isLoading } = useGetStudentSessionRequest({ sessionId, userId, requestId })
+  const { data, isLoading, isError, error } = useGetStudentSessionRequest({ sessionId, userId, requestId })
 
   useEffect(() => {
+    if (isError) {
+      message.error(error.message)
+    }
     if (!isLoading && data) {
       const sessionRequest = data?.data?.sessionRequest
 

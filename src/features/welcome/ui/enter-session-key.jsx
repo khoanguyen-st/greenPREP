@@ -2,6 +2,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { sessionKey as sessionKeyImage } from '@assets/images'
 import { useJoinSession } from '@features/welcome/hooks'
 import { Button, Form, Image, Input, Layout, message, Typography } from 'antd'
+import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
@@ -21,7 +22,7 @@ const EnterSessionKey = () => {
       try {
         const res = await joinSession.mutateAsync({ sessionKey, userId })
         const { ID: requestId, SessionID: sessionId, UserID: userIdFromRes } = res.data
-
+        localStorage.setItem('key', JSON.stringify({ requestId, sessionId, userIdFromRes }))
         message.success('Session joined successfully!')
         navigate(`/waiting-for-approval/${userIdFromRes}/${sessionId}/${requestId}`)
       } catch (error) {
@@ -29,6 +30,16 @@ const EnterSessionKey = () => {
       }
     }
   }
+
+  useEffect(() => {
+    if (localStorage.getItem('globalData')) {
+      navigate('/introduction')
+    }
+    if (JSON.parse(localStorage.getItem('key'))) {
+      const key = JSON.parse(localStorage.getItem('key'))
+      navigate(`/waiting-for-approval/${key.userIdFromRes}/${key.sessionId}/${key.requestId}`)
+    }
+  }, [])
 
   return (
     <Layout>
