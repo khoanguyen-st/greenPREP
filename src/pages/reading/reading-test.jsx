@@ -284,37 +284,6 @@ const ReadingTest = () => {
   const currentQuestion = sortedQuestions[currentQuestionIndex]
   const isLastPart = currentPartIndex === testData.Parts.length - 1
 
-  const shouldShowContent = () => {
-    if (currentPartIndex === 4 && (currentQuestion.Type === 'matching' || currentQuestion.Type === 'dropdown-list')) {
-      return false
-    }
-
-    if (currentPartIndex === 0) {
-      return false
-    }
-
-    if (currentQuestion.Type === 'matching') {
-      return true
-    }
-
-    if (currentQuestion.Type === 'dropdown-list') {
-      const answerContent =
-        typeof currentQuestion.AnswerContent === 'string'
-          ? JSON.parse(currentQuestion.AnswerContent)
-          : currentQuestion.AnswerContent
-
-      if (answerContent.leftItems && answerContent.rightItems) {
-        return true
-      }
-
-      if (answerContent.options) {
-        return false
-      }
-    }
-
-    return true
-  }
-
   const renderDropdownQuestion = () => {
     const processedData = (() => {
       try {
@@ -634,7 +603,7 @@ const ReadingTest = () => {
           <FlagButton key={`flag-button-${currentPartIndex}`} onFlag={handleFlagToggle} initialFlagged={isFlagged} />
         </div>
         <Title level={2} className="mb-6 text-3xl font-bold">
-          {`Part ${currentPartIndex + 1}`}
+          {`Question ${currentPartIndex + 1} of 5`}
         </Title>
         <div className="prose prose-lg mb-8 max-w-none">
           <Text className="mb-2 block text-xl font-semibold text-gray-800">
@@ -645,24 +614,6 @@ const ReadingTest = () => {
               : currentPart.Content}
           </Text>
         </div>
-
-        {shouldShowContent() && (
-          <div className="prose prose-lg mb-8 whitespace-pre-wrap text-lg text-gray-800">
-            {currentPartIndex === 3
-              ? currentQuestion.Content.split('\n').map((paragraph, index) => {
-                  const formattedParagraph = paragraph.replace(
-                    /([A-Z][a-z]+(?: [A-Z][a-z]+)*)(?=:)/g,
-                    '<strong>$1</strong>'
-                  )
-                  return (
-                    <div key={index} className="mb-4">
-                      <div dangerouslySetInnerHTML={{ __html: formattedParagraph }} />
-                    </div>
-                  )
-                })
-              : currentQuestion.Content}
-          </div>
-        )}
 
         <div className="prose prose-lg flex max-w-none flex-col gap-4">{renderQuestion()}</div>
       </Card>
