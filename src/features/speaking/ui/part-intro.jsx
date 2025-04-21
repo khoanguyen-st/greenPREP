@@ -52,15 +52,15 @@ const PartIntro = ({ data, onStartPart }) => {
         return {
           title: 'Part 4: Topic Discussion',
           description: 'You will be asked to discuss a topic in detail with multiple questions.',
-          preparingTime: '1 minute',
+          preparingTime: '60 seconds',
           readingTime: '05 seconds',
-          answeringTime: '2 minutes',
+          answeringTime: '120 seconds',
           totalQuestions: 3,
           instructions: [
             'You will be shown a topic with multiple questions',
             'You have 5 seconds to read the questions',
-            'You have 1 minute to prepare your answer',
-            'You have 2 minutes to answer all questions',
+            'You have 60 seconds to prepare your answer',
+            'You have 120 seconds to answer all questions',
             'Organize your thoughts and speak clearly',
             'Try to cover all aspects of the topic'
           ]
