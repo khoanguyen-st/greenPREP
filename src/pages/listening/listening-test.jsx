@@ -137,8 +137,7 @@ const ListeningTest = () => {
         setFormattedAnswers(formattedAnswers)
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [testData])
+  }, [testData, getGlobalData])
 
   useEffect(() => {
     const dropdownListQuestions = Object.entries(userAnswers).filter(([id, answer]) => {
@@ -843,9 +842,10 @@ const ListeningTest = () => {
         userAnswers={userAnswers}
         flaggedQuestions={flaggedQuestions}
       >
-        <Typography.Title level={4} className="mb-4">
-          {currentGroup?.questions[0]?.Part?.Content}
-        </Typography.Title>
+        {currentGroup?.questions[0]?.Type === 'listening-questions-group' && (
+          <Typography.Title level={5}>{currentGroup.questions[0].Content}</Typography.Title>
+        )}
+
         {currentGroup && (
           <PlayStopButton
             audioUrl={currentGroup.audioUrl}
@@ -853,6 +853,7 @@ const ListeningTest = () => {
             onPlayingChange={setIsAudioPlaying}
           />
         )}
+
         {currentGroup?.questions.map(question => {
           const formattedQ = formatQuestionData(question)
           const qType = formattedQ?.Type || question.Type
@@ -864,9 +865,6 @@ const ListeningTest = () => {
 
             return (
               <div key={question.ID} className="mt-6">
-                <Typography.Title level={4} className="mb-6">
-                  {question.Content}
-                </Typography.Title>
                 {formattedQ.map(subQuestion => (
                   <div key={subQuestion.ID} className="mb-8">
                     <MultipleChoice
