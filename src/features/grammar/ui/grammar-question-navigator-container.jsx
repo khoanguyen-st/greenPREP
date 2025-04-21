@@ -20,7 +20,7 @@ const QuestionNavigatorContainer = ({
       <PopupSubmission isOpen={isPopupOpen} type="timeout" onSubmit={handleSubmit} />
       <div>
         <Button
-          className="fixed bottom-[50%] right-5 rounded-full bg-blue-500 p-2 text-white shadow-lg md:hidden"
+          className="fixed bottom-[50%] right-5 z-20 rounded-full bg-blue-500 p-2 text-white shadow-lg md:hidden"
           onClick={() => setIsNavigatorOpen(!isNavigatorOpen)}
         >
           <MenuOutlined />

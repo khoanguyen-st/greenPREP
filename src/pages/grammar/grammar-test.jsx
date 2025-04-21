@@ -9,13 +9,11 @@ import NextScreen from '@shared/ui/submission/next-screen'
 import { useQuery } from '@tanstack/react-query'
 import { Card, Divider, Spin, Typography } from 'antd'
 import { useEffect, useState, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 const { Title } = Typography
-
 const GrammarTest = () => {
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const navigate = useNavigate()
+
   const { data, isLoading, isError } = useQuery({
     queryKey: ['grammarQuestions'],
     queryFn: async () => {
@@ -45,10 +43,10 @@ const GrammarTest = () => {
     localStorage.setItem('flaggedQuestions', JSON.stringify(updatedFlags))
   }
 
-  const handleSubmit = async () => {
-    await submitGrammarTest({ data, answers, navigate })
+  const handleSubmit = useCallback(async () => {
+    await submitGrammarTest({ data, answers })
     setIsSubmitted(true)
-  }
+  }, [data, answers])
 
   const handleForceSubmit = useCallback(() => {
     handleSubmit()
