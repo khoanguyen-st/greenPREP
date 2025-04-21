@@ -32,15 +32,17 @@ const MultipleChoice = ({ questionData, userAnswer, setUserAnswer, onSubmit, cla
       [questionData.ID]: optionValue
     }))
 
-    const newAnswerSubmit = {
-      questionId: questionData.ID,
-      answerText: optionValue,
-      answerAudio: null
+    if (setUserAnswerSubmit) {
+      const newAnswerSubmit = {
+        questionId: questionData.ID,
+        answerText: optionValue,
+        answerAudio: null
+      }
+      setUserAnswerSubmit(prev => ({
+        ...prev,
+        [questionData.ID]: newAnswerSubmit
+      }))
     }
-    setUserAnswerSubmit(prev => ({
-      ...prev,
-      [questionData.ID]: newAnswerSubmit
-    }))
 
     onSubmit?.(optionValue)
   }

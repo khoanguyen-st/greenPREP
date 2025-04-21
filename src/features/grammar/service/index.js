@@ -18,33 +18,32 @@ export const submitGrammarTest = async ({ data, answers, navigate }) => {
       return
     }
 
-    const questionsArray = Object.entries(answers)
-      .map(([questionId, answer]) => {
-        const question = data.Parts.flatMap(part => part.Questions).find(q => q.ID === questionId)
-        if (!question) {
-          return null
-        }
+    const allQuestions = data.Parts.flatMap(part => part.Questions || [])
 
-        let answerText = null
-        if (typeof answer === 'string') {
+    const questionsArray = allQuestions.map(question => {
+      const questionId = question.ID
+      const answerKey = Object.keys(answers).find(key => key === questionId || key === `answer-${questionId}`)
+      const answer = answerKey ? answers[answerKey] : null
+
+      let answerText = null
+      if (typeof answer === 'string') {
+        answerText = answer
+      } else if (Array.isArray(answer)) {
+        if (answer[0]?.left !== undefined) {
           answerText = answer
-        } else if (Array.isArray(answer)) {
-          if (answer[0]?.left !== undefined) {
-            answerText = answer
-          } else if (answer[0]?.key !== undefined) {
-            answerText = answer
-          } else if (answer[0]?.ID !== undefined) {
-            answerText = answer
-          }
+        } else if (answer[0]?.key !== undefined) {
+          answerText = answer
+        } else if (answer[0]?.ID !== undefined) {
+          answerText = answer
         }
+      }
 
-        return {
-          questionId,
-          answerText,
-          answerAudio: null
-        }
-      })
-      .filter(Boolean)
+      return {
+        questionId,
+        answerText,
+        answerAudio: null
+      }
+    })
 
     const payload = {
       studentId,
