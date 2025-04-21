@@ -58,6 +58,7 @@ const SubmissionPage = () => {
           message.success('Test submitted and confirmation email sent successfully!')
           localStorage.removeItem('pendingEmailSubmission')
           localStorage.removeItem('globalData')
+          localStorage.removeItem('key')
         } catch (error) {
           console.error('Failed to send email:', error)
           // Show a more user-friendly message

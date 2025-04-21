@@ -31,7 +31,7 @@ const EnterSessionKey = () => {
         const res = await joinSession.mutateAsync({ sessionKey, userId })
         const { ID: requestId, SessionID: sessionId, UserID: userIdFromRes } = res.data
         localStorage.setItem('key', JSON.stringify({ requestId, sessionId, userIdFromRes }))
-        message.success('Session joined successfully!')
+        message.success('Your request has been submitted successfully!')
         navigate(`/waiting-for-approval/${userIdFromRes}/${sessionId}/${requestId}`)
       } catch (error) {
         message.error(error?.response?.data || 'Failed to join session. Please try again.')
