@@ -369,7 +369,7 @@ const ReadingTest = () => {
 
     const answer = userAnswers[currentQuestion.ID] || {}
 
-    if (currentPartIndex === 2 && processedData.type === 'right-left') {
+    if (currentQuestion.Type === 'matching' && processedData.type === 'right-left') {
       const contentLines = processedData.question.split('\n')
       const paragraphs = []
       let currentParagraph = ''
