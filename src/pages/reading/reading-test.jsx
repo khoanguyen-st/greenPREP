@@ -9,7 +9,7 @@ import OrderingQuestion from '@shared/ui/question-type/ordering-question'
 import NextScreen from '@shared/ui/submission/next-screen'
 import { useQuery } from '@tanstack/react-query'
 import { Spin, Alert, Typography, Card, Select, Divider } from 'antd'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 
 const { Option } = Select
 const { Title, Text } = Typography
@@ -258,7 +258,16 @@ const ReadingTest = () => {
       console.error('Error submitting answers:', error)
     }
   }
+  const handleForceSubmit = useCallback(() => {
+    handleSubmit()
+  }, [handleSubmit])
 
+  useEffect(() => {
+    window.addEventListener('forceSubmit', handleForceSubmit)
+    return () => {
+      window.removeEventListener('forceSubmit', handleForceSubmit)
+    }
+  }, [handleForceSubmit])
   if (isSubmitted) {
     return <NextScreen nextPath="/writing" skillName="Reading" imageSrc={ReadingSubmission} />
   }

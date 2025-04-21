@@ -18,30 +18,32 @@ const useAntiCheat = () => {
 
     const handleFullScreenChange = () => {
       if (!document.fullscreenElement) {
-        triggerAlert('⚠️ You exited full-screen mode! Return within 10 seconds, or your test will be submitted.')
+        triggerAlert('⚠️ You exited full-screen mode! Return within 15 seconds, or your test will be submitted.')
       }
     }
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        triggerAlert('⚠️ You switched away from the test! Your test may be submitted if this happens again.')
+        triggerAlert('⚠️ You switched away from the test! Return within 15 seconds, or your test will be submitted.')
       }
     }
 
     const handleWindowBlur = () => {
-      triggerAlert('⚠️ You left the test window! Switching again will result in automatic test submission.')
+      triggerAlert('⚠️ You left the test window! Return within 15 seconds, or your test will be submitted.')
     }
 
     const handleRestrictedActions = e => {
       if ((e.ctrlKey || e.metaKey) && ['c', 'v'].includes(e.key.toLowerCase())) {
         e.preventDefault()
-        triggerAlert(`⚠️ ${e.key.toUpperCase()} is strictly prohibited! Repeated violations will end your test.`)
+        triggerAlert(
+          `⚠️ ${e.key.toUpperCase()} is strictly prohibited! Return within 15 seconds, or your test will be submitted.`
+        )
       }
     }
 
     const blockContextMenu = e => {
       e.preventDefault()
-      triggerAlert('⚠️ Right-clicking is disabled! Further violations will result in automatic test submission.')
+      triggerAlert('⚠️ Right-clicking is disabled! Return within 15 seconds, or your test will be submitted.')
     }
 
     document.addEventListener('fullscreenchange', handleFullScreenChange)
