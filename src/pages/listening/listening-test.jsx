@@ -137,6 +137,7 @@ const ListeningTest = () => {
         setFormattedAnswers(formattedAnswers)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [testData])
 
   useEffect(() => {

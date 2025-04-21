@@ -3,26 +3,66 @@ import { memo, useEffect, useState } from 'react'
 import formatTime from '../../utils/useCountdownTimer'
 
 const TimeRemaining = ({ duration, label = 'Time remaining', onAutoSubmit }) => {
-  const [timeLeft, setTimeLeft] = useState(duration)
+  const storageKey = 'timeRemainingData'
+
+  const [timeLeft, setTimeLeft] = useState(() => {
+    const savedData = localStorage.getItem(storageKey)
+    if (savedData) {
+      const { remainingTime, timestamp, originalDuration } = JSON.parse(savedData)
+
+      const elapsedSeconds = Math.floor((Date.now() - timestamp) / 1000)
+      const calculatedTimeLeft = Math.max(remainingTime - elapsedSeconds, 0)
+
+      if (originalDuration !== duration || calculatedTimeLeft <= 0) {
+        return duration
+      }
+
+      return calculatedTimeLeft
+    }
+    return duration
+  })
 
   useEffect(() => {
-    setTimeLeft(duration)
-  }, [duration])
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify({
+        remainingTime: timeLeft,
+        timestamp: Date.now(),
+        originalDuration: duration
+      })
+    )
 
-  useEffect(() => {
     if (timeLeft <= 0) {
       onAutoSubmit?.()
       return
     }
 
     const timer = setInterval(() => {
-      setTimeLeft(prev => Math.max(prev - 1, 0))
+      setTimeLeft(prev => {
+        const newValue = Math.max(prev - 1, 0)
+        localStorage.setItem(
+          storageKey,
+          JSON.stringify({
+            remainingTime: newValue,
+            timestamp: Date.now(),
+            originalDuration: duration
+          })
+        )
+        return newValue
+      })
     }, 1000)
 
     // eslint-disable-next-line consistent-return
     return () => clearInterval(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeLeft])
+
+  useEffect(() => {
+    if (duration) {
+      localStorage.removeItem(storageKey)
+      setTimeLeft(duration)
+    }
+  }, [duration])
 
   const percentage = ((timeLeft / duration) * 100).toFixed(2)
 

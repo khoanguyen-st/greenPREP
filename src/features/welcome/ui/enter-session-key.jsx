@@ -20,6 +20,14 @@ const EnterSessionKey = () => {
     const { sessionKey } = values
     if (userId) {
       try {
+        const accessToken = localStorage.getItem('access_token')
+
+        localStorage.clear()
+
+        if (accessToken) {
+          localStorage.setItem('access_token', accessToken)
+        }
+
         const res = await joinSession.mutateAsync({ sessionKey, userId })
         const { ID: requestId, SessionID: sessionId, UserID: userIdFromRes } = res.data
         localStorage.setItem('key', JSON.stringify({ requestId, sessionId, userIdFromRes }))
