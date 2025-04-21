@@ -350,38 +350,62 @@ const ListeningTest = () => {
     }
   }, [userAnswers, testData])
 
+  const navigatorQuestions = useMemo(() => {
+    if (!testData?.Parts) {
+      return []
+    }
+
+    const allQuestions = []
+    testData.Parts.forEach((part, partIndex) => {
+      part.Questions.forEach(question => {
+        allQuestions.push({
+          partIndex,
+          question,
+          sequence: question.Sequence || 999
+        })
+      })
+    })
+
+    allQuestions.sort((a, b) => a.sequence - b.sequence)
+
+    return allQuestions.map(({ partIndex, question }) => ({
+      partIndex,
+      questionIndex: 0,
+      question
+    }))
+  }, [testData?.Parts])
+
   const groupedQuestions = useMemo(() => {
     if (!testData?.Parts) {
       return []
     }
 
-    const groups = {}
-    testData.Parts.forEach(part => {
-      const sortedQuestions = [...part.Questions].sort((a, b) => {
-        if (a.Sequence !== undefined && b.Sequence !== undefined) {
-          return a.Sequence - b.Sequence
-        }
-        if (a.Sequence !== undefined) {
-          return -1
-        }
-        if (b.Sequence !== undefined) {
-          return 1
-        }
-        return 0
-      })
-
-      sortedQuestions.forEach(question => {
-        if (!groups[question.AudioKeys]) {
-          groups[question.AudioKeys] = {
+    const audioGroups = {}
+    testData.Parts.forEach((part, partIndex) => {
+      part.Questions.forEach(question => {
+        if (!audioGroups[question.AudioKeys]) {
+          audioGroups[question.AudioKeys] = {
             audioUrl: question.AudioKeys,
             questions: [],
-            partIndex: testData.Parts.indexOf(part)
+            partIndex
           }
         }
-        groups[question.AudioKeys].questions.push(question)
+        audioGroups[question.AudioKeys].questions.push({
+          ...question,
+          sequence: question.Sequence || 999
+        })
       })
     })
-    return Object.values(groups)
+
+    Object.values(audioGroups).forEach(group => {
+      group.questions.sort((a, b) => a.sequence - b.sequence)
+    })
+
+    return Object.values(audioGroups).sort((a, b) => {
+      const aFirstSeq = a.questions[0]?.sequence || 999
+      const bFirstSeq = b.questions[0]?.sequence || 999
+      return aFirstSeq - bFirstSeq
+    })
   }, [testData])
 
   const getTotalQuestions = () => {
@@ -786,22 +810,6 @@ const ListeningTest = () => {
       return null
     }
   }
-
-  const navigatorQuestions = useMemo(() => {
-    if (!testData?.Parts) {
-      return []
-    }
-
-    const questions = []
-    groupedQuestions.forEach(group => {
-      questions.push({
-        partIndex: group.partIndex,
-        questionIndex: 0,
-        question: group.questions[0]
-      })
-    })
-    return questions
-  }, [groupedQuestions, testData?.Parts])
 
   if (isSubmitted) {
     return <NextScreen nextPath="/grammar" skillName="Listening" imageSrc={ListeningSubmission} />
