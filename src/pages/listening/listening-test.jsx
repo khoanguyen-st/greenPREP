@@ -137,7 +137,7 @@ const ListeningTest = () => {
         setFormattedAnswers(formattedAnswers)
       }
     }
-  }, [testData])
+  }, [testData, getGlobalData])
 
   useEffect(() => {
     const dropdownListQuestions = Object.entries(userAnswers).filter(([id, answer]) => {
@@ -357,7 +357,20 @@ const ListeningTest = () => {
 
     const groups = {}
     testData.Parts.forEach(part => {
-      part.Questions.forEach(question => {
+      const sortedQuestions = [...part.Questions].sort((a, b) => {
+        if (a.Sequence !== undefined && b.Sequence !== undefined) {
+          return a.Sequence - b.Sequence
+        }
+        if (a.Sequence !== undefined) {
+          return -1
+        }
+        if (b.Sequence !== undefined) {
+          return 1
+        }
+        return 0
+      })
+
+      sortedQuestions.forEach(question => {
         if (!groups[question.AudioKeys]) {
           groups[question.AudioKeys] = {
             audioUrl: question.AudioKeys,
@@ -829,9 +842,10 @@ const ListeningTest = () => {
         userAnswers={userAnswers}
         flaggedQuestions={flaggedQuestions}
       >
-        <Typography.Title level={4} className="mb-4">
-          {currentGroup?.questions[0]?.Part?.Content}
-        </Typography.Title>
+        {currentGroup?.questions[0]?.Type === 'listening-questions-group' && (
+          <Typography.Title level={5}>{currentGroup.questions[0].Content}</Typography.Title>
+        )}
+
         {currentGroup && (
           <PlayStopButton
             audioUrl={currentGroup.audioUrl}
@@ -839,6 +853,7 @@ const ListeningTest = () => {
             onPlayingChange={setIsAudioPlaying}
           />
         )}
+
         {currentGroup?.questions.map(question => {
           const formattedQ = formatQuestionData(question)
           const qType = formattedQ?.Type || question.Type
@@ -850,9 +865,6 @@ const ListeningTest = () => {
 
             return (
               <div key={question.ID} className="mt-6">
-                <Typography.Title level={4} className="mb-6">
-                  {question.Content}
-                </Typography.Title>
                 {formattedQ.map(subQuestion => (
                   <div key={subQuestion.ID} className="mb-8">
                     <MultipleChoice

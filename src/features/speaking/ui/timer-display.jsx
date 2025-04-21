@@ -7,6 +7,15 @@ const TimerDisplay = ({ countdown, phase, content }) => {
 
   const getPhaseColor = () => {
     switch (phase) {
+      case 'preparing':
+        return {
+          bg: 'bg-white',
+          text: 'text-yellow-500',
+          border: 'border-yellow-500',
+          glow: 'shadow-[0_0_30px_rgba(234,179,8,0.1)]',
+          progress: '#EAB308',
+          progressBg: '#ddd'
+        }
       case 'reading':
         return {
           bg: 'bg-white',
@@ -40,8 +49,10 @@ const TimerDisplay = ({ countdown, phase, content }) => {
   const colors = getPhaseColor()
 
   const getMaxTime = () => {
-    if (phase === 'reading') {
-      return content === 'PART 4' ? 60 : 5
+    if (phase === 'preparing') {
+      return content === 'PART 4' ? 60 : 0
+    } else if (phase === 'reading') {
+      return 5
     } else {
       if (content === 'PART 1') {
         return 30
@@ -56,10 +67,24 @@ const TimerDisplay = ({ countdown, phase, content }) => {
   const maxTime = getMaxTime()
   const progress = (countdown / maxTime) * 100
 
+  const getPhaseText = () => {
+    switch (phase) {
+      case 'preparing':
+        return 'Preparing Time'
+      case 'reading':
+        return 'Reading Time'
+      case 'answering':
+        return 'Recording Time'
+      default:
+        return 'Time'
+    }
+  }
+
   return (
-    <div className="relative">
+    <div className="relative z-0">
       <div
         className={`relative flex h-64 w-64 items-center justify-center rounded-full border-2 ${colors.border} ${colors.bg} ${colors.glow}`}
+        style={{ zIndex: 1 }}
       >
         <style>
           {`
@@ -112,9 +137,7 @@ const TimerDisplay = ({ countdown, phase, content }) => {
           <div className="flex items-baseline justify-center">
             <span className={`text-6xl font-bold ${colors.text}`}>{formatTime(countdown)}</span>
           </div>
-          <p className={`mt-4 text-lg font-medium ${colors.text}`}>
-            {phase === 'reading' ? 'Reading Time' : 'Recording Time'}
-          </p>
+          <p className={`mt-4 text-lg font-medium ${colors.text}`}>{getPhaseText()}</p>
         </div>
       </div>
     </div>

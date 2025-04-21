@@ -37,7 +37,7 @@ const LoginPage = () => {
 
     try {
       const response = await axiosInstance.post('/users/login', {
-        email: values.email,
+        email: values.email.toLowerCase(),
         password: values.password
       })
 

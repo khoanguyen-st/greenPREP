@@ -12,8 +12,12 @@ export const joinSession = async ({ sessionKey, userId }) => {
   }
 }
 export const getStudentSessionRequest = async ({ sessionId, userId, requestId }) => {
-  const res = await axiosInstance.get(`/session-requests/${sessionId}/student/${userId}`, {
-    params: { requestId }
-  })
-  return res.data
+  try {
+    const res = await axiosInstance.get(`/session-requests/${sessionId}/student/${userId}`, {
+      params: { requestId }
+    })
+    return res.data
+  } catch (error) {
+    throw new Error(error.response.data.error)
+  }
 }
