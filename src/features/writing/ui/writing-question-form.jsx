@@ -28,7 +28,7 @@ const QuestionForm = ({
   return (
     <Form layout="vertical">
       <div className="mb-4 flex items-center justify-between">
-        <Title level={4} className="text-justify">
+        <Title level={5} className="text-justify">
           {currentPart.Content.replace(/^Part\s*\d+:\s*/i, '')
             .replace(/\(\d+(\.\d+)?\s*points?\)/i, '')
             .trim()}
@@ -46,10 +46,19 @@ const QuestionForm = ({
               : DEFAULT_MAX_WORDS[partNumber])
 
           return (
-            <Form.Item key={index} label={<Text strong>{question.Content}</Text>}>
+            <Form.Item
+              key={index}
+              label={
+                <Text className="text-base">
+                  {question.Content.replace(/^\d+\.\s*/, '')
+                    .replace(/\(\d+(\.\d+)?\s*points?\)/i, '')
+                    .trim()}
+                </Text>
+              }
+            >
               <Input.TextArea
-                rows={5}
-                autoSize={{ minRows: 5, maxRows: 10 }}
+                rows={partNumber === 1 ? 2 : 5}
+                autoSize={partNumber === 1 ? { minRows: 3, maxRows: 6 } : { minRows: 5, maxRows: 10 }}
                 className="w-full"
                 placeholder="Enter your answer here"
                 value={answers[fieldName] || ''}
