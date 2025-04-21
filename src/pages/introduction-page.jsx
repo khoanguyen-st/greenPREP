@@ -1,4 +1,5 @@
 import SharedHeader from '@shared/ui/base-header'
+import useAntiCheat from '@shared/utils/antiCheat'
 import { Layout, Button, Typography, Card } from 'antd'
 import { useNavigate } from 'react-router-dom'
 
@@ -8,7 +9,10 @@ const { Title } = Typography
 const IntroductionPage = () => {
   const navigate = useNavigate()
 
-  const handleNext = () => {
+  const { enableFullScreen } = useAntiCheat()
+
+  const handleNext = async () => {
+    await enableFullScreen()
     navigate('/speaking')
   }
 

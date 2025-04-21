@@ -3,6 +3,7 @@ import { useAudioPlayback } from '@shared/lib/hooks/useAudioPlayback'
 import { useAudioRecording } from '@shared/lib/hooks/useAudioRecording'
 import { useMicrophoneAccess } from '@shared/lib/hooks/useMicrophoneAccess'
 import AudioVisual from '@shared/ui/audio-visual'
+import useAntiCheat from '@shared/utils/antiCheat'
 import { Button } from 'antd'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -25,7 +26,7 @@ const MicrophoneCheck = () => {
   const navigate = useNavigate()
   const [showStartScreen, setShowStartScreen] = useState(true)
   const microphoneStatus = useMicrophoneAccess()
-
+  const { enableFullScreen } = useAntiCheat()
   const { isRecording, audioBlob, countdown, startRecording, setAudioBlob } = useAudioRecording()
 
   const { isPlaying, playRecording, audioPlayerRef } = useAudioPlayback(audioBlob)
@@ -56,7 +57,10 @@ const MicrophoneCheck = () => {
       </div>
     )
   }, [isPlaying])
-
+  const handleStart = useCallback(async () => {
+    await enableFullScreen()
+    navigate('/speaking/test/1')
+  }, [enableFullScreen])
   const renderContent = useCallback(() => {
     if (showStartScreen) {
       return (
@@ -114,12 +118,7 @@ const MicrophoneCheck = () => {
               <Button size="large" onClick={resetTest}>
                 Try Again
               </Button>
-              <Button
-                type="primary"
-                size="large"
-                onClick={() => navigate('/speaking/test/1')}
-                className="bg-[#003087] hover:!bg-[#002b6c]"
-              >
+              <Button type="primary" size="large" onClick={handleStart} className="bg-[#003087] hover:!bg-[#002b6c]">
                 Start Test
               </Button>
             </div>
@@ -150,7 +149,8 @@ const MicrophoneCheck = () => {
     playRecording,
     resetTest,
     navigate,
-    playButtonIcon
+    playButtonIcon,
+    handleStart
   ])
 
   return (

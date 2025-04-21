@@ -8,7 +8,7 @@ import FlagButton from '@shared/ui/flag-button'
 import NextScreen from '@shared/ui/submission/next-screen'
 import { useQuery } from '@tanstack/react-query'
 import { Card, Divider, Spin, Typography } from 'antd'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const { Title } = Typography
@@ -50,6 +50,16 @@ const GrammarTest = () => {
     setIsSubmitted(true)
   }
 
+  const handleForceSubmit = useCallback(() => {
+    handleSubmit()
+  }, [handleSubmit])
+
+  useEffect(() => {
+    window.addEventListener('forceSubmit', handleForceSubmit)
+    return () => {
+      window.removeEventListener('forceSubmit', handleForceSubmit)
+    }
+  }, [handleForceSubmit])
   useEffect(() => {
     if (answers && Object.keys(answers).length > 0) {
       localStorage.setItem('grammarAnswers', JSON.stringify(answers))

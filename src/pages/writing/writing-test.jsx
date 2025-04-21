@@ -7,7 +7,7 @@ import QuestionForm from '@features/writing/ui/writing-question-form'
 import QuestionNavigatorContainer from '@features/writing/ui/writing-question-navigator-container'
 import { useQuery } from '@tanstack/react-query'
 import { Typography, Spin, Card, Divider, Button } from 'antd'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 const { Title } = Typography
 
 const WritingTest = () => {
@@ -73,7 +73,16 @@ const WritingTest = () => {
   const handleSubmit = async () => {
     await submitWritingTest(data)
   }
+  const handleForceSubmit = useCallback(() => {
+    handleSubmit()
+  }, [handleSubmit])
 
+  useEffect(() => {
+    window.addEventListener('forceSubmit', handleForceSubmit)
+    return () => {
+      window.removeEventListener('forceSubmit', handleForceSubmit)
+    }
+  }, [handleForceSubmit])
   if (isLoading) {
     return <Spin className="flex h-screen items-center justify-center" />
   }

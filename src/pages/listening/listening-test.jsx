@@ -9,7 +9,7 @@ import MultipleChoice from '@shared/ui/question-type/multiple-choice'
 import NextScreen from '@shared/ui/submission/next-screen'
 import { useQuery } from '@tanstack/react-query'
 import { Spin, Alert, Typography, Modal } from 'antd'
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 
 const STORAGE_KEY = 'listening_test_answers'
 
@@ -676,7 +676,16 @@ const ListeningTest = () => {
   const handleSubmit = () => {
     handleSubmitAnswers(false)
   }
+  const handleForceSubmit = useCallback(() => {
+    handleSubmitAnswers()
+  }, [handleSubmitAnswers])
 
+  useEffect(() => {
+    window.addEventListener('forceSubmit', handleForceSubmit)
+    return () => {
+      window.removeEventListener('forceSubmit', handleForceSubmit)
+    }
+  }, [handleForceSubmit])
   const handleAutoSubmit = () => {
     handleSubmitAnswers(true)
   }
