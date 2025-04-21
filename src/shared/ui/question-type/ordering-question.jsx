@@ -172,7 +172,7 @@ const OrderingQuestion = ({ options = [], className = '', userAnswer = [], setUs
                 onDrop={e => handleDrop(e, index)}
                 className="flex h-20 items-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-4 transition-all duration-300 hover:border-[rgb(0,48,135)]"
               >
-                <div className="mr-4 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-[rgb(0,48,135)] text-base font-semibold text-white shadow-md">
+                <div className="mr-4 flex h-8 w-8 flex-shrink-0 select-none items-center justify-center rounded-lg bg-[rgb(0,48,135)] text-base font-semibold text-white shadow-md">
                   {index + 1}
                 </div>
                 {placedItem ? (
@@ -180,7 +180,7 @@ const OrderingQuestion = ({ options = [], className = '', userAnswer = [], setUs
                     draggable
                     onDragStart={e => handleDragStart(e, items.indexOf(placedItem))}
                     onDragEnd={handleDragEnd}
-                    className="cursor-grab text-base font-medium text-slate-800 active:cursor-grabbing"
+                    className="cursor-grab select-none text-base font-medium text-slate-800 active:cursor-grabbing"
                   >
                     {placedItem.content}
                   </div>
@@ -188,7 +188,7 @@ const OrderingQuestion = ({ options = [], className = '', userAnswer = [], setUs
                   <div
                     className={`flex-grow text-base ${
                       selectedItem ? 'cursor-pointer text-slate-600 hover:bg-slate-100' : 'text-slate-400'
-                    } flex h-full items-center`}
+                    } flex h-full select-none items-center`}
                     onClick={() => {
                       if (selectedItem) {
                         handleClick(selectedItem, index)
@@ -220,7 +220,7 @@ const OrderingQuestion = ({ options = [], className = '', userAnswer = [], setUs
                     onDragStart={e => handleDragStart(e, items.indexOf(item))}
                     onDragEnd={handleDragEnd}
                     onClick={() => setSelectedItem(item)}
-                    className={`group cursor-pointer rounded-lg border ${
+                    className={`group cursor-pointer select-none rounded-lg border ${
                       selectedItem?.id === item.id ? 'border-[rgb(0,48,135)] bg-blue-50' : 'border-slate-200 bg-white'
                     } p-4 shadow-[0_2px_4px_0_rgba(0,0,0,0.1),0_1px_8px_-1px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[rgb(0,48,135)] hover:shadow-[0_8px_16px_-4px_rgba(0,0,0,0.1),0_4px_24px_-8px_rgba(0,0,0,0.08)] active:cursor-grabbing`}
                   >
