@@ -294,16 +294,16 @@ const ReadingTest = () => {
   const isLastPart = currentPartIndex === testData.Parts.length - 1
 
   const shouldShowContent = () => {
-    if (currentQuestion.Type === 'matching' || currentQuestion.Type === 'dropdown-list') {
+    if (currentPartIndex === 3) {
+      return true
+    }
+
+    if (currentQuestion.Type === 'matching') {
       return false
     }
 
     if (currentPartIndex === 0) {
       return false
-    }
-
-    if (currentQuestion.Type === 'matching') {
-      return true
     }
 
     if (currentQuestion.Type === 'ordering') {
@@ -409,18 +409,20 @@ const ReadingTest = () => {
                     value={answer?.[`para-${index}`] || ''}
                     className="w-80"
                     placeholder="Select a heading"
+                    size="large"
+                    style={{ fontSize: '16px' }}
                   >
                     {processedData.rightItems.map(rightItem => {
                       const displayText = rightItem.replace(/^[A-Z]\. /, '')
                       return (
-                        <Option key={rightItem} value={rightItem}>
+                        <Option key={rightItem} value={rightItem} className="py-2 !text-base">
                           {displayText}
                         </Option>
                       )
                     })}
                   </Select>
                 </div>
-                <div className="whitespace-pre-wrap text-justify text-lg text-gray-800">{para}</div>
+                <div className="whitespace-pre-wrap text-justify text-base text-gray-800">{para}</div>
               </div>
             ))}
           </div>
@@ -432,7 +434,7 @@ const ReadingTest = () => {
       const cleanedQuestion = processedData.question.replace(/\s*\([^)]*\)/g, '')
       return (
         <div className="mx-auto w-full max-w-4xl">
-          <div className="whitespace-pre-wrap text-lg text-gray-800">
+          <div className="whitespace-pre-wrap text-base text-gray-800">
             {cleanedQuestion.split(/(\d+\.)/).map((part, index) => {
               if (part.match(/^\d+\.$/)) {
                 const number = part.replace('.', '')
@@ -442,13 +444,14 @@ const ReadingTest = () => {
                     <Select
                       onChange={value => handleAnswerSubmit({ ...answer, [number]: value })}
                       value={answer?.[number] || ''}
-                      className="mx-2 inline-block w-32"
-                      style={{ marginBottom: 10 }}
+                      className="mx-2 my-2 inline-block w-32"
+                      size="large"
+                      style={{ fontSize: '16px' }}
                     >
                       {processedData.answers[number]?.map(option => {
                         const displayText = option.replace(/^[A-Z]\. /, '')
                         return (
-                          <Option key={option} value={option}>
+                          <Option key={option} value={option} className="py-2 !text-base">
                             {displayText}
                           </Option>
                         )
@@ -469,26 +472,31 @@ const ReadingTest = () => {
         <div className="mx-auto w-full max-w-4xl">
           <div className="mt-4">
             {processedData.leftItems.map((leftItem, index) => (
-              <div key={index} className="mb-4 flex w-full items-center gap-4">
-                <div className="min-w-[300px] flex-shrink-0">
-                  <span className="text-base font-medium">{leftItem}</span>
+              <div key={index}>
+                <div className="grid w-full grid-cols-[1fr,400px] items-center py-6">
+                  <div className="border-r-2 border-gray-300 pr-8">
+                    <span className="block whitespace-pre-wrap text-base text-gray-800">{leftItem}</span>
+                  </div>
+                  <div className="pl-8">
+                    <Select
+                      onChange={value => handleAnswerSubmit({ ...answer, [leftItem]: value })}
+                      value={answer?.[leftItem] || ''}
+                      className="w-full"
+                      size="large"
+                      style={{ fontSize: '16px' }}
+                    >
+                      {processedData.rightItems.map(rightItem => {
+                        const displayText = rightItem.replace(/^[A-Z]\. /, '')
+                        return (
+                          <Option key={rightItem} value={rightItem} className="py-2 !text-base">
+                            {displayText}
+                          </Option>
+                        )
+                      })}
+                    </Select>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <Select
-                    onChange={value => handleAnswerSubmit({ ...answer, [leftItem]: value })}
-                    value={answer?.[leftItem] || ''}
-                    className="w-full"
-                  >
-                    {processedData.rightItems.map(rightItem => {
-                      const displayText = rightItem.replace(/^[A-Z]\. /, '')
-                      return (
-                        <Option key={rightItem} value={rightItem}>
-                          {displayText}
-                        </Option>
-                      )
-                    })}
-                  </Select>
-                </div>
+                {index < processedData.leftItems.length - 1 && <div className="h-[1px] bg-[#f0f0f0]" />}
               </div>
             ))}
           </div>
@@ -500,7 +508,7 @@ const ReadingTest = () => {
       const cleanedQuestion = processedData.question.replace(/\s*\([^)]*\)/g, '')
       return (
         <div className="mx-auto w-full max-w-4xl">
-          <div className="whitespace-pre-wrap text-lg text-gray-800">
+          <div className="whitespace-pre-wrap text-base text-gray-800">
             {cleanedQuestion.split(/(\d+\.)/).map((part, index) => {
               if (part.match(/^\d+\.$/)) {
                 const number = part.replace('.', '')
@@ -511,12 +519,13 @@ const ReadingTest = () => {
                       onChange={value => handleAnswerSubmit({ ...answer, [number]: value })}
                       value={answer?.[number] || ''}
                       className="mx-2 inline-block w-32"
-                      style={{ marginBottom: 10 }}
+                      style={{ marginBottom: 10, fontSize: '16px' }}
+                      size="large"
                     >
                       {processedData.answers[number]?.map(option => {
                         const displayText = option.replace(/^[A-Z]\. /, '')
                         return (
-                          <Option key={option} value={option}>
+                          <Option key={option} value={option} className="py-2 !text-base">
                             {displayText}
                           </Option>
                         )
@@ -675,13 +684,13 @@ const ReadingTest = () => {
         </div>
 
         {shouldShowContent() && (
-          <div className="prose prose-lg mb-8 whitespace-pre-wrap text-lg text-gray-800">
+          <div className="prose prose-lg mb-8 whitespace-pre-wrap text-base text-gray-800">
             {currentPartIndex === 3
               ? currentQuestion.Content.split('\n').map((paragraph, index) => {
-                  const formattedParagraph = paragraph.replace(
-                    /([A-Z][a-z]+(?: [A-Z][a-z]+)*)(?=:)/g,
-                    '<strong>$1</strong>'
-                  )
+                  if (!paragraph.trim()) {
+                    return null
+                  }
+                  const formattedParagraph = paragraph.replace(/([A-Z][a-z]+):\s/g, '<strong>$1:</strong> ')
                   return (
                     <div key={index} className="mb-4">
                       <div dangerouslySetInnerHTML={{ __html: formattedParagraph }} />
