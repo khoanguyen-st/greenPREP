@@ -9,7 +9,8 @@ import MultipleChoice from '@shared/ui/question-type/multiple-choice'
 import NextScreen from '@shared/ui/submission/next-screen'
 import { useQuery } from '@tanstack/react-query'
 import { Spin, Alert, Typography, Modal } from 'antd'
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
+const { Title } = Typography
 
 const STORAGE_KEY = 'listening_test_answers'
 
@@ -350,38 +351,62 @@ const ListeningTest = () => {
     }
   }, [userAnswers, testData])
 
+  const navigatorQuestions = useMemo(() => {
+    if (!testData?.Parts) {
+      return []
+    }
+
+    const allQuestions = []
+    testData.Parts.forEach((part, partIndex) => {
+      part.Questions.forEach(question => {
+        allQuestions.push({
+          partIndex,
+          question,
+          sequence: question.Sequence || 999
+        })
+      })
+    })
+
+    allQuestions.sort((a, b) => a.sequence - b.sequence)
+
+    return allQuestions.map(({ partIndex, question }) => ({
+      partIndex,
+      questionIndex: 0,
+      question
+    }))
+  }, [testData?.Parts])
+
   const groupedQuestions = useMemo(() => {
     if (!testData?.Parts) {
       return []
     }
 
-    const groups = {}
-    testData.Parts.forEach(part => {
-      const sortedQuestions = [...part.Questions].sort((a, b) => {
-        if (a.Sequence !== undefined && b.Sequence !== undefined) {
-          return a.Sequence - b.Sequence
-        }
-        if (a.Sequence !== undefined) {
-          return -1
-        }
-        if (b.Sequence !== undefined) {
-          return 1
-        }
-        return 0
-      })
-
-      sortedQuestions.forEach(question => {
-        if (!groups[question.AudioKeys]) {
-          groups[question.AudioKeys] = {
+    const audioGroups = {}
+    testData.Parts.forEach((part, partIndex) => {
+      part.Questions.forEach(question => {
+        if (!audioGroups[question.AudioKeys]) {
+          audioGroups[question.AudioKeys] = {
             audioUrl: question.AudioKeys,
             questions: [],
-            partIndex: testData.Parts.indexOf(part)
+            partIndex
           }
         }
-        groups[question.AudioKeys].questions.push(question)
+        audioGroups[question.AudioKeys].questions.push({
+          ...question,
+          sequence: question.Sequence || 999
+        })
       })
     })
-    return Object.values(groups)
+
+    Object.values(audioGroups).forEach(group => {
+      group.questions.sort((a, b) => a.sequence - b.sequence)
+    })
+
+    return Object.values(audioGroups).sort((a, b) => {
+      const aFirstSeq = a.questions[0]?.sequence || 999
+      const bFirstSeq = b.questions[0]?.sequence || 999
+      return aFirstSeq - bFirstSeq
+    })
   }, [testData])
 
   const getTotalQuestions = () => {
@@ -608,51 +633,71 @@ const ListeningTest = () => {
     })
   }
 
-  const handleSubmitAnswers = async (isAutoSubmit = false) => {
-    try {
-      const globalData = getGlobalData()
-      if (!globalData) {
-        throw new Error('Cannot submit: Missing required data')
+  const handleSubmitAnswers = useCallback(
+    async (isAutoSubmit = false) => {
+      try {
+        const globalData = getGlobalData()
+        if (!globalData) {
+          throw new Error('Cannot submit: Missing required data')
+        }
+
+        const updatedFormattedAnswers = {
+          ...formattedAnswers,
+          studentId: globalData.studentId,
+          topicId: globalData.topicId,
+          sessionId: globalData.sessionId,
+          sessionParticipantId: globalData.sessionParticipantId
+        }
+
+        await saveListeningAnswers(updatedFormattedAnswers)
+
+        localStorage.setItem('listening_formatted_answers', JSON.stringify(updatedFormattedAnswers))
+
+        localStorage.removeItem(STORAGE_KEY)
+        localStorage.removeItem('listening_test_answers')
+        localStorage.removeItem('listening_formatted_answers')
+
+        setUserAnswers({})
+        setFormattedAnswers({
+          studentId: globalData.studentId,
+          topicId: globalData.topicId,
+          skillName: 'LISTENING',
+          sessionId: globalData.sessionId,
+          sessionParticipantId: globalData.sessionParticipantId,
+          questions: []
+        })
+
+        setIsSubmitted(true)
+      } catch (error) {
+        console.error(`Error ${isAutoSubmit ? 'auto-' : ''}submitting listening test:`, error)
+        setErrorMessage(error.message || 'Failed to submit the test. Please try again.')
+        setShowErrorModal(true)
       }
-
-      const updatedFormattedAnswers = {
-        ...formattedAnswers,
-        studentId: globalData.studentId,
-        topicId: globalData.topicId,
-        sessionId: globalData.sessionId,
-        sessionParticipantId: globalData.sessionParticipantId
-      }
-
-      await saveListeningAnswers(updatedFormattedAnswers)
-
-      localStorage.setItem('listening_formatted_answers', JSON.stringify(updatedFormattedAnswers))
-
-      localStorage.removeItem(STORAGE_KEY)
-      localStorage.removeItem('listening_test_answers')
-      localStorage.removeItem('listening_formatted_answers')
-
-      setUserAnswers({})
-      setFormattedAnswers({
-        studentId: globalData.studentId,
-        topicId: globalData.topicId,
-        skillName: 'LISTENING',
-        sessionId: globalData.sessionId,
-        sessionParticipantId: globalData.sessionParticipantId,
-        questions: []
-      })
-
-      setIsSubmitted(true)
-    } catch (error) {
-      console.error(`Error ${isAutoSubmit ? 'auto-' : ''}submitting listening test:`, error)
-      setErrorMessage(error.message || 'Failed to submit the test. Please try again.')
-      setShowErrorModal(true)
-    }
-  }
+    },
+    [
+      formattedAnswers,
+      getGlobalData,
+      setErrorMessage,
+      setShowErrorModal,
+      setUserAnswers,
+      setFormattedAnswers,
+      setIsSubmitted
+    ]
+  )
 
   const handleSubmit = () => {
     handleSubmitAnswers(false)
   }
+  const handleForceSubmit = useCallback(() => {
+    handleSubmitAnswers()
+  }, [handleSubmitAnswers])
 
+  useEffect(() => {
+    window.addEventListener('forceSubmit', handleForceSubmit)
+    return () => {
+      window.removeEventListener('forceSubmit', handleForceSubmit)
+    }
+  }, [handleForceSubmit])
   const handleAutoSubmit = () => {
     handleSubmitAnswers(true)
   }
@@ -787,22 +832,6 @@ const ListeningTest = () => {
     }
   }
 
-  const navigatorQuestions = useMemo(() => {
-    if (!testData?.Parts) {
-      return []
-    }
-
-    const questions = []
-    groupedQuestions.forEach(group => {
-      questions.push({
-        partIndex: group.partIndex,
-        questionIndex: 0,
-        question: group.questions[0]
-      })
-    })
-    return questions
-  }, [groupedQuestions, testData?.Parts])
-
   if (isSubmitted) {
     return <NextScreen nextPath="/grammar" skillName="Listening" imageSrc={ListeningSubmission} />
   }
@@ -842,16 +871,17 @@ const ListeningTest = () => {
         userAnswers={userAnswers}
         flaggedQuestions={flaggedQuestions}
       >
-        {currentGroup?.questions[0]?.Type === 'listening-questions-group' && (
-          <Typography.Title level={5}>{currentGroup.questions[0].Content}</Typography.Title>
-        )}
-
         {currentGroup && (
-          <PlayStopButton
-            audioUrl={currentGroup.audioUrl}
-            questionId={currentGroup.questions[0]?.ID}
-            onPlayingChange={setIsAudioPlaying}
-          />
+          <>
+            <Title level={5} className="mb-6 text-lg">
+              {currentGroup.questions[0].Content}
+            </Title>
+            <PlayStopButton
+              audioUrl={currentGroup.audioUrl}
+              questionId={currentGroup.questions[0]?.ID}
+              onPlayingChange={setIsAudioPlaying}
+            />
+          </>
         )}
 
         {currentGroup?.questions.map(question => {
@@ -867,6 +897,9 @@ const ListeningTest = () => {
               <div key={question.ID} className="mt-6">
                 {formattedQ.map(subQuestion => (
                   <div key={subQuestion.ID} className="mb-8">
+                    <Title level={5} className="mb-6 text-lg">
+                      {subQuestion.Content}
+                    </Title>
                     <MultipleChoice
                       questionData={subQuestion}
                       userAnswer={userAnswers}
@@ -884,20 +917,22 @@ const ListeningTest = () => {
           return (
             <div key={question.ID} className="mt-6">
               {qType === 'multiple-choice' ? (
-                <MultipleChoice
-                  questionData={formattedQ}
-                  userAnswer={userAnswers}
-                  setUserAnswer={setUserAnswers}
-                  onSubmit={answer => handleAnswerSubmit(question.ID, answer)}
-                  className="z-0 mt-6"
-                  setUserAnswerSubmit={() => {}}
-                />
+                <>
+                  <MultipleChoice
+                    questionData={formattedQ}
+                    userAnswer={userAnswers}
+                    setUserAnswer={setUserAnswers}
+                    onSubmit={answer => handleAnswerSubmit(question.ID, answer)}
+                    className="z-0 mt-6"
+                    setUserAnswerSubmit={() => {}}
+                  />
+                </>
               ) : qType === 'dropdown-list' ? (
                 <DropdownQuestion
                   questionData={formattedQ}
                   userAnswer={userAnswers}
                   setUserAnswer={setUserAnswers}
-                  className="z-0 mt-6 !p-0 shadow-none"
+                  className="z-0 mt-6 shadow-none"
                 />
               ) : null}
             </div>

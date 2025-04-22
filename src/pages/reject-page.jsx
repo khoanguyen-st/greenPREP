@@ -22,7 +22,7 @@ const DesktopRejectRequestPage = () => {
   }, [])
 
   return (
-    <Layout className="h-screen overflow-hidden">
+    <Layout className="h-screen w-full overflow-hidden">
       <SharedHeader />
       <Content className="bg-white">
         <div className="flex h-[calc(100vh-64px)] flex-col items-center p-2 sm:p-3 md:p-4 lg:p-4">

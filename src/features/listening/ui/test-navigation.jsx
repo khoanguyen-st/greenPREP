@@ -33,17 +33,20 @@ const TestNavigation = ({
       return []
     }
 
-    const questions = []
-    testData.Parts.forEach((part, partIdx) => {
-      part.Questions.forEach((question, questionIdx) => {
-        questions.push({
-          partIndex: partIdx,
-          questionIndex: questionIdx,
-          question
+    const allQuestions = []
+    testData.Parts.forEach((part, partIndex) => {
+      part.Questions.forEach(question => {
+        allQuestions.push({
+          partIndex,
+          question,
+          sequence: question.Sequence || 999
         })
       })
     })
-    return questions
+
+    allQuestions.sort((a, b) => a.sequence - b.sequence)
+
+    return allQuestions
   }
 
   const questionNavigatorValues = getAllQuestions().map((q, idx) => {

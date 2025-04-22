@@ -9,7 +9,7 @@ import OrderingQuestion from '@shared/ui/question-type/ordering-question'
 import NextScreen from '@shared/ui/submission/next-screen'
 import { useQuery } from '@tanstack/react-query'
 import { Spin, Alert, Typography, Card, Select, Divider } from 'antd'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 
 const { Option } = Select
 const { Title, Text } = Typography
@@ -258,7 +258,16 @@ const ReadingTest = () => {
       console.error('Error submitting answers:', error)
     }
   }
+  const handleForceSubmit = useCallback(() => {
+    handleSubmit()
+  }, [handleSubmit])
 
+  useEffect(() => {
+    window.addEventListener('forceSubmit', handleForceSubmit)
+    return () => {
+      window.removeEventListener('forceSubmit', handleForceSubmit)
+    }
+  }, [handleForceSubmit])
   if (isSubmitted) {
     return <NextScreen nextPath="/writing" skillName="Reading" imageSrc={ReadingSubmission} />
   }
@@ -285,7 +294,7 @@ const ReadingTest = () => {
   const isLastPart = currentPartIndex === testData.Parts.length - 1
 
   const shouldShowContent = () => {
-    if (currentPartIndex === 4 && (currentQuestion.Type === 'matching' || currentQuestion.Type === 'dropdown-list')) {
+    if (currentQuestion.Type === 'matching' || currentQuestion.Type === 'dropdown-list') {
       return false
     }
 
@@ -295,6 +304,10 @@ const ReadingTest = () => {
 
     if (currentQuestion.Type === 'matching') {
       return true
+    }
+
+    if (currentQuestion.Type === 'ordering') {
+      return false
     }
 
     if (currentQuestion.Type === 'dropdown-list') {
@@ -365,7 +378,7 @@ const ReadingTest = () => {
 
     const answer = userAnswers[currentQuestion.ID] || {}
 
-    if (currentPartIndex === 4 && processedData.type === 'right-left') {
+    if (currentQuestion.Type === 'matching' && processedData.type === 'right-left') {
       const contentLines = processedData.question.split('\n')
       const paragraphs = []
       let currentParagraph = ''
@@ -593,7 +606,7 @@ const ReadingTest = () => {
         )
       }
       case 'matching': {
-        if (currentPartIndex === 4) {
+        if (currentQuestion.Type === 'matching') {
           return renderDropdownQuestion()
         }
         return (
@@ -634,15 +647,30 @@ const ReadingTest = () => {
           <FlagButton key={`flag-button-${currentPartIndex}`} onFlag={handleFlagToggle} initialFlagged={isFlagged} />
         </div>
         <Title level={2} className="mb-6 text-3xl font-bold">
-          {`Part ${currentPartIndex + 1}`}
+          {`Question ${currentPartIndex + 1} of 5`}
         </Title>
         <div className="prose prose-lg mb-8 max-w-none">
           <Text className="mb-2 block text-xl font-semibold text-gray-800">
             {currentPart.Content.startsWith('Part')
-              ? currentPart.Content.includes(':')
-                ? currentPart.Content.split(':')[1].trim()
-                : currentPart.Content.split('-').slice(1).join(' ').trim()
-              : currentPart.Content}
+              ? (currentPart.Content.includes(':')
+                  ? currentPart.Content.split(':')[1]
+                  : currentPart.Content.split('-').slice(1).join(' ')
+                )
+                  .trim()
+                  .split('\n')
+                  .map((line, idx) => (
+                    <span key={idx}>
+                      {line}
+                      <br />
+                    </span>
+                  ))
+              : currentPart.Content.split('\n').map((line, idx) => (
+                  <span key={idx}>
+                    {line}
+                    <br />
+                    <br />
+                  </span>
+                ))}
           </Text>
         </div>
 

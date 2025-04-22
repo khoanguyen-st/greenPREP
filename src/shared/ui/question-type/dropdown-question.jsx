@@ -9,7 +9,7 @@ const validationSchema = yup.object().shape({
   selectedOption: yup.string().required('Please select an answer')
 })
 
-const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className = '', small = false }) => {
+const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className = '' }) => {
   dropdownQuestionSchema.validateSync(questionData)
   const [selectedOptions, setSelectedOptions] = useState({})
   const [error, setError] = useState({})
@@ -124,7 +124,7 @@ const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className =
       <style>
         {`
           .ant-select-selection-item {
-            font-size: 15px !important;
+            font-size: 16px !important;
             line-height: 1.5 !important;
           }
           .dropdown-item {
@@ -139,43 +139,42 @@ const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className =
           }
         `}
       </style>
-      <p className="mb-6 whitespace-pre-wrap text-[15px] font-semibold leading-relaxed text-gray-800">
-        {processedData.question}
-      </p>
       {processedData.type === 'paragraph' ? (
-        Object.entries(processedData.answers).map(([key, options]) => (
-          <div key={key} className="dropdown-item flex w-full">
-            <div className={`flex w-1/2`}>
-              <Select
-                onChange={value => handleSelectChange(key, value)}
-                value={selectedOptions?.[key] || ''}
-                className={`w-2/3 ${small ? 'h-10' : 'h-12'} rounded-lg border border-gray-300 text-[15px] shadow-sm`}
-                dropdownStyle={{ fontSize: '15px' }}
-              >
-                {options.map(option => (
-                  <Option key={option} value={option} style={{ fontSize: '15px', padding: '8px 12px' }}>
-                    {option}
-                  </Option>
-                ))}
-              </Select>
+        <>
+          {Object.entries(processedData.answers).map(([key, options]) => (
+            <div key={key} className="dropdown-item flex w-full items-center">
+              <div className={`flex w-1/2`}>
+                <Select
+                  onChange={value => handleSelectChange(key, value)}
+                  value={selectedOptions?.[key] || ''}
+                  className={`h-9 w-2/3 rounded-lg border border-gray-300 text-base shadow-sm`}
+                  dropdownStyle={{ fontSize: '16px' }}
+                >
+                  {options.map(option => (
+                    <Option key={option} value={option} style={{ fontSize: '16px', padding: '8px 12px' }}>
+                      {option}
+                    </Option>
+                  ))}
+                </Select>
+              </div>
+              {error[key] && <p className="mt-2 text-base text-red-500">{error[key]}</p>}
             </div>
-            {error[key] && <p className="mt-2 text-[15px] text-red-500">{error[key]}</p>}
-          </div>
-        ))
+          ))}
+        </>
       ) : (
         <div className="w-full space-y-6">
           {processedData.leftItems.map((leftItem, index) => (
-            <div key={index} className="dropdown-item flex w-full items-start gap-6">
+            <div key={index} className="dropdown-item flex w-full items-center gap-6">
               <div className="min-w-[250px] flex-1">
-                <p className="text-[15px] font-medium leading-relaxed text-gray-700">{leftItem}</p>
+                <p className="text-base font-medium leading-relaxed text-gray-700">{leftItem}</p>
               </div>
-              <div className="w-[350px] flex-shrink-0">
+              <div className="w-[250px] flex-shrink-0">
                 <Select
                   onChange={value => handleSelectChange(leftItem, value)}
                   value={selectedOptions[leftItem] || ''}
-                  className={`w-full ${small ? 'h-10' : 'h-12'} rounded-lg border border-gray-300 text-[15px] shadow-sm`}
+                  className="h-9 w-full rounded-lg border border-gray-300 text-base shadow-sm"
                   placeholder="Select an answer"
-                  dropdownStyle={{ fontSize: '15px' }}
+                  dropdownStyle={{ fontSize: '16px' }}
                   dropdownMatchSelectWidth={false}
                   style={{ width: '100%' }}
                   optionLabelProp="label"
@@ -186,14 +185,14 @@ const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className =
                       key={rightItem}
                       value={rightItem}
                       label={rightItem}
-                      style={{ fontSize: '15px', padding: '8px 12px' }}
+                      style={{ fontSize: '16px', padding: '8px 12px' }}
                     >
                       {rightItem}
                     </Option>
                   ))}
                 </Select>
               </div>
-              {error[leftItem] && <p className="mt-2 text-[15px] text-red-500">{error[leftItem]}</p>}
+              {error[leftItem] && <p className="mt-2 text-base text-red-500">{error[leftItem]}</p>}
             </div>
           ))}
         </div>
