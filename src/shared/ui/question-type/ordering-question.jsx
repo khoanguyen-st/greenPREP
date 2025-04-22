@@ -11,7 +11,7 @@ const validationSchema = yup.object().shape({
   )
 })
 
-const OrderingQuestion = ({ options = [], className = '', userAnswer = [], setUserAnswer }) => {
+const OrderingQuestion = ({ options = [], className = '', userAnswer = [], setUserAnswer, subcontent = '' }) => {
   const initialItems = useMemo(() => {
     const orderMap = new Map(userAnswer.map(item => [item.key, item.value]))
 
@@ -160,56 +160,66 @@ const OrderingQuestion = ({ options = [], className = '', userAnswer = [], setUs
   return (
     <div className={`ordering-question mx-auto max-w-6xl ${className}`}>
       <div className="flex gap-8">
-        <div className="w-1/2 space-y-4">
-          {slots.map((slot, index) => {
-            const placedItem = items.find(item => item.order === index + 1)
-
-            return (
-              <div
-                key={`slot-${index}`}
-                onDragOver={e => e.preventDefault()}
-                onDragEnter={e => handleDragEnter(e, index)}
-                onDrop={e => handleDrop(e, index)}
-                className="flex h-20 items-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-4 transition-all duration-300 hover:border-[rgb(0,48,135)]"
-              >
-                <div className="mr-4 flex h-8 w-8 flex-shrink-0 select-none items-center justify-center rounded-lg bg-[rgb(0,48,135)] text-base font-semibold text-white shadow-md">
-                  {index + 1}
-                </div>
-                {placedItem ? (
-                  <div
-                    draggable
-                    onDragStart={e => handleDragStart(e, items.indexOf(placedItem))}
-                    onDragEnd={handleDragEnd}
-                    className="cursor-grab text-base font-medium text-slate-800 active:cursor-grabbing"
-                  >
-                    {placedItem.content}
-                  </div>
-                ) : (
-                  <div
-                    className={`flex-grow select-none text-base ${
-                      selectedItem ? 'cursor-pointer text-slate-600 hover:bg-slate-100' : 'text-slate-400'
-                    } flex h-full items-center`}
-                    onClick={() => {
-                      if (selectedItem) {
-                        handleClick(selectedItem, index)
-                      }
-                    }}
-                  >
-                    {selectedItem ? 'Click to place item here' : 'Drop item here'}
-                  </div>
-                )}
+        <div className="w-1/2">
+          {subcontent && (
+            <div className="mb-6 select-none p-4">
+              <div className="text-base text-slate-600">
+                <span className="font-semibold text-slate-800">Example: </span>
+                {subcontent.replace('Example:', '').trim()}
               </div>
-            )
-          })}
+            </div>
+          )}
+          <div className="space-y-4">
+            {slots.map((slot, index) => {
+              const placedItem = items.find(item => item.order === index + 1)
+
+              return (
+                <div
+                  key={`slot-${index}`}
+                  onDragOver={e => e.preventDefault()}
+                  onDragEnter={e => handleDragEnter(e, index)}
+                  onDrop={e => handleDrop(e, index)}
+                  className="flex h-20 items-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-4 transition-all duration-300 hover:border-[rgb(0,48,135)]"
+                >
+                  <div className="mr-4 flex h-8 w-8 flex-shrink-0 select-none items-center justify-center rounded-lg bg-[rgb(0,48,135)] text-base font-semibold text-white shadow-md">
+                    {index + 1}
+                  </div>
+                  {placedItem ? (
+                    <div
+                      draggable
+                      onDragStart={e => handleDragStart(e, items.indexOf(placedItem))}
+                      onDragEnd={handleDragEnd}
+                      className="cursor-grab text-base font-medium text-slate-800 active:cursor-grabbing"
+                    >
+                      {placedItem.content}
+                    </div>
+                  ) : (
+                    <div
+                      className={`flex-grow select-none text-base ${
+                        selectedItem ? 'cursor-pointer text-slate-600 hover:bg-slate-100' : 'text-slate-400'
+                      } flex h-full items-center`}
+                      onClick={() => {
+                        if (selectedItem) {
+                          handleClick(selectedItem, index)
+                        }
+                      }}
+                    >
+                      {selectedItem ? 'Click to place item here' : 'Drop item here'}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
         </div>
 
         <div
-          className="w-1/2 rounded-xl border-2 border-slate-200 bg-white p-6 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)]"
+          className="flex w-1/2 items-center justify-center rounded-xl border-2 border-slate-200 bg-white p-6 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)]"
           onDragOver={e => e.preventDefault()}
           onDragEnter={handleBacklogDragEnter}
           onDrop={handleBacklogDrop}
         >
-          <div className="space-y-3">
+          <div className="w-full space-y-3">
             {items.filter(item => !item.placed).length > 0 ? (
               items
                 .filter(item => !item.placed)

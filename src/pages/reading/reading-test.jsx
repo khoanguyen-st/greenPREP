@@ -601,6 +601,7 @@ const ReadingTest = () => {
                   answer: newAnswer
                 })
               }}
+              subcontent={currentPart.SubContent}
             />
           </div>
         )
