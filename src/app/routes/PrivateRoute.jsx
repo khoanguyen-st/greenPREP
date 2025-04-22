@@ -21,7 +21,6 @@ import SubmissionPage from '@pages/submission-page'
 import WritingPage from '@pages/writing'
 import WritingIntroduction from '@pages/writing/writing-introduction'
 import WritingTest from '@pages/writing/writing-test'
-import TestLayout from '@shared/ui/test-layout'
 
 import { ProtectedRoute } from './ProtectedRoute'
 
@@ -44,11 +43,7 @@ const PrivateRoute = [
           },
           {
             path: 'test',
-            element: (
-              <TestLayout>
-                <WritingTest />
-              </TestLayout>
-            )
+            element: <WritingTest />
           }
         ]
       },
@@ -66,11 +61,7 @@ const PrivateRoute = [
           },
           {
             path: 'test',
-            element: (
-              <TestLayout>
-                <ListeningTest />
-              </TestLayout>
-            )
+            element: <ListeningTest />
           }
         ]
       },
@@ -84,11 +75,7 @@ const PrivateRoute = [
           },
           {
             path: 'test',
-            element: (
-              <TestLayout>
-                <GrammarTest />
-              </TestLayout>
-            )
+            element: <GrammarTest />
           }
         ]
       },
@@ -102,11 +89,7 @@ const PrivateRoute = [
           },
           {
             path: 'test/:part',
-            element: (
-              <TestLayout>
-                <SpeakingParts />
-              </TestLayout>
-            )
+            element: <SpeakingParts />
           },
           {
             path: 'microphonecheck',
@@ -124,11 +107,7 @@ const PrivateRoute = [
           },
           {
             path: 'test',
-            element: (
-              <TestLayout>
-                <ReadingTest />
-              </TestLayout>
-            )
+            element: <ReadingTest />
           }
         ]
       },
