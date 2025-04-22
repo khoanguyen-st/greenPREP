@@ -22,7 +22,6 @@ export const fetchGrammarTestDetails = async () => {
       throw new Error('No grammar test parts available')
     }
 
-    // Validate each part has questions
     const hasQuestions = response.data.Parts.every(
       part => part.Questions && Array.isArray(part.Questions) && part.Questions.length > 0
     )
@@ -31,11 +30,33 @@ export const fetchGrammarTestDetails = async () => {
       throw new Error('Some parts are missing questions')
     }
 
+    if (response.data.Parts) {
+      response.data.Parts.forEach(part => {
+        if (part.Questions && Array.isArray(part.Questions)) {
+          part.Questions.forEach(question => {
+            if (question.Content) {
+              question.Content = formatDialogueContent(question.Content)
+            }
+          })
+        }
+      })
+    }
+
     return response.data
   } catch (error) {
     console.error('Error fetching grammar test details:', error)
     throw error
   }
+}
+
+export const formatDialogueContent = content => {
+  if (!content) {
+    return content
+  }
+
+  return content
+    .replace(/([A-Za-z]+):\s+(.*?)(?=\s+[A-Za-z]+:|\s*$)/, '$1: $2\n')
+    .replace(/([A-Za-z]+):\s+(__+),/, '$1: $2,\n')
 }
 
 export const submitGrammarAnswers = async data => {
