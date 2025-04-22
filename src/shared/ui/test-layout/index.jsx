@@ -45,7 +45,7 @@ const TestLayout = ({ children }) => {
       window.dispatchEvent(submitEvent)
 
       if (path.includes('/speaking')) {
-        navigate('/grammar')
+        navigate('/listening')
       } else if (path.includes('/listening')) {
         navigate('/grammar')
       } else if (path.includes('/grammar')) {
