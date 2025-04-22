@@ -47,7 +47,7 @@ const MatchingQuestion = ({ leftItems, rightItems, userAnswer = [], setUserAnswe
       <style>
         {`
           .ant-select-selection-item {
-            font-size: 16px !important;
+            font-size: 18px !important;
             line-height: 1.5 !important;
           }
           .matching-item {
@@ -66,7 +66,7 @@ const MatchingQuestion = ({ leftItems, rightItems, userAnswer = [], setUserAnswe
         {leftItems.map((leftItem, index) => (
           <div key={index} className="matching-item flex w-full items-center gap-6">
             <div className="min-w-[250px] flex-1">
-              <p className="text-base font-medium leading-relaxed text-gray-700">{leftItem}</p>
+              <p className="text-lg font-medium leading-relaxed text-gray-700">{leftItem}</p>
             </div>
             <div className="w-[250px] flex-shrink-0">
               <Select

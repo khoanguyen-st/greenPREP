@@ -90,7 +90,7 @@ const GrammarTest = () => {
 
       <Card className="mb-6 flex w-full">
         <div className="mb-5 flex flex-row gap-80">
-          <Title level={3} className="text-l mb-5 w-3/4 font-semibold">
+          <Title level={2} className="text-l mb-5 w-3/4 font-semibold">
             Question {currentQuestionIndex + 1} of {mergedArray.length}
           </Title>
           <FlagButton
@@ -104,6 +104,7 @@ const GrammarTest = () => {
           answers={answers}
           setUserAnswer={setAnswers}
           onSubmit={handleSubmit}
+          questionNumber={currentQuestionIndex + 1}
         />
       </Card>
 
