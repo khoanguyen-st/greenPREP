@@ -253,7 +253,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
   }
 
   return (
-    <div className="flex h-screen w-full flex-row rounded-xl bg-white">
+    <div className="flex h-screen w-full flex-col rounded-xl bg-white lg:flex-row">
       <QuestionDisplay
         data={data}
         currentQuestion={currentQuestion}
@@ -268,11 +268,11 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
         isButtonLoading={isButtonLoading || submitMutation.isPending}
         buttonRef={buttonRef}
       />
-      <div className="flex h-screen w-1/3 flex-col items-center justify-center bg-gradient-to-br from-[#003087] via-[#002b6c] to-[#001f4d]">
-        <h2 className="mb-4 text-4xl font-bold text-white">
+      <div className="flex h-auto w-full flex-col items-center justify-center bg-gradient-to-br from-[#003087] via-[#002b6c] to-[#001f4d] p-4 lg:h-screen lg:w-1/3 lg:p-0">
+        <h2 className="mb-2 text-2xl font-bold text-white lg:mb-4 lg:text-4xl">
           {phase === 'preparing' ? 'Preparing Time' : phase === 'reading' ? 'Reading Time' : 'Recording Time'}
         </h2>
-        <p className="mb-12 text-lg text-white/80">
+        <p className="mb-6 text-center text-base text-white/80 lg:mb-12 lg:text-lg">
           {phase === 'preparing'
             ? 'Get ready to read the question'
             : phase === 'reading'
@@ -288,7 +288,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
         </div>
 
         {data.Content !== 'PART 4' && (
-          <div className="mt-8 flex gap-2">
+          <div className="mt-4 flex gap-2 lg:mt-8">
             <div className={`h-2 w-2 rounded-full ${currentQuestionIndex === 0 ? 'bg-white' : 'bg-white/30'}`} />
             <div className={`h-2 w-2 rounded-full ${currentQuestionIndex === 1 ? 'bg-white' : 'bg-white/30'}`} />
             <div className={`h-2 w-2 rounded-full ${currentQuestionIndex === 2 ? 'bg-white' : 'bg-white/30'}`} />
