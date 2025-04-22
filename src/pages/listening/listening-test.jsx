@@ -656,6 +656,7 @@ const ListeningTest = () => {
         localStorage.removeItem(STORAGE_KEY)
         localStorage.removeItem('listening_test_answers')
         localStorage.removeItem('listening_formatted_answers')
+        localStorage.removeItem('listening_played_questions')
 
         setUserAnswers({})
         setFormattedAnswers({
