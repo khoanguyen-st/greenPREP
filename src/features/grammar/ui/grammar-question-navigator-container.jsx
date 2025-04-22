@@ -28,7 +28,7 @@ const QuestionNavigatorContainer = ({
         <div
           className={`border-black-300 fixed right-2 z-10 h-auto w-60 overflow-y-auto rounded-lg border bg-white p-2 shadow-lg ${isNavigatorOpen ? 'block' : 'hidden'} top-[15%] md:block`}
         >
-          <TimeRemaining duration={10 * 60} onAutoSubmit={() => setIsPopupOpen(true)} />
+          <TimeRemaining duration={25 * 60} onAutoSubmit={() => setIsPopupOpen(true)} />
           <QuestionNavigator
             values={data.Parts.map(question => {
               const isFlagged = flaggedQuestions[`answer-${question.ID}`] || false

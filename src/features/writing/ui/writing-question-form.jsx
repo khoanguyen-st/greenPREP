@@ -57,8 +57,8 @@ const QuestionForm = ({
               }
             >
               <Input.TextArea
-                rows={partNumber === 1 ? 2 : 5}
-                autoSize={partNumber === 1 ? { minRows: 3, maxRows: 6 } : { minRows: 5, maxRows: 10 }}
+                rows={partNumber === 1 ? 1 : 5}
+                autoSize={partNumber === 1 ? { minRows: 1, maxRows: 3 } : { minRows: 5, maxRows: 10 }}
                 className="w-full"
                 placeholder="Enter your answer here"
                 value={answers[fieldName] || ''}

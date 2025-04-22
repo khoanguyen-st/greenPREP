@@ -3,7 +3,7 @@ export const READING_DATA = {
   testName: 'Aptis General Test',
   section: 'Reading',
   testStructure: {
-    desc: 'This test has 4 parts, you will have 30 minutes to complete the test.',
+    desc: 'This test has 4 parts, you will have 35 minutes to complete the test.',
     parts: [
       {
         name: 'Part 1: Sentence Completions. ',
@@ -29,13 +29,13 @@ export const READING_DATA = {
   },
   fornDescription: {
     desc: 'In this test, you will read a variety of texts and answer questions about them. The texts will be taken from a range of sources, such as newspapers, magazines, and books. You will need to read the texts carefully and answer the questions based on what you have read.',
-    duration: '30 minutes',
-    numberOfQuestions: '20 questions'
+    duration: '35 minutes',
+    numberOfQuestions: '29 questions'
   },
   notes: {
     title: 'Notes',
     listNotes: [
-      'You will have 30 minutes to complete the test.',
+      'You will have 35 minutes to complete the test.',
       'You can go back and change your answers at any time.',
       'You can only submit your answers once.',
       'You will not be able to return to the test once you have submitted your answers.'
