@@ -1,7 +1,7 @@
 import { submitGrammarAnswers } from '@features/grammar/api'
 import { message } from 'antd'
 
-export const submitGrammarTest = async ({ data, answers, navigate }) => {
+export const submitGrammarTest = async ({ data, answers }) => {
   try {
     if (!data?.Parts) {
       return
@@ -58,7 +58,6 @@ export const submitGrammarTest = async ({ data, answers, navigate }) => {
 
     localStorage.removeItem('grammarAnswers')
     localStorage.removeItem('flaggedQuestions')
-    navigate('/grammar/test')
   } catch (error) {
     console.error(error)
     message.error({
