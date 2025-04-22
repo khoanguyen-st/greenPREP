@@ -294,15 +294,13 @@ const ReadingTest = () => {
   const isLastPart = currentPartIndex === testData.Parts.length - 1
 
   const shouldShowContent = () => {
-    if (currentPartIndex === 3) {
+    const hasSlashFormat = currentQuestion.Content.includes('/') && currentQuestion.Content.split('/').length >= 2
+
+    if (hasSlashFormat) {
       return true
     }
 
     if (currentQuestion.Type === 'matching') {
-      return false
-    }
-
-    if (currentPartIndex === 0) {
       return false
     }
 
