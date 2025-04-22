@@ -1,0 +1,17 @@
+node_modules
+.git
+.gitignore
+.env
+Dockerfile
+docker-compose.yml
+README.md
+*.log
+*.md
+package-lock.json
+yarn.lock
+dist
+eslint.config.js
+.prettierrc
+.prettierignore
+.env.example
+.husky
