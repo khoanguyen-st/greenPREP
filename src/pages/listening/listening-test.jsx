@@ -932,7 +932,7 @@ const ListeningTest = () => {
                   questionData={formattedQ}
                   userAnswer={userAnswers}
                   setUserAnswer={setUserAnswers}
-                  className="z-0 mt-6 !p-0 shadow-none"
+                  className="z-0 mt-6 shadow-none"
                 />
               ) : null}
             </div>
