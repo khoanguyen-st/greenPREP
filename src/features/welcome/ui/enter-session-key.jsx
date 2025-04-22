@@ -40,6 +40,10 @@ const EnterSessionKey = () => {
   }
 
   useEffect(() => {
+    const status = localStorage.getItem('status')
+    if (status) {
+      localStorage.removeItem('status')
+    }
     if (localStorage.getItem('globalData')) {
       navigate('/introduction')
     }
