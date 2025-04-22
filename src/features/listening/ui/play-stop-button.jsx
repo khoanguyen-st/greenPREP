@@ -2,7 +2,18 @@ import { PlayCircleOutlined, PauseCircleOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
 import { useState, useRef, useEffect } from 'react'
 
-const playedQuestions = {}
+const STORAGE_KEY = 'listening_played_questions'
+
+const getPlayedQuestions = () => {
+  const stored = localStorage.getItem(STORAGE_KEY)
+  return stored ? JSON.parse(stored) : {}
+}
+
+const savePlayedQuestions = questions => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(questions))
+}
+
+const playedQuestions = getPlayedQuestions()
 
 const AudioPlayer = ({ src, id, questionId, playAttempt, onPlayingChange, isOtherPlaying, setIsOtherPlaying }) => {
   const [isPlaying, setIsPlaying] = useState(false)
@@ -52,6 +63,7 @@ const AudioPlayer = ({ src, id, questionId, playAttempt, onPlayingChange, isOthe
             playedQuestions[questionId] = {}
           }
           playedQuestions[questionId][playAttempt] = true
+          savePlayedQuestions(playedQuestions)
         })
         .catch(error => console.error('Audio playback failed:', error))
     }
