@@ -144,12 +144,12 @@ const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className =
       </p>
       {processedData.type === 'paragraph' ? (
         Object.entries(processedData.answers).map(([key, options]) => (
-          <div key={key} className="dropdown-item flex w-full">
+          <div key={key} className="dropdown-item flex w-full items-center">
             <div className={`flex w-1/2`}>
               <Select
                 onChange={value => handleSelectChange(key, value)}
                 value={selectedOptions?.[key] || ''}
-                className={`w-2/3 ${small ? 'h-10' : 'h-12'} rounded-lg border border-gray-300 text-[15px] shadow-sm`}
+                className={`w-2/3 ${small ? 'h-8' : 'h-9'} rounded-lg border border-gray-300 text-[15px] shadow-sm`}
                 dropdownStyle={{ fontSize: '15px' }}
               >
                 {options.map(option => (
@@ -165,15 +165,15 @@ const DropdownQuestion = ({ questionData, userAnswer, setUserAnswer, className =
       ) : (
         <div className="w-full space-y-6">
           {processedData.leftItems.map((leftItem, index) => (
-            <div key={index} className="dropdown-item flex w-full items-start gap-6">
+            <div key={index} className="dropdown-item flex w-full items-center gap-6">
               <div className="min-w-[250px] flex-1">
                 <p className="text-[15px] font-medium leading-relaxed text-gray-700">{leftItem}</p>
               </div>
-              <div className="w-[350px] flex-shrink-0">
+              <div className="w-[250px] flex-shrink-0">
                 <Select
                   onChange={value => handleSelectChange(leftItem, value)}
                   value={selectedOptions[leftItem] || ''}
-                  className={`w-full ${small ? 'h-10' : 'h-12'} rounded-lg border border-gray-300 text-[15px] shadow-sm`}
+                  className={`w-full ${small ? 'h-8' : 'h-9'} rounded-lg border border-gray-300 text-[15px] shadow-sm`}
                   placeholder="Select an answer"
                   dropdownStyle={{ fontSize: '15px' }}
                   dropdownMatchSelectWidth={false}

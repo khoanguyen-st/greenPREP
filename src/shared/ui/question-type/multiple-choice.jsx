@@ -1,7 +1,7 @@
 import { multipleChoiceAnswerSchema } from '@shared/model/questionType/multipleQuestion.schemas'
 import { Typography } from 'antd'
 import { useState, useMemo } from 'react'
-const { Title, Text } = Typography
+const { Text } = Typography
 
 const MultipleChoice = ({ questionData, userAnswer, setUserAnswer, onSubmit, className = '', setUserAnswerSubmit }) => {
   const [selectedOption, setSelectedOption] = useState(null)
@@ -57,9 +57,6 @@ const MultipleChoice = ({ questionData, userAnswer, setUserAnswer, onSubmit, cla
 
   return (
     <div className={`w-full ${className}`}>
-      <Title level={5} className="mb-6 text-lg">
-        {questionData.Content}
-      </Title>
       <div className="space-y-4">
         {options.map(option => {
           const isSelected = selectedOption === option.value

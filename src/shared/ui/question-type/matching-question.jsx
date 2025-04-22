@@ -64,15 +64,15 @@ const MatchingQuestion = ({ leftItems, rightItems, userAnswer = [], setUserAnswe
       </style>
       <div className="w-full space-y-6">
         {leftItems.map((leftItem, index) => (
-          <div key={index} className="matching-item flex w-full items-start gap-6">
+          <div key={index} className="matching-item flex w-full items-center gap-6">
             <div className="min-w-[250px] flex-1">
               <p className="text-base font-medium leading-relaxed text-gray-700">{leftItem}</p>
             </div>
-            <div className="w-[350px] flex-shrink-0">
+            <div className="w-[250px] flex-shrink-0">
               <Select
                 onChange={value => handleSelectChange(leftItem, value)}
                 value={selectedOptions[leftItem] || ''}
-                className="h-12 w-full rounded-lg border border-gray-300 text-base shadow-sm"
+                className="h-9 w-full rounded-lg border border-gray-300 text-base shadow-sm"
                 placeholder="Select an answer"
                 dropdownStyle={{ fontSize: '16px' }}
                 dropdownMatchSelectWidth={false}
