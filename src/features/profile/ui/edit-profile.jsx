@@ -85,7 +85,13 @@ const EditProfileModal = ({ open, onCancel, onSave, formData, setFormData }) => 
         <Form.Item
           label="Phone Number"
           name="phone"
-          rules={[{ pattern: PHONE_REG, message: 'Invalid phone number (e.g. 0987654321)' }]}
+          rules={[
+            {
+              required: true,
+              message: 'Phone number is required'
+            },
+            { pattern: PHONE_REG, message: 'Invalid phone number (e.g. 0987654321)' }
+          ]}
           hasFeedback
         >
           <Input
@@ -95,7 +101,12 @@ const EditProfileModal = ({ open, onCancel, onSave, formData, setFormData }) => 
             placeholder="Enter phone number"
           />
         </Form.Item>
-        <Form.Item label="Address" name="address" hasFeedback>
+        <Form.Item
+          label="Address"
+          name="address"
+          rules={[{ required: true, message: 'Address is required' }]}
+          hasFeedback
+        >
           <Input
             value={formData.address}
             onChange={e => setFormData({ ...formData, address: e.target.value })}

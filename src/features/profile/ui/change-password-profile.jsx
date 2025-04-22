@@ -13,17 +13,15 @@ const passwordValidationSchema = Yup.object().shape({
 
 const ChangePasswordModal = ({ open, onCancel, onSubmit, userId }) => {
   const [form] = Form.useForm()
-  const [passwordData, setPasswordData] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' })
+  const [passwordData] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' })
 
   const handleSubmit = async () => {
     try {
-      await passwordValidationSchema.validate(passwordData, { abortEarly: false })
-      await onSubmit(userId, {
-        oldPassword: passwordData.oldPassword,
-        newPassword: passwordData.newPassword
-      })
-      message.success('Password changed successfully!')
-      setPasswordData({ oldPassword: '', newPassword: '', confirmPassword: '' })
+      const values = await form.validateFields()
+      await passwordValidationSchema.validate(values, { abortEarly: false })
+      await onSubmit(userId, values)
+      message.success('Password changed successfully')
+      handleClose()
     } catch (error) {
       if (error.inner) {
         error.inner.forEach(err => {
@@ -35,26 +33,20 @@ const ChangePasswordModal = ({ open, onCancel, onSubmit, userId }) => {
     }
   }
 
+  const handleClose = () => {
+    form.resetFields()
+    onCancel()
+  }
+
   return (
     <Modal
       title={<div className="text-center text-2xl font-semibold">Change Password</div>}
       open={open}
-      onCancel={() => {
-        form.resetFields()
-        setPasswordData({ oldPassword: '', newPassword: '', confirmPassword: '' })
-        onCancel()
-      }}
+      onCancel={handleClose}
+      destroyOnClose
       footer={
         <div className="flex justify-end space-x-4">
-          <Button
-            key="cancel"
-            onClick={() => {
-              form.resetFields()
-              setPasswordData({ oldPassword: '', newPassword: '', confirmPassword: '' })
-              onCancel()
-            }}
-            className="h-10 w-24 border border-[#D1D5DB] text-[#374151]"
-          >
+          <Button key="cancel" onClick={handleClose} className="h-10 w-24 border border-[#D1D5DB] text-[#374151]">
             Cancel
           </Button>
           <Button
@@ -80,15 +72,7 @@ const ChangePasswordModal = ({ open, onCancel, onSubmit, userId }) => {
       maskClosable={false}
       className="change-password-modal"
     >
-      <Form
-        form={form}
-        layout="vertical"
-        initialValues={passwordData}
-        onValuesChange={(changedValues, allValues) => {
-          setPasswordData(allValues)
-        }}
-        className="px-4"
-      >
+      <Form form={form} layout="vertical" initialValues={passwordData} className="px-4">
         <Form.Item
           label={<span>Current Password</span>}
           name="oldPassword"
