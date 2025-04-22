@@ -88,8 +88,11 @@ const TestLayout = ({ children }) => {
       {children}
       <CustomAlert
         show={showAlert}
-        message={`${alertMessage} You have ${countdown} seconds to return to fullscreen mode. Warning ${warningCount}/3`}
         onConfirm={handleContinue}
+        submittedText={alertMessage}
+        countdown={countdown}
+        warningCount={warningCount}
+        totalCount={3}
       />
     </>
   )
