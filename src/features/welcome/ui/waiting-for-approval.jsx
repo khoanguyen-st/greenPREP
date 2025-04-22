@@ -36,6 +36,7 @@ const WaitingForApproval = () => {
       }
       if (!data?.data?.sessionRequest && data?.data.status === 'rejected') {
         localStorage.removeItem('key')
+        localStorage.setItem('status', 'rejected')
         navigate('/rejected')
       }
     }
