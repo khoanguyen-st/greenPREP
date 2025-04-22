@@ -1,9 +1,143 @@
 import MatchingQuestion from '@shared/ui/question-type/matching-question'
 import MultipleChoice from '@shared/ui/question-type/multiple-choice'
-import { Form, Typography } from 'antd'
+import { Form, Typography, Select, Row, Col } from 'antd'
 import { useEffect, useState } from 'react'
 
 const { Text, Paragraph } = Typography
+const { Option } = Select
+
+// Custom matching question component for questions 26 and 29 with equals sign format
+const CustomMatchingQuestionEquals = ({ leftItems, rightItems, userAnswer = [], setUserAnswer }) => {
+  const [selectedOptions, setSelectedOptions] = useState({})
+
+  useEffect(() => {
+    const newMatches = {}
+    userAnswer.forEach(answer => {
+      newMatches[answer.left] = answer.right
+    })
+    setSelectedOptions(newMatches)
+  }, [userAnswer])
+
+  const handleSelectChange = (leftItem, rightItem) => {
+    const updatedMatches = { ...selectedOptions, [leftItem]: rightItem }
+    setSelectedOptions(updatedMatches)
+
+    const formattedAnswers = Object.entries(updatedMatches).map(([left, right]) => ({
+      left,
+      right
+    }))
+    setUserAnswer(formattedAnswers)
+  }
+
+  return (
+    <div className="mx-auto max-w-xl rounded-xl bg-white">
+      <Row justify="center">
+        <Col span={18}>
+          <div className="w-full space-y-4 text-lg font-medium">
+            {leftItems.map((leftItem, index) => (
+              <Row key={index} className="matching-item" align="middle" justify="center">
+                <Col span={7} style={{ textAlign: 'right' }}>
+                  <Text className="text-lg">{leftItem}</Text>
+                </Col>
+                <Col span={2} style={{ textAlign: 'center' }}>
+                  <Text>=</Text>
+                </Col>
+                <Col span={10}>
+                  <Select
+                    onChange={value => handleSelectChange(leftItem, value)}
+                    value={selectedOptions[leftItem] || ''}
+                    className="w-full"
+                    placeholder="Select an answer"
+                    dropdownStyle={{ fontSize: '16px' }}
+                    dropdownMatchSelectWidth={false}
+                    optionLabelProp="label"
+                    getPopupContainer={triggerNode => triggerNode.parentNode}
+                  >
+                    {rightItems.map((rightItem, rightIndex) => (
+                      <Option
+                        key={rightIndex}
+                        value={rightItem}
+                        label={rightItem}
+                        style={{ fontSize: '16px', padding: '8px 12px' }}
+                      >
+                        {rightItem}
+                      </Option>
+                    ))}
+                  </Select>
+                </Col>
+              </Row>
+            ))}
+          </div>
+        </Col>
+      </Row>
+    </div>
+  )
+}
+
+const CustomMatchingQuestionPlus = ({ leftItems, rightItems, userAnswer = [], setUserAnswer }) => {
+  const [selectedOptions, setSelectedOptions] = useState({})
+
+  useEffect(() => {
+    const newMatches = {}
+    userAnswer.forEach(answer => {
+      newMatches[answer.left] = answer.right
+    })
+    setSelectedOptions(newMatches)
+  }, [userAnswer])
+
+  const handleSelectChange = (leftItem, rightItem) => {
+    const updatedMatches = { ...selectedOptions, [leftItem]: rightItem }
+    setSelectedOptions(updatedMatches)
+
+    const formattedAnswers = Object.entries(updatedMatches).map(([left, right]) => ({
+      left,
+      right
+    }))
+    setUserAnswer(formattedAnswers)
+  }
+
+  return (
+    <div className="mx-auto max-w-xl rounded-xl bg-white">
+      <Row justify="center">
+        <Col span={18}>
+          <div className="w-full space-y-4 text-lg font-medium">
+            {leftItems.map((leftItem, index) => (
+              <Row key={index} className="matching-item" align="middle" justify="center">
+                <Col span={7} style={{ textAlign: 'right' }}>
+                  <Text className="text-lg">{leftItem}</Text>
+                </Col>
+                <Col span={2} style={{ textAlign: 'center' }}></Col>
+                <Col span={10}>
+                  <Select
+                    onChange={value => handleSelectChange(leftItem, value)}
+                    value={selectedOptions[leftItem] || ''}
+                    className="w-full"
+                    placeholder="Select an answer"
+                    dropdownStyle={{ fontSize: '16px' }}
+                    dropdownMatchSelectWidth={false}
+                    optionLabelProp="label"
+                    getPopupContainer={triggerNode => triggerNode.parentNode}
+                  >
+                    {rightItems.map((rightItem, rightIndex) => (
+                      <Option
+                        key={rightIndex}
+                        value={rightItem}
+                        label={rightItem}
+                        style={{ fontSize: '16px', padding: '8px 12px' }}
+                      >
+                        {rightItem}
+                      </Option>
+                    ))}
+                  </Select>
+                </Col>
+              </Row>
+            ))}
+          </div>
+        </Col>
+      </Row>
+    </div>
+  )
+}
 
 const formatDialogueContent = content => {
   if (!content) {
@@ -55,7 +189,7 @@ const formatDialogueContent = content => {
 }
 
 // eslint-disable-next-line no-unused-vars
-const QuestionForm = ({ currentPart, answers, setUserAnswer, onSubmit }) => {
+const QuestionForm = ({ currentPart, answers, setUserAnswer, onSubmit, questionNumber = 0 }) => {
   const [, setUserAnswerSubmit] = useState({})
 
   const handleAnswerSubmit = answer => {
@@ -81,11 +215,15 @@ const QuestionForm = ({ currentPart, answers, setUserAnswer, onSubmit }) => {
   const questionContent =
     currentPart.Content || (currentPart.AnswerContent.title ? currentPart.AnswerContent.title : null)
 
+  // Check if this is question 26, 29 or 30
+  const isQuestion26or29 = questionNumber === 26 || questionNumber === 29
+  const isQuestion30 = questionNumber === 30
+
   return (
     <Form layout="vertical">
       {currentPart.Type === 'matching' && (
         <div className="mb-6">
-          <Paragraph className="mb-0 text-xl">{currentPart.Content}</Paragraph>
+          <Paragraph className="mb-0 text-xl font-semibold">{currentPart.Content}</Paragraph>
         </div>
       )}
       {currentPart.Type === 'multiple-choice' && <div className="mb-6">{formatDialogueContent(questionContent)}</div>}
@@ -113,12 +251,28 @@ const QuestionForm = ({ currentPart, answers, setUserAnswer, onSubmit }) => {
             setUserAnswerSubmit={setUserAnswerSubmit}
           />
         ) : currentPart.Type === 'matching' ? (
-          <MatchingQuestion
-            leftItems={currentPart.AnswerContent.leftItems}
-            rightItems={currentPart.AnswerContent.rightItems}
-            userAnswer={userAnswer}
-            setUserAnswer={handleAnswerSubmit}
-          />
+          isQuestion26or29 ? (
+            <CustomMatchingQuestionEquals
+              leftItems={currentPart.AnswerContent.leftItems}
+              rightItems={currentPart.AnswerContent.rightItems}
+              userAnswer={userAnswer}
+              setUserAnswer={handleAnswerSubmit}
+            />
+          ) : isQuestion30 ? (
+            <CustomMatchingQuestionPlus
+              leftItems={currentPart.AnswerContent.leftItems}
+              rightItems={currentPart.AnswerContent.rightItems}
+              userAnswer={userAnswer}
+              setUserAnswer={handleAnswerSubmit}
+            />
+          ) : (
+            <MatchingQuestion
+              leftItems={currentPart.AnswerContent.leftItems}
+              rightItems={currentPart.AnswerContent.rightItems}
+              userAnswer={userAnswer}
+              setUserAnswer={handleAnswerSubmit}
+            />
+          )
         ) : null}
       </Form.Item>
     </Form>
