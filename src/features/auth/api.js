@@ -1,11 +1,9 @@
 import axiosInstance from '@shared/config/axios'
 import { ACCESS_TOKEN } from '@shared/lib/constants/auth'
 import { useMutation } from '@tanstack/react-query'
-import axios from 'axios'
-const API_BASE_URL = 'https://dev-api-greenprep.onrender.com/api'
-// Hàm gọi API cơ bản
+
 const loginAPI = async ({ email, password }) => {
-  const response = await axios.post(`${API_BASE_URL}/users/login`, {
+  const response = await axiosInstance.post(`/users/login`, {
     email,
     password
   })
@@ -18,8 +16,8 @@ const forgotPasswordAPI = payload => {
   return axiosInstance.post('/users/forgot-password', payload)
 }
 const resetPasswordAPI = async ({ token, newPassword }) => {
-  const response = await axios.post(
-    `${API_BASE_URL}/users/reset-password`,
+  const response = await axiosInstance.post(
+    `/users/reset-password`,
     {
       token,
       newPassword

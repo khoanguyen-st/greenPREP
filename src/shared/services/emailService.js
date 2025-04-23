@@ -1,9 +1,7 @@
-import axios from 'axios'
+import axiosInstance from '@shared/config/axios'
 
-const API_BASE_URL = 'https://dev-api-greenprep.onrender.com'
 const MAX_RETRIES = 3
 const RETRY_DELAY = 1000
-const API_TIMEOUT = 5000
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -23,16 +21,7 @@ export const sendTestSubmissionEmail = async (userId, testData, retryCount = 0) 
       throw new Error('Authentication required')
     }
 
-    const response = await axios({
-      method: 'POST',
-      url: `${API_BASE_URL}/api/send-email/${userId}`,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json'
-      },
-      data: testData,
-      timeout: API_TIMEOUT
-    })
+    const response = await axiosInstance.post(`/api/send-email/${userId}`, testData)
 
     return response.data
   } catch (error) {

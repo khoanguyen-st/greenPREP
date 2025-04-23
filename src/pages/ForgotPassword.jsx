@@ -19,7 +19,7 @@ const ForgotPassword = () => {
       // @ts-ignore
       mutate(
         // @ts-ignore
-        { email: values.email.toLowerCase(), host: import.meta.env.VITE_HOST_URL },
+        { email: values.email.toLowerCase(), host: window.location.origin },
         {
           onSuccess: () => {
             message.success({
