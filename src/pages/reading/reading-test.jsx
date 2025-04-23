@@ -166,7 +166,7 @@ const ReadingTest = () => {
     }))
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     try {
       const globalData = JSON.parse(localStorage.getItem('globalData'))
       if (!globalData) {
@@ -257,7 +257,7 @@ const ReadingTest = () => {
     } catch (error) {
       console.error('Error submitting answers:', error)
     }
-  }
+  }, [userAnswers, testData])
   const handleForceSubmit = useCallback(() => {
     handleSubmit()
   }, [handleSubmit])
@@ -675,7 +675,6 @@ const ReadingTest = () => {
               : currentPart.Content.split('\n').map((line, idx) => (
                   <span key={idx}>
                     {line}
-                    <br />
                     <br />
                   </span>
                 ))}
