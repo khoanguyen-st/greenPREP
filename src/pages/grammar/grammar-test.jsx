@@ -23,11 +23,29 @@ const GrammarTest = () => {
         const partNumberB = parseInt(b.Content.match(/Part (\d+)/)?.[1]) || 0
         return partNumberA - partNumberB
       })
+
+      sortedParts.forEach(part => {
+        if (part.Questions && Array.isArray(part.Questions)) {
+          part.Questions.sort((a, b) => {
+            const sequenceA = a.Sequence || 0
+            const sequenceB = b.Sequence || 0
+            return sequenceA - sequenceB
+          })
+        }
+      })
+
       return { ...response, Parts: sortedParts }
     }
   })
 
   const mergedArray = data?.Parts.flatMap(part => part.Questions) || []
+
+  mergedArray.sort((a, b) => {
+    const sequenceA = a.Sequence || 0
+    const sequenceB = b.Sequence || 0
+    return sequenceA - sequenceB
+  })
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [answers, setAnswers] = useState(() => JSON.parse(localStorage.getItem('grammarAnswers')) || {})
   const [flaggedQuestions, setFlaggedQuestions] = useState(
