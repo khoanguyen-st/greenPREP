@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query'
 
 export const useRegister = ({ onSuccess, onError }) => {
   return useMutation({
-    mutationFn: data => axiosInstance.post(`/register`, data),
+    mutationFn: data => axiosInstance.post(`/users/register`, data),
     onSuccess,
     onError
   })
