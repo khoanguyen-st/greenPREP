@@ -51,6 +51,7 @@ const EnterSessionKey = () => {
       const key = JSON.parse(localStorage.getItem('key'))
       navigate(`/waiting-for-approval/${key.userIdFromRes}/${key.sessionId}/${key.requestId}`)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

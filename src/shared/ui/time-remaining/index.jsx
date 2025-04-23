@@ -1,66 +1,83 @@
-import { memo, useEffect, useState } from 'react'
+import { memo, useEffect, useState, useRef } from 'react'
 
 import formatTime from '../../utils/useCountdownTimer'
 
 const TimeRemaining = ({ duration, label = 'Time remaining', onAutoSubmit }) => {
   const storageKey = 'timeRemainingData'
+  const timerRef = useRef(null)
 
   const [timeLeft, setTimeLeft] = useState(() => {
-    const savedData = localStorage.getItem(storageKey)
-    if (savedData) {
-      const { remainingTime, timestamp, originalDuration } = JSON.parse(savedData)
+    try {
+      const savedData = localStorage.getItem(storageKey)
+      if (savedData) {
+        const { remainingSeconds, originalDuration } = JSON.parse(savedData)
 
-      const elapsedSeconds = Math.floor((Date.now() - timestamp) / 1000)
-      const calculatedTimeLeft = Math.max(remainingTime - elapsedSeconds, 0)
+        if (originalDuration !== duration) {
+          return duration
+        }
 
-      if (originalDuration !== duration || calculatedTimeLeft <= 0) {
-        return duration
+        return remainingSeconds
       }
-
-      return calculatedTimeLeft
+    } catch (error) {
+      console.error('Error loading timer data:', error)
     }
+
     return duration
   })
 
   useEffect(() => {
-    localStorage.setItem(
-      storageKey,
-      JSON.stringify({
-        remainingTime: timeLeft,
-        timestamp: Date.now(),
-        originalDuration: duration
-      })
-    )
+    try {
+      localStorage.setItem(
+        storageKey,
+        JSON.stringify({
+          remainingSeconds: timeLeft,
+          originalDuration: duration
+        })
+      )
+    } catch (error) {
+      console.error('Error saving timer data:', error)
+    }
+  }, [timeLeft, duration])
 
+  // Timer effect
+  useEffect(() => {
     if (timeLeft <= 0) {
       onAutoSubmit?.()
       return
     }
 
-    const timer = setInterval(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current)
+    }
+
+    timerRef.current = setInterval(() => {
       setTimeLeft(prev => {
-        const newValue = Math.max(prev - 1, 0)
-        localStorage.setItem(
-          storageKey,
-          JSON.stringify({
-            remainingTime: newValue,
-            timestamp: Date.now(),
-            originalDuration: duration
-          })
-        )
-        return newValue
+        const newTime = Math.max(prev - 1, 0)
+
+        if (newTime <= 0) {
+          clearInterval(timerRef.current)
+          localStorage.removeItem(storageKey)
+          onAutoSubmit?.()
+        }
+
+        return newTime
       })
     }, 1000)
 
-    // eslint-disable-next-line consistent-return
-    return () => clearInterval(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeLeft])
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current)
+      }
+    }
+  }, [onAutoSubmit, timeLeft])
 
   useEffect(() => {
-    if (duration) {
-      localStorage.removeItem(storageKey)
-      setTimeLeft(duration)
+    const savedData = localStorage.getItem(storageKey)
+    if (savedData) {
+      const { originalDuration } = JSON.parse(savedData)
+      if (originalDuration !== duration) {
+        setTimeLeft(duration)
+      }
     }
   }, [duration])
 

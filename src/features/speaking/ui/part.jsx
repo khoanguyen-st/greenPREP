@@ -135,10 +135,12 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
   useEffect(() => {
     if (!isRecording && phase === 'answering' && countdown === 0 && !isAutoSubmitting) {
       setIsAutoSubmitting(true)
+
       autoSubmitTimerRef.current = setTimeout(() => {
         if (buttonRef.current) {
           buttonRef.current.click()
         }
+        setIsAutoSubmitting(false)
       }, 2000)
 
       const timerElement = document.createElement('div')
@@ -155,13 +157,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
         }
       }
     }
-  }, [isRecording, phase, countdown])
-
-  useEffect(() => {
-    if (isAutoSubmitting) {
-      setIsAutoSubmitting(false)
-    }
-  }, [currentQuestionIndex])
+  }, [isRecording, phase, countdown, isAutoSubmitting, currentQuestionIndex])
 
   const handleStartPart = () => {
     setShowIntro(false)
