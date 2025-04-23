@@ -50,9 +50,22 @@ const QuestionForm = ({
               key={index}
               label={
                 <Text className="text-base">
-                  {question.Content.replace(/^\d+\.\s*/, '')
-                    .replace(/\(\d+(\.\d+)?\s*points?\)/i, '')
-                    .trim()}
+                  {(() => {
+                    const cleanedContent = question.Content.replace(/^\d+\.\s*/, '')
+                      .replace(/\(\d+(\.\d+)?\s*points?\)/i, '')
+                      .trim()
+
+                    const match = cleanedContent.match(/^([A-Z][a-z]+):\s*(.*)$/)
+                    if (match) {
+                      const [, name, content] = match
+                      return (
+                        <>
+                          <strong>{name}:</strong> {content}
+                        </>
+                      )
+                    }
+                    return cleanedContent
+                  })()}
                 </Text>
               }
             >
