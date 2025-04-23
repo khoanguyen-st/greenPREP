@@ -31,7 +31,7 @@ const WaitingForApproval = () => {
         } = data?.data?.sessionParticipant || {}
         const sessionData = { sessionName, sessionParticipantId, sessionId, studentId, topicId }
         localStorage.setItem('globalData', JSON.stringify(sessionData))
-        message.success('your request have been approved')
+        message.success('Your request have been approved')
         navigate('/introduction')
       }
       if (!data?.data?.sessionRequest && data?.data.status === 'rejected') {

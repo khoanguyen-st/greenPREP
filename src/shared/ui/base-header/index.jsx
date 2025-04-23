@@ -4,12 +4,14 @@ import LogoutModal from '@pages/logout-modal'
 import { Avatar, Dropdown, Image, Layout, Menu } from 'antd'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const { Header } = Layout
 
 const SharedHeader = () => {
+  // @ts-ignore
   const { user } = useSelector(state => state.auth)
+  const navigate = useNavigate()
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
   const menu = (
     <Menu>
@@ -25,8 +27,8 @@ const SharedHeader = () => {
   return (
     <>
       <Header className="flex h-[80px] items-center justify-between border-0 border-l border-solid border-neutral-400 bg-[#003087] px-12">
-        <div className="flex items-center justify-center pb-2">
-          <Image className="object-contain" src={Logo} alt="Logo" preview={false} />
+        <div className="flex items-center justify-center" onClick={() => navigate('/')}>
+          <Image className="max-w-[155px] object-contain" src={Logo} alt="Logo" preview={false} />
         </div>
         <div className="flex items-center justify-center">
           <Dropdown overlay={menu} trigger={['click']} overlayClassName="border-none shadow-none">
