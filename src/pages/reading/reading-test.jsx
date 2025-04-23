@@ -297,7 +297,7 @@ const ReadingTest = () => {
     const hasSlashFormat = currentQuestion.Content.includes('/') && currentQuestion.Content.split('/').length >= 2
 
     if (hasSlashFormat) {
-      return true
+      return false
     }
 
     if (currentQuestion.Type === 'matching') {
