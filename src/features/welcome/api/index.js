@@ -1,15 +1,10 @@
 import axiosInstance from '@shared/config/axios'
 
 export const joinSession = async ({ sessionKey, userId }) => {
-  try {
-    const response = await axiosInstance.post('/session-requests', {
-      sessionKey,
-      UserID: userId
-    })
-    return response.data
-  } catch (error) {
-    throw new Error(error.response.data.error)
-  }
+  return await axiosInstance.post('/session-requests', {
+    sessionKey,
+    UserID: userId
+  })
 }
 export const getStudentSessionRequest = async ({ sessionId, userId, requestId }) => {
   try {

@@ -1,16 +1,18 @@
 import { getStudentSessionRequest, joinSession } from '@features/welcome/api'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { message } from 'antd'
 
 export const useJoinSession = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: joinSession,
-    onSuccess: () => {
+    onSuccess: response => {
       queryClient.invalidateQueries({ queryKey: ['sessions'] })
+      return response.data.data
     },
     onError: error => {
-      console.error('this is hook', error)
+      message.error(error.response?.data?.message || 'Failed to join session. Please try again.')
     }
   })
 }

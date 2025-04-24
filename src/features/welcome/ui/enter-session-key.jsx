@@ -19,33 +19,36 @@ const EnterSessionKey = () => {
 
   const handleStart = async values => {
     const { sessionKey } = values
+
     if (userId) {
-      try {
-        const accessToken = localStorage.getItem('access_token')
-        const currentSkill = localStorage.getItem('current_skill')
-        const key = localStorage.getItem('key')
+      const accessToken = localStorage.getItem('access_token')
+      const currentSkill = localStorage.getItem('current_skill')
+      const key = localStorage.getItem('key')
 
-        localStorage.clear()
+      localStorage.clear()
 
-        if (accessToken) {
-          localStorage.setItem('access_token', accessToken)
-        }
-
-        if (currentSkill) {
-          localStorage.setItem('current_skill', currentSkill)
-        }
-
-        if (key) {
-          localStorage.setItem('key', key)
-        }
-
-        const res = await joinSession.mutateAsync({ sessionKey, userId })
-        const { ID: requestId, SessionID: sessionId, UserID: userIdFromRes } = res.data
-        message.success('Your request has been submitted successfully!')
-        navigate(`/waiting-for-approval/${userIdFromRes}/${sessionId}/${requestId}`)
-      } catch (error) {
-        message.error(error?.response?.data || 'Failed to join session. Please try again.')
+      if (accessToken) {
+        localStorage.setItem('access_token', accessToken)
       }
+
+      if (currentSkill) {
+        localStorage.setItem('current_skill', currentSkill)
+      }
+
+      if (key) {
+        localStorage.setItem('key', key)
+      }
+
+      joinSession.mutate(
+        { sessionKey, userId },
+        {
+          onSuccess: async res => {
+            const { ID: requestId, SessionID: sessionId, UserID: userIdFromRes } = res.data.data
+            message.success('Your request has been submitted successfully!')
+            navigate(`/waiting-for-approval/${userIdFromRes}/${sessionId}/${requestId}`)
+          }
+        }
+      )
     }
   }
 
