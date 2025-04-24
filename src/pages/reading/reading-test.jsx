@@ -196,10 +196,10 @@ const ReadingTest = () => {
             break
           case 'ordering':
             if (answer && typeof answer === 'object' && 'partIndex' in answer) {
-              const options = question.AnswerContent
-              formattedAnswer.answerText = answer.answer.map((item, index) => ({
-                key: options[item],
-                value: index + 1
+              // const options = question.AnswerContent;
+              formattedAnswer.answerText = answer.answer.map(item => ({
+                key: item.key,
+                value: item.value
               }))
             }
             break
@@ -401,11 +401,11 @@ const ReadingTest = () => {
         <div className="mx-auto w-full max-w-4xl">
           <div className="mt-4 flex flex-col gap-8">
             {paragraphs.map((para, index) => (
-              <div key={index} className="mb-8">
+              <div key={index + 1} className="mb-8">
                 <div className="mb-4">
                   <Select
-                    onChange={value => handleAnswerSubmit({ ...answer, [`para-${index}`]: value })}
-                    value={answer?.[`para-${index}`] || ''}
+                    onChange={value => handleAnswerSubmit({ ...answer, [`Paragraph ${index + 1}`]: value })}
+                    value={answer?.[`Paragraph ${index + 1}`] || ''}
                     className="w-80"
                     placeholder="Select a heading"
                     size="large"
