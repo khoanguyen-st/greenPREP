@@ -23,6 +23,7 @@ const EnterSessionKey = () => {
       try {
         const accessToken = localStorage.getItem('access_token')
         const currentSkill = localStorage.getItem('current_skill')
+        const key = localStorage.getItem('key')
 
         localStorage.clear()
 
@@ -32,6 +33,10 @@ const EnterSessionKey = () => {
 
         if (currentSkill) {
           localStorage.setItem('current_skill', currentSkill)
+        }
+
+        if (key) {
+          localStorage.setItem('key', key)
         }
 
         const res = await joinSession.mutateAsync({ sessionKey, userId })
@@ -48,31 +53,6 @@ const EnterSessionKey = () => {
     const status = localStorage.getItem('status')
     if (status) {
       localStorage.removeItem('status')
-    }
-
-    const currentSkill = localStorage.getItem('current_skill')
-
-    if (currentSkill) {
-      switch (currentSkill) {
-        case 'grammar':
-          navigate('/grammar')
-          break
-        case 'reading':
-          navigate('/reading')
-          break
-        case 'listening':
-          navigate('/listening')
-          break
-        case 'speaking':
-          navigate('/speaking')
-          break
-        case 'writing':
-          navigate('/writing')
-          break
-        default:
-          navigate('/grammar')
-          break
-      }
     }
 
     if (localStorage.getItem('globalData')) {

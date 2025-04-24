@@ -30,8 +30,7 @@ const WaitingForApproval = () => {
 
     const { sessionRequest, sessionParticipant, status } = data?.data || {}
 
-    // Handle rejected status
-    if (!sessionRequest && status === 'rejected') {
+    if (status === 'rejected') {
       localStorage.removeItem('key')
       localStorage.setItem('status', 'rejected')
       navigate('/rejected')
@@ -63,7 +62,6 @@ const WaitingForApproval = () => {
     localStorage.setItem('globalData', JSON.stringify(sessionData))
     message.success('Your request has been approved')
 
-    // Check if continuing a previous session
     const key = JSON.parse(localStorage.getItem('key') || '{}')
     const isContinuingSession = sessionData.sessionId === key.sessionId && sessionData.studentId === key.userIdFromRes
 
