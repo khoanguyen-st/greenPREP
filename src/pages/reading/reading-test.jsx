@@ -403,6 +403,8 @@ const ReadingTest = () => {
             {paragraphs.map((para, index) => (
               <div key={index + 1} className="mb-8">
                 <div className="mb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold">{index + 1}.</span>
                   <Select
                     onChange={value => handleAnswerSubmit({ ...answer, [`Paragraph ${index + 1}`]: value })}
                     value={answer?.[`Paragraph ${index + 1}`] || ''}
@@ -420,8 +422,12 @@ const ReadingTest = () => {
                       )
                     })}
                   </Select>
+                  </div>
                 </div>
-                <div className="whitespace-pre-wrap text-justify text-base text-gray-800">{para}</div>
+                <div className="whitespace-pre-wrap text-justify text-base text-gray-800">
+                  <span className="mr-2 font-semibold">Paragraph {index + 1} -</span>
+                  {para}
+                </div>
               </div>
             ))}
           </div>
@@ -431,6 +437,7 @@ const ReadingTest = () => {
 
     if (currentPartIndex === 0 && processedData.type === 'paragraph') {
       const cleanedQuestion = processedData.question.replace(/\s*\([^)]*\)/g, '')
+      const hasSlashFormat = currentQuestion.Content.includes('/') && currentQuestion.Content.split('/').length >= 2
       return (
         <div className="mx-auto w-full max-w-4xl">
           <div className="whitespace-pre-wrap text-base text-gray-800">
@@ -439,7 +446,7 @@ const ReadingTest = () => {
                 const number = part.replace('.', '')
                 return (
                   <React.Fragment key={index}>
-                    {part}
+                    {hasSlashFormat ? '' : part}
                     <Select
                       onChange={value => handleAnswerSubmit({ ...answer, [number]: value })}
                       value={answer?.[number] || ''}
@@ -505,6 +512,7 @@ const ReadingTest = () => {
 
     if (processedData.type === 'paragraph') {
       const cleanedQuestion = processedData.question.replace(/\s*\([^)]*\)/g, '')
+      const hasSlashFormat = currentQuestion.Content.includes('/') && currentQuestion.Content.split('/').length >= 2
       return (
         <div className="mx-auto w-full max-w-4xl">
           <div className="whitespace-pre-wrap text-base text-gray-800">
@@ -513,7 +521,7 @@ const ReadingTest = () => {
                 const number = part.replace('.', '')
                 return (
                   <React.Fragment key={index}>
-                    {part}
+                    {hasSlashFormat ? '' : part}
                     <Select
                       onChange={value => handleAnswerSubmit({ ...answer, [number]: value })}
                       value={answer?.[number] || ''}
