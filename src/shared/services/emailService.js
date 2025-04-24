@@ -21,7 +21,7 @@ export const sendTestSubmissionEmail = async (userId, testData, retryCount = 0) 
       throw new Error('Authentication required')
     }
 
-    const response = await axiosInstance.post(`/api/send-email/${userId}`, testData)
+    const response = await axiosInstance.post(`/send-email/${userId}`, testData)
 
     return response.data
   } catch (error) {
