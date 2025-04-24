@@ -196,10 +196,10 @@ const ReadingTest = () => {
             break
           case 'ordering':
             if (answer && typeof answer === 'object' && 'partIndex' in answer) {
-              const options = question.AnswerContent
-              formattedAnswer.answerText = answer.answer.map((item, index) => ({
-                key: options[item],
-                value: index + 1
+              // const options = question.AnswerContent;
+              formattedAnswer.answerText = answer.answer.map(item => ({
+                key: item.key,
+                value: item.value
               }))
             }
             break
@@ -254,6 +254,7 @@ const ReadingTest = () => {
       localStorage.removeItem('partFlaggedStates')
 
       setIsSubmitted(true)
+      localStorage.setItem('current_skill', 'writing')
     } catch (error) {
       console.error('Error submitting answers:', error)
     }
@@ -400,27 +401,27 @@ const ReadingTest = () => {
         <div className="mx-auto w-full max-w-4xl">
           <div className="mt-4 flex flex-col gap-8">
             {paragraphs.map((para, index) => (
-              <div key={index} className="mb-8">
+              <div key={index + 1} className="mb-8">
                 <div className="mb-4">
                   <div className="flex items-center gap-2">
                     <span className="font-bold">{index + 1}.</span>
-                    <Select
-                      onChange={value => handleAnswerSubmit({ ...answer, [`para-${index}`]: value })}
-                      value={answer?.[`para-${index}`] || ''}
-                      className="w-80"
-                      placeholder="Select a heading"
-                      size="large"
-                      style={{ fontSize: '16px' }}
-                    >
-                      {processedData.rightItems.map(rightItem => {
-                        const displayText = rightItem.replace(/^[A-Z]\. /, '')
-                        return (
-                          <Option key={rightItem} value={rightItem} className="py-2 !text-base">
-                            {displayText}
-                          </Option>
-                        )
-                      })}
-                    </Select>
+                  <Select
+                    onChange={value => handleAnswerSubmit({ ...answer, [`Paragraph ${index + 1}`]: value })}
+                    value={answer?.[`Paragraph ${index + 1}`] || ''}
+                    className="w-80"
+                    placeholder="Select a heading"
+                    size="large"
+                    style={{ fontSize: '16px' }}
+                  >
+                    {processedData.rightItems.map(rightItem => {
+                      const displayText = rightItem.replace(/^[A-Z]\. /, '')
+                      return (
+                        <Option key={rightItem} value={rightItem} className="py-2 !text-base">
+                          {displayText}
+                        </Option>
+                      )
+                    })}
+                  </Select>
                   </div>
                 </div>
                 <div className="whitespace-pre-wrap text-justify text-base text-gray-800">

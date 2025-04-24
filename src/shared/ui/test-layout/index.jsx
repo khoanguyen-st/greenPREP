@@ -45,14 +45,19 @@ const TestLayout = ({ children }) => {
       window.dispatchEvent(submitEvent)
 
       if (path.includes('/speaking')) {
+        localStorage.setItem('current_skill', 'listinening')
         navigate('/listening')
       } else if (path.includes('/listening')) {
+        localStorage.setItem('current_skill', 'grammar')
         navigate('/grammar')
       } else if (path.includes('/grammar')) {
+        localStorage.setItem('current_skill', 'reading')
         navigate('/reading')
       } else if (path.includes('/reading')) {
+        localStorage.setItem('current_skill', 'writing')
         navigate('/writing')
       } else if (path.includes('/writing')) {
+        localStorage.removeItem('current_skill')
         navigate('/complete-test')
       }
     } catch (error) {
