@@ -15,7 +15,6 @@ import { useEffect, useRef, useState } from 'react'
 
 const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPart }) => {
   const timerRef = useRef(null)
-
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [phase, setPhase] = useState('reading')
   const [countdown, setCountdown] = useState(0)
@@ -177,11 +176,31 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
   if (submitted) {
     return <NextScreen nextPath="/listening" skillName="Speaking" imageSrc={SpeakingSubmission} />
   }
+
+  const getSupportedMimeType = () => {
+    const types = ['audio/mpeg', 'audio/mp4', 'audio/webm;codecs=opus']
+
+    for (const type of types) {
+      if (MediaRecorder.isTypeSupported(type)) {
+        if (type.includes('mpeg')) {
+          return type
+        } else if (type.includes('mp4')) {
+          return type
+        }
+      }
+    }
+
+    return 'audio/webm;codecs=opus'
+  }
+
   const startRecording = () => {
+    const mimeType = getSupportedMimeType()
     navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then(stream => {
-        const mediaRecorder = new MediaRecorder(stream)
+        const mediaRecorder = new MediaRecorder(stream, {
+          mimeType: mimeType
+        })
         setMediaRecorderRef(mediaRecorder)
         setStreamRef(stream)
         const chunks = []
@@ -189,11 +208,11 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
           chunks.push(e.data)
         }
         mediaRecorder.onstop = async () => {
-          const blob = new Blob(chunks, { type: 'audio/mp3' })
+          const blob = new Blob(chunks, { type: 'audio/mpeg' })
           if (!hasUploaded) {
             try {
               setIsUploading(true)
-              const result = await uploadToCloudinary(blob, data.TopicID, data.Content, currentQuestionIndex)
+              const result = await uploadToCloudinary(blob)
               setHasUploaded(true)
 
               if (currentQuestion && result.secure_url) {
