@@ -174,6 +174,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
     return <PartIntro data={data} onStartPart={handleStartPart} />
   }
   if (submitted) {
+    localStorage.setItem('current_skill', 'listening')
     return <NextScreen nextPath="/listening" skillName="Speaking" imageSrc={SpeakingSubmission} />
   }
 

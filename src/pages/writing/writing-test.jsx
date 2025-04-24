@@ -70,9 +70,11 @@ const WritingTest = () => {
     }))
   }
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     await submitWritingTest(data)
-  }
+    localStorage.removeItem('current_skill')
+  }, [submitWritingTest, data])
+
   const handleForceSubmit = useCallback(() => {
     handleSubmit()
   }, [handleSubmit])

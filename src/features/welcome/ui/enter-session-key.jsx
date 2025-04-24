@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { sessionKey as sessionKeyImage } from '@assets/images'
 import { useJoinSession } from '@features/welcome/hooks'
@@ -21,6 +22,7 @@ const EnterSessionKey = () => {
     if (userId) {
       try {
         const accessToken = localStorage.getItem('access_token')
+        const currentSkill = localStorage.getItem('current_skill')
 
         localStorage.clear()
 
@@ -28,9 +30,12 @@ const EnterSessionKey = () => {
           localStorage.setItem('access_token', accessToken)
         }
 
+        if (currentSkill) {
+          localStorage.setItem('current_skill', currentSkill)
+        }
+
         const res = await joinSession.mutateAsync({ sessionKey, userId })
         const { ID: requestId, SessionID: sessionId, UserID: userIdFromRes } = res.data
-        localStorage.setItem('key', JSON.stringify({ requestId, sessionId, userIdFromRes }))
         message.success('Your request has been submitted successfully!')
         navigate(`/waiting-for-approval/${userIdFromRes}/${sessionId}/${requestId}`)
       } catch (error) {
@@ -44,13 +49,37 @@ const EnterSessionKey = () => {
     if (status) {
       localStorage.removeItem('status')
     }
+
+    const currentSkill = localStorage.getItem('current_skill')
+
+    if (currentSkill) {
+      switch (currentSkill) {
+        case 'grammar':
+          navigate('/grammar')
+          break
+        case 'reading':
+          navigate('/reading')
+          break
+        case 'listening':
+          navigate('/listening')
+          break
+        case 'speaking':
+          navigate('/speaking')
+          break
+        case 'writing':
+          navigate('/writing')
+          break
+        default:
+          navigate('/grammar')
+          break
+      }
+    }
+
     if (localStorage.getItem('globalData')) {
-      navigate('/introduction')
+      localStorage.removeItem('globalData')
+      navigate('/')
     }
-    if (JSON.parse(localStorage.getItem('key'))) {
-      const key = JSON.parse(localStorage.getItem('key'))
-      navigate(`/waiting-for-approval/${key.userIdFromRes}/${key.sessionId}/${key.requestId}`)
-    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

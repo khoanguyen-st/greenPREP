@@ -254,6 +254,7 @@ const ReadingTest = () => {
       localStorage.removeItem('partFlaggedStates')
 
       setIsSubmitted(true)
+      localStorage.setItem('current_skill', 'writing')
     } catch (error) {
       console.error('Error submitting answers:', error)
     }

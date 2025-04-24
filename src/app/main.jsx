@@ -9,6 +9,12 @@ import store from './providers/store'
 
 const queryClient = new QueryClient()
 
+const hasCurrentSkill = localStorage.getItem('current_skill') !== null
+
+if (!hasCurrentSkill && window.location.pathname !== '/') {
+  window.location.href = '/'
+}
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <QueryClientProvider client={queryClient}>
