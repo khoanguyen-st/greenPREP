@@ -27,7 +27,7 @@ const SharedHeader = () => {
   return (
     <>
       <Header className="flex h-[80px] items-center justify-between border-0 border-l border-solid border-neutral-400 bg-[#003087] px-12">
-        <div className="flex items-center justify-center" onClick={() => navigate('/')}>
+        <div className="flex cursor-pointer items-center justify-center" onClick={() => navigate('/')}>
           <Image className="max-w-[155px] object-contain" src={Logo} alt="Logo" preview={false} />
         </div>
         <div className="flex items-center justify-center">
