@@ -669,6 +669,7 @@ const ListeningTest = () => {
         })
 
         setIsSubmitted(true)
+        localStorage.setItem('current_skill', 'grammar')
       } catch (error) {
         console.error(`Error ${isAutoSubmit ? 'auto-' : ''}submitting listening test:`, error)
         setErrorMessage(error.message || 'Failed to submit the test. Please try again.')
@@ -787,7 +788,7 @@ const ListeningTest = () => {
           }))
         } else {
           formattedCorrectAnswer = answerContent.leftItems.map((leftItem, index) => ({
-            key: leftItem,
+            key: index,
             value: answerContent.rightItems[index] || ''
           }))
         }

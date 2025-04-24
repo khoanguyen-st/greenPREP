@@ -30,6 +30,14 @@ const useAntiCheat = () => {
       setShowAlert(true)
     }
 
+    const disableTextSelection = e => {
+      e.preventDefault()
+      triggerAlert('⚠️ Text selection is not allowed during the test!')
+      return false
+    }
+
+    document.body.style.userSelect = 'none'
+
     const handleFullScreenChange = () => {
       if (!document.fullscreenElement) {
         sessionStorage.setItem('exitedFullscreen', 'true')
@@ -186,6 +194,15 @@ const useAntiCheat = () => {
     const checkInterval = setInterval(devToolsDetector, 1000)
     document.addEventListener('mousemove', handleMouseMove)
 
+    document.addEventListener('selectstart', disableTextSelection)
+    document.addEventListener('mousedown', e => {
+      // Prevent double-click selection
+      if (e.detail > 1) {
+        e.preventDefault()
+        return false
+      }
+    })
+
     document.addEventListener('fullscreenchange', handleFullScreenChange)
     document.addEventListener('visibilitychange', handleVisibilityChange)
     window.addEventListener('blur', handleWindowBlur)
@@ -200,15 +217,19 @@ const useAntiCheat = () => {
 
     // eslint-disable-next-line consistent-return
     return () => {
+      window.removeEventListener('blur', handleWindowBlur)
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+      window.removeEventListener('popstate', handlePopState)
+
+      document.body.style.userSelect = ''
+
+      document.removeEventListener('selectstart', disableTextSelection)
       document.removeEventListener('fullscreenchange', handleFullScreenChange)
       document.removeEventListener('visibilitychange', handleVisibilityChange)
-      window.removeEventListener('blur', handleWindowBlur)
       document.removeEventListener('keydown', handleRestrictedActions)
       document.removeEventListener('contextmenu', blockContextMenu)
       clearInterval(checkInterval)
       document.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('beforeunload', handleBeforeUnload)
-      window.removeEventListener('popstate', handlePopState)
       document.removeEventListener('auxclick', handleAuxClick)
     }
   }, [])

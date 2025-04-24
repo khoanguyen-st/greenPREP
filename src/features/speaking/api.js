@@ -24,15 +24,18 @@ const fetchTopicData = async partNumber => {
   }
 }
 
-const uploadToCloudinary = async (blob, topicId, partContent, questionIndex) => {
+const uploadToCloudinary = async blob => {
   try {
     const formData = new FormData()
-    formData.append('file', blob)
+
+    const fileName = `recording_${Date.now()}.mp3`
+    const file = new File([blob], fileName, { type: 'audio/mpeg' })
+    formData.append('file', file)
     formData.append('upload_preset', process.env.VITE_CLOUDINARY_UPLOAD_PRESET)
-    formData.append('filename_override', `speaking_${topicId}_${partContent}_${questionIndex + 1}`)
+    formData.append('resource_type', 'raw')
 
     const response = await fetch(
-      `${process.env.VITE_CLOUDINARY_API_URL}/${process.env.VITE_CLOUDINARY_CLOUD_NAME}/auto/upload`,
+      `${process.env.VITE_CLOUDINARY_API_URL}/${process.env.VITE_CLOUDINARY_CLOUD_NAME}/raw/upload`,
       {
         method: 'POST',
         body: formData

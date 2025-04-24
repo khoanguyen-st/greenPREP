@@ -64,6 +64,7 @@ const GrammarTest = () => {
   const handleSubmit = useCallback(async () => {
     await submitGrammarTest({ data, answers })
     setIsSubmitted(true)
+    localStorage.setItem('current_skill', 'reading')
   }, [data, answers])
 
   const handleForceSubmit = useCallback(() => {
@@ -76,6 +77,7 @@ const GrammarTest = () => {
       window.removeEventListener('forceSubmit', handleForceSubmit)
     }
   }, [handleForceSubmit])
+
   useEffect(() => {
     if (answers && Object.keys(answers).length > 0) {
       localStorage.setItem('grammarAnswers', JSON.stringify(answers))
