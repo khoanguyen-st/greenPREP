@@ -1,6 +1,6 @@
 import { SpeakingSubmission } from '@assets/images'
 import {
-  uploadToCloudinary,
+  uploadToMinIO,
   initializeSpeakingAnswer,
   addQuestionAnswer,
   submitSpeakingAnswer
@@ -213,11 +213,11 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
           if (!hasUploaded) {
             try {
               setIsUploading(true)
-              const result = await uploadToCloudinary(blob)
+              const result = await uploadToMinIO(blob)
               setHasUploaded(true)
 
-              if (currentQuestion && result.secure_url) {
-                addQuestionAnswer(currentQuestion.ID, result.secure_url)
+              if (currentQuestion && result.fileUrl) {
+                addQuestionAnswer(currentQuestion.ID, result.fileUrl)
               }
             } catch (error) {
               console.error('Failed to upload recording:', error)
