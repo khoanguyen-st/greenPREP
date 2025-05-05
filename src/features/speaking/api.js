@@ -107,4 +107,36 @@ const submitSpeakingAnswer = async () => {
   }
 }
 
-export { fetchTopicData, uploadToCloudinary, initializeSpeakingAnswer, addQuestionAnswer, submitSpeakingAnswer }
+const uploadToMinIO = async blob => {
+  try {
+    const fileName = `recording_${Date.now()}.mp3`
+    const file = new File([blob], fileName, { type: 'audio/mpeg' })
+    // Call BE to get presigned URL
+    const res = await axiosInstance.get(`/presigned-url?filename=${file.name}`)
+    const { uploadUrl, fileUrl } = await res.data
+
+    // Upload to MinIO
+    await fetch(uploadUrl, {
+      method: 'PUT',
+      body: file,
+      headers: {
+        'Content-Type': file.type
+      }
+    })
+
+    console.warn('✅ Uploaded to MinIO successfully:', fileUrl)
+    return { fileUrl }
+  } catch (error) {
+    console.error('Upload error:', error)
+    throw error
+  }
+}
+
+export {
+  fetchTopicData,
+  uploadToCloudinary,
+  initializeSpeakingAnswer,
+  addQuestionAnswer,
+  submitSpeakingAnswer,
+  uploadToMinIO
+}
