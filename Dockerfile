@@ -6,6 +6,10 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
+
+ARG VITE_BASE_URL
+ENV VITE_BASE_URL=$VITE_BASE_URL
+
 RUN npm run build
 
 
@@ -17,6 +21,6 @@ RUN npm install -g serve
 
 COPY --from=builder /app/dist ./dist
 
-EXPOSE 3002
+EXPOSE 3001
 
 CMD ["serve", "-s", "dist", "-l", "3001"]
