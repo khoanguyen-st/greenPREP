@@ -13,8 +13,9 @@ const fetchTopicData = async partNumber => {
     })
 
     const parts = response.data.Parts || []
-
-    const selectedPart = parts.find(part => part.Content === `PART ${partNumber}`)
+    const selectedPart = parts.find(
+      part => part.Content.toLowerCase().match(/part \d+/)?.[0] === `PART ${partNumber}`.toLowerCase()
+    )
 
     return selectedPart || null
   } catch (error) {
@@ -79,7 +80,6 @@ const addQuestionAnswer = (questionId, answerAudio) => {
   if (!speakingAnswerStr) {
     return
   }
-
   const speakingAnswer = JSON.parse(speakingAnswerStr)
   speakingAnswer.questions.push({
     questionId: questionId,

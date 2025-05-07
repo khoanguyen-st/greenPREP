@@ -13,6 +13,7 @@ const MultipleChoice = ({ questionData, userAnswer, setUserAnswer, onSubmit, cla
         : JSON.parse(questionData.AnswerContent)[0]
 
       multipleChoiceAnswerSchema.validateSync(parsedContent)
+
       return { options: parsedContent.options, isValid: true }
     } catch (err) {
       setError(err.message)
