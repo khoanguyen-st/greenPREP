@@ -39,13 +39,16 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
   const questions = (data.Questions || []).sort((a, b) => a.Sequence - b.Sequence)
   const totalQuestions = questions.length
   const getTimePair = index => {
-    if (data.Content === 'PART 1') {
+    const content = (data.Content || '').toLowerCase()
+
+    if (content.includes('part 1')) {
       return { read: '00:05', answer: '00:30' }
-    } else if (data.Content === 'PART 2' || data.Content === 'PART 3') {
+    } else if (content.includes('part 2') || content.includes('part 3')) {
       return { read: '00:05', answer: '00:45' }
-    } else if (data.Content === 'PART 4') {
+    } else if (content.includes('part 4')) {
       return { read: '00:05', answer: '02:00' }
     }
+
     return timePairs[index] || timePairs[timePairs.length - 1] || { read: '00:05', answer: '00:30' }
   }
 
@@ -56,7 +59,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
   const submitMutation = useMutation({
     mutationFn: submitSpeakingAnswer,
     onSuccess: () => {
-      if (data.Content === 'PART 4') {
+      if ((data.Content || '').toLowerCase().includes('part 4')) {
         setSubmitted(true)
       } else if (onNextPart) {
         onNextPart()
@@ -215,9 +218,8 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
               setIsUploading(true)
               const result = await uploadToMinIO(blob)
               setHasUploaded(true)
-
-              if (currentQuestion && result.fileUrl) {
-                addQuestionAnswer(currentQuestion.ID, result.fileUrl)
+              if (currentQuestion && result.secure_url) {
+                addQuestionAnswer(currentQuestion.ID, result.secure_url)
               }
             } catch (error) {
               console.error('Failed to upload recording:', error)

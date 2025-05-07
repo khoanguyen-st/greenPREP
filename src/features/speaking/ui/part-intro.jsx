@@ -76,8 +76,10 @@ const PartIntro = ({ data, onStartPart }) => {
         }
     }
   }
-
-  const info = getPartInfo(data.Content)
+  const rawPart = data?.Content?.toLowerCase()
+    .match(/part \d+/)?.[0]
+    .toUpperCase()
+  const info = getPartInfo(rawPart)
 
   return (
     <div className="flex h-screen w-full items-center justify-center bg-gray-50 p-8">
@@ -88,7 +90,7 @@ const PartIntro = ({ data, onStartPart }) => {
         </div>
 
         <div className="mb-8 grid grid-cols-3 gap-6 rounded-xl border border-gray-200 bg-white p-6 shadow-[0_4px_12px_rgb(0,0,0,0.05)]">
-          {data.Content === 'PART 4' ? (
+          {rawPart === 'PART 4' ? (
             <>
               <div className="text-center">
                 <div className="text-sm font-medium text-gray-500">Reading Time</div>
