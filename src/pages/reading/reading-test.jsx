@@ -536,15 +536,11 @@ const ReadingTest = () => {
                     >
                       {processedData.answers[number]?.map(option => {
                         const displayText = option.replace(/^[A-Z]\. /, '')
-                        if (number === 0) {
-                          return null
-                        } else {
-                          return (
-                            <Option key={option} value={option} className="py-2 !text-base">
-                              {displayText}
-                            </Option>
-                          )
-                        }
+                        return (
+                          <Option key={option} value={option} className="py-2 !text-base">
+                            {displayText}
+                          </Option>
+                        )
                       })}
                     </Select>
                   </React.Fragment>
