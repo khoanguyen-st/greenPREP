@@ -405,23 +405,23 @@ const ReadingTest = () => {
                 <div className="mb-4">
                   <div className="flex items-center gap-2">
                     <span className="font-bold">{index + 1}.</span>
-                  <Select
-                    onChange={value => handleAnswerSubmit({ ...answer, [`Paragraph ${index + 1}`]: value })}
-                    value={answer?.[`Paragraph ${index + 1}`] || ''}
-                    className="w-80"
-                    placeholder="Select a heading"
-                    size="large"
-                    style={{ fontSize: '16px' }}
-                  >
-                    {processedData.rightItems.map(rightItem => {
-                      const displayText = rightItem.replace(/^[A-Z]\. /, '')
-                      return (
-                        <Option key={rightItem} value={rightItem} className="py-2 !text-base">
-                          {displayText}
-                        </Option>
-                      )
-                    })}
-                  </Select>
+                    <Select
+                      onChange={value => handleAnswerSubmit({ ...answer, [`Paragraph ${index + 1}`]: value })}
+                      value={answer?.[`Paragraph ${index + 1}`] || ''}
+                      className="w-80"
+                      placeholder="Select a heading"
+                      size="large"
+                      style={{ fontSize: '16px' }}
+                    >
+                      {processedData.rightItems.map(rightItem => {
+                        const displayText = rightItem.replace(/^[A-Z]\. /, '')
+                        return (
+                          <Option key={rightItem} value={rightItem} className="py-2 !text-base">
+                            {displayText}
+                          </Option>
+                        )
+                      })}
+                    </Select>
                   </div>
                 </div>
                 <div className="whitespace-pre-wrap text-justify text-base text-gray-800">
@@ -444,27 +444,32 @@ const ReadingTest = () => {
             {cleanedQuestion.split(/(\d+\.)/).map((part, index) => {
               if (part.match(/^\d+\.$/)) {
                 const number = part.replace('.', '')
-                return (
-                  <React.Fragment key={index}>
-                    {hasSlashFormat ? '' : part}
-                    <Select
-                      onChange={value => handleAnswerSubmit({ ...answer, [number]: value })}
-                      value={answer?.[number] || ''}
-                      className="mx-2 my-2 inline-block w-32"
-                      size="large"
-                      style={{ fontSize: '16px' }}
-                    >
-                      {processedData.answers[number]?.map(option => {
-                        const displayText = option.replace(/^[A-Z]\. /, '')
-                        return (
-                          <Option key={option} value={option} className="py-2 !text-base">
-                            {displayText}
-                          </Option>
-                        )
-                      })}
-                    </Select>
-                  </React.Fragment>
-                )
+                if (number === '0') {
+                  return part
+                } else {
+                  return (
+                    <React.Fragment key={index}>
+                      {hasSlashFormat ? '' : part}
+                      <Select
+                        onChange={value => handleAnswerSubmit({ ...answer, [number]: value })}
+                        value={answer?.[number] || ''}
+                        className="mx-2 my-2 inline-block"
+                        size="large"
+                        style={{ fontSize: '16px', minWidth: 100 }}
+                        dropdownStyle={{ maxWidth: 'max-content' }}
+                      >
+                        {processedData.answers[number]?.map(option => {
+                          const displayText = option.replace(/^[A-Z]\. /, '')
+                          return (
+                            <Option key={option} value={option} style={{ whiteSpace: 'normal' }} className="!text-base">
+                              {displayText}
+                            </Option>
+                          )
+                        })}
+                      </Select>
+                    </React.Fragment>
+                  )
+                }
               }
               return <span key={index}>{part}</span>
             })}
@@ -531,11 +536,15 @@ const ReadingTest = () => {
                     >
                       {processedData.answers[number]?.map(option => {
                         const displayText = option.replace(/^[A-Z]\. /, '')
-                        return (
-                          <Option key={option} value={option} className="py-2 !text-base">
-                            {displayText}
-                          </Option>
-                        )
+                        if (number === 0) {
+                          return null
+                        } else {
+                          return (
+                            <Option key={option} value={option} className="py-2 !text-base">
+                              {displayText}
+                            </Option>
+                          )
+                        }
                       })}
                     </Select>
                   </React.Fragment>

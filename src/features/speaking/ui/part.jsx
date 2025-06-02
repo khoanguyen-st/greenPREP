@@ -97,7 +97,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
           if (prev <= 1) {
             clearInterval(timerRef.current)
             if (phase === 'reading') {
-              if (data.Content === 'PART 4') {
+              if (data.Content?.toLowerCase().startsWith('part 4')) {
                 setPhase('preparing')
                 setCountdown(60)
               } else {
@@ -285,7 +285,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
         onNextPart={handleNextPart}
         isLastQuestion={currentQuestionIndex === totalQuestions - 1}
         showNavigation={!isRecording && countdown === 0 && phase === 'answering'}
-        isPart4={data.Content === 'PART 4'}
+        isPart4={data.Content?.toLowerCase().startsWith('part 4')}
         isUploading={isUploading}
         isButtonLoading={isButtonLoading || submitMutation.isPending}
         buttonRef={buttonRef}
@@ -309,7 +309,7 @@ const Part = ({ data, timePairs = [{ read: '00:03', answer: '00:15' }], onNextPa
           )}
         </div>
 
-        {data.Content !== 'PART 4' && (
+        {!data.Content?.toLowerCase().startsWith('part 4') && (
           <div className="mt-4 flex gap-2 lg:mt-8">
             <div className={`h-2 w-2 rounded-full ${currentQuestionIndex === 0 ? 'bg-white' : 'bg-white/30'}`} />
             <div className={`h-2 w-2 rounded-full ${currentQuestionIndex === 1 ? 'bg-white' : 'bg-white/30'}`} />
